@@ -1,0 +1,296 @@
+{
+  "name": "playground",
+  "displayName": "Playground",
+  "publisher": "codespaces-contrib",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.51.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codespaces-contrib/playground"
+  },
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
+  "activationEvents": [
+    "*",
+    "onCommand:playground.newPlayground"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "playground.addPlaygroundLibrary",
+        "title": "Add Library",
+        "category": "Playground",
+        "icon": "$(library)"
+      },
+      {
+        "command": "playground.changePlaygroundLayout",
+        "title": "Change Layout",
+        "category": "Playground",
+        "icon": "$(editor-layout)"
+      },
+      {
+        "command": "playground.newPlayground",
+        "title": "New Playground...",
+        "category": "Playground"
+      },
+      {
+        "command": "playground.newTemporaryPlayground",
+        "title": "New Temporary Playground",
+        "category": "Playground"
+      },
+      {
+        "command": "playground.openPlaygroundConsole",
+        "title": "Open Console",
+        "category": "Playground",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "playground.openPlaygroundDeveloperTools",
+        "title": "Open Dev Tools",
+        "category": "Playground",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "playground.openPlayground",
+        "title": "Open Playground...",
+        "category": "Playground"
+      },
+      {
+        "command": "playground.runPlayground",
+        "title": "Run",
+        "category": "Playground",
+        "icon": "$(play)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "playground.addPlaygroundLibrary",
+          "when": "playground:inPlayground"
+        },
+        {
+          "command": "playground.changePlaygroundLayout",
+          "when": "playground:inPlayground"
+        },
+        {
+          "command": "playground.openPlaygroundConsole",
+          "when": "playground:inPlayground"
+        },
+        {
+          "command": "playground.openPlaygroundDeveloperTools",
+          "when": "playground:inPlayground && !isWeb"
+        },
+        {
+          "command": "playground.runPlayground",
+          "when": "playground:inPlayground"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "playground.runPlayground",
+          "when": "playground:inPlayground",
+          "group": "navigation@1"
+        },
+        {
+          "command": "playground.openPlaygroundConsole",
+          "when": "playground:inPlayground",
+          "group": "navigation@2"
+        },
+        {
+          "command": "playground.changePlaygroundLayout",
+          "when": "playground:inPlayground",
+          "group": "navigation@3"
+        },
+        {
+          "command": "playground.addPlaygroundLibrary",
+          "when": "playground:inPlayground",
+          "group": "navigation@4"
+        },
+        {
+          "command": "playground.openPlaygroundDeveloperTools",
+          "when": "playground:inPlayground && !isWeb",
+          "group": "navigation@5"
+        },
+        {
+          "command": "playground.recordCodeTour",
+          "when": "playground:inPlayground && playground:allowCodeTourRecording",
+          "group": "codetour@1"
+        }
+      ]
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": "playground.json",
+        "url": "https://gist.githubusercontent.com/lostintangent/21727eab0d79c7b9fd0dde92df7b1f50/raw/schema.json"
+      },
+      {
+        "fileMatch": "gallery.json",
+        "url": "https://gist.githubusercontent.com/lostintangent/091c0eec1f6443b526566d1cd3a85294/raw/schema.json"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Playground",
+      "properties": {
+        "playground.autoRun": {
+          "default": "onEdit",
+          "enum": [
+            "onEdit",
+            "onSave",
+            "never"
+          ],
+          "description": "Specifies when to automatically run the code for a playground."
+        },
+        "playground.autoSave": {
+          "default": false,
+          "type": "boolean",
+          "description": "Specifies whether to automatically save your playground files (every 30s)."
+        },
+        "playground.includeMarkup": {
+          "default": true,
+          "type": "boolean",
+          "description": "Specifies whether to include a markup file (index.html) when creating new web playgrounds."
+        },
+        "playground.includeScript": {
+          "default": true,
+          "type": "boolean",
+          "description": "Specifies whether to include a script file (script.css) when creating new web playgrounds."
+        },
+        "playground.includeStylesheet": {
+          "default": true,
+          "type": "boolean",
+          "description": "Specifies whether to include a stylesheet file (style.css) when creating new web playgrounds."
+        },
+        "playground.layout": {
+          "default": "splitLeft",
+          "enum": [
+            "grid",
+            "preview",
+            "splitBottom",
+            "splitLeft",
+            "splitLeftTabbed",
+            "splitRight",
+            "splitRightTabbed",
+            "splitTop"
+          ],
+          "description": "Specifies how to layout the editor windows when opening a playground."
+        },
+        "playground.readmeBehavior": {
+          "default": "previewHeader",
+          "enum": [
+            "none",
+            "previewFooter",
+            "previewHeader"
+          ],
+          "description": "Specifies how the playground's readme content should be displayed."
+        },
+        "playground.markupLanguage": {
+          "default": "html",
+          "enum": [
+            "html",
+            "markdown",
+            "pug"
+          ],
+          "description": "Specifies the default markup language to use when creating new web playgrounds."
+        },
+        "playground.scriptLanguage": {
+          "default": "javascript",
+          "enum": [
+            "javascript",
+            "javascriptreact",
+            "typescript",
+            "typescriptreact"
+          ],
+          "description": "Specifies the default scripting language to use when creating new web playgrounds."
+        },
+        "playground.stylesheetLanguage": {
+          "default": "css",
+          "enum": [
+            "css",
+            "less",
+            "sass",
+            "scss"
+          ],
+          "description": "Specifies the default stylesheet language to use when creating new web playgrounds."
+        },
+        "playground.showConsole": {
+          "default": false,
+          "type": "boolean",
+          "description": "Specifies whether to automatically show the console when opening a playground."
+        },
+        "playground.templateGalleries": {
+          "default": [
+            "web:basic",
+            "web:languages",
+            "web:libraries"
+          ],
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "web:basic",
+                  "web:languages"
+                ]
+              },
+              {
+                "type": "string",
+                "format": "uri"
+              }
+            ]
+          },
+          "description": "Specifies one or more URLs that point of template galleries for creating playgrounds."
+        }
+      }
+    },
+    "playground.templateGalleries": [
+      {
+        "id": "web:basic",
+        "url": "https://gist.githubusercontent.com/lostintangent/5b8d7f1319cdf0321a6c3aeffa909876/raw/gallery.json"
+      },
+      {
+        "id": "web:languages",
+        "url": "https://gist.githubusercontent.com/lostintangent/2c8209b16b9c3a6e20facb430d5424bc/raw/gallery.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/debounce": "^1.2.0",
+    "@types/glob": "^7.1.3",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.51.0",
+    "@typescript-eslint/eslint-plugin": "^4.1.1",
+    "@typescript-eslint/parser": "^4.1.1",
+    "eslint": "^7.9.0",
+    "glob": "^7.1.6",
+    "typescript": "^4.1.2",
+    "vsce": "^1.81.1"
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "case": "^1.6.3",
+    "debounce": "^1.2.0",
+    "less": "^3.12.2",
+    "markdown-it": "^12.0.3",
+    "pug": "^3.0.0",
+    "sass": "^1.30.0",
+    "typescript": "^4.1.2"
+  }
+}

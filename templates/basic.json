@@ -1,0 +1,54 @@
+{
+  "id": "web:basic",
+  "title": "Basic",
+  "description": "Get started with the basic web development configurations.",
+  "templates": [
+    {
+      "title": "HTML/CSS/JavaScript",
+      "files": [
+        {
+          "filename": "index.html"
+        },
+        {
+          "filename": "script.js"
+        },
+        {
+          "filename": "style.css"
+        }
+      ]
+    },
+    {
+      "title": "HTML-Only",
+      "files": [
+        {
+          "filename": "index.html"
+        }
+      ]
+    },
+    {
+      "title": "JavaScript-Only",
+      "files": [
+        {
+          "filename": "script.js"
+        },
+        {
+          "filename": "playground.json",
+          "content": "{\"scripts\": [],\"showConsole\": true}"
+        }
+      ]
+    },
+    {
+      "title": "JavaScript-Only (Module)",
+      "description": "Creates a playground where the JavaScript is treated as an ES module.",
+      "files": [
+        {
+          "filename": "script.mjs"
+        },
+        {
+          "filename": "playground.json",
+          "content": "{\"scripts\": [],\"showConsole\": true}"
+        }
+      ]
+    }
+  ]
+}

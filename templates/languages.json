@@ -1,0 +1,175 @@
+{
+  "id": "web:languages",
+  "title": "Languages",
+  "description": "Get started with commonly-used language configurations: Pug/HTML, SCSS/Less/Saas and JS/TS.",
+  "templates": [
+    {
+      "title": "HTML w/Less + JavaScript",
+      "files": [
+        {
+          "filename": "index.html"
+        },
+        {
+          "filename": "script.js"
+        },
+        {
+          "filename": "style.less"
+        }
+      ]
+    },
+    {
+      "title": "HTML w/Less + TypeScript",
+      "files": [
+        {
+          "filename": "index.html"
+        },
+        {
+          "filename": "script.ts"
+        },
+        {
+          "filename": "style.less"
+        }
+      ]
+    },
+    {
+      "title": "HTML w/Sass + JavaScript",
+      "files": [
+        {
+          "filename": "index.html"
+        },
+        {
+          "filename": "script.js"
+        },
+        {
+          "filename": "style.sass"
+        }
+      ]
+    },
+    {
+      "title": "HTML w/Sass + TypeScript",
+      "files": [
+        {
+          "filename": "index.html"
+        },
+        {
+          "filename": "script.ts"
+        },
+        {
+          "filename": "style.sass"
+        }
+      ]
+    },
+    {
+      "title": "HTML w/SCSS + JavaScript",
+      "files": [
+        {
+          "filename": "index.html"
+        },
+        {
+          "filename": "script.js"
+        },
+        {
+          "filename": "style.scss"
+        }
+      ]
+    },
+    {
+      "title": "HTML w/SCSS + TypeScript",
+      "files": [
+        {
+          "filename": "index.html"
+        },
+        {
+          "filename": "script.ts"
+        },
+        {
+          "filename": "style.scss"
+        }
+      ]
+    },
+    {
+      "title": "Pug w/Less + TypeScript",
+      "files": [
+        {
+          "filename": "index.pug"
+        },
+        {
+          "filename": "script.ts"
+        },
+        {
+          "filename": "style.less"
+        }
+      ]
+    },
+    {
+      "title": "Pug w/Less + JavaScript",
+      "files": [
+        {
+          "filename": "index.pug"
+        },
+        {
+          "filename": "script.js"
+        },
+        {
+          "filename": "style.less"
+        }
+      ]
+    },
+    {
+      "title": "Pug w/Sass + JavaScript",
+      "files": [
+        {
+          "filename": "index.pug"
+        },
+        {
+          "filename": "script.js"
+        },
+        {
+          "filename": "style.sass"
+        }
+      ]
+    },
+    {
+      "title": "Pug w/Sass + TypeScript",
+      "files": [
+        {
+          "filename": "index.pug"
+        },
+        {
+          "filename": "script.ts"
+        },
+        {
+          "filename": "style.sass"
+        }
+      ]
+    },
+    {
+      "title": "Pug w/SCSS + JavaScript",
+      "files": [
+        {
+          "filename": "index.pug"
+        },
+        {
+          "filename": "script.js"
+        },
+        {
+          "filename": "style.scss"
+        }
+      ]
+    },
+    {
+      "title": "Pug w/SCSS + TypeScript",
+      "files": [
+        {
+          "filename": "index.pug"
+        },
+        {
+          "filename": "script.ts"
+        },
+        {
+          "filename": "style.scss"
+        }
+      ]
+    }
+  ]
+}
