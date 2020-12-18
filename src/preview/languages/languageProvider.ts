@@ -45,7 +45,7 @@ async function getExtension(id: string) {
     await extensionInstance.activate();
   }
 
-  return extensionInstance.exports?.swingCompile;
+  return extensionInstance.exports?.codeSwingCompile;
 }
 
 export function discoverLanguageProviders() {
