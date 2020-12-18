@@ -337,7 +337,7 @@ export async function openSwing(uri: Uri) {
 
   const webViewPanel = vscode.window.createWebviewPanel(
     `${EXTENSION_NAME}.preview`,
-    "Preview",
+    "CodeSwing",
     { viewColumn: layoutManager.previewViewColumn, preserveFocus: true },
     {
       enableScripts: true,
@@ -407,7 +407,7 @@ export async function openSwing(uri: Uri) {
             author: {
               name: "CodeSwing",
               iconPath: vscode.Uri.parse(
-                "https://cdn.jsdelivr.net/gh/vsls-contrib/gistpad/images/icon.png"
+                "https://cdn.jsdelivr.net/gh/codespaces-contrib/playground@main/images/icon.png"
               ),
             },
             body: rawContent,
