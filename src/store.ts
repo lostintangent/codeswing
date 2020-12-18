@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { PlaygroundWebview } from "./preview/webview";
+import { SwingWebView } from "./preview/webview";
 
 export type ScriptType = "text/javascript" | "module";
 export type ReadmeBehavior =
@@ -8,13 +8,13 @@ export type ReadmeBehavior =
   | "previewHeader"
   | "previewFooter";
 
-export interface PlaygroundInput {
+export interface SwingInput {
   fileName?: string;
   prompt?: string;
   completionMessage?: string;
 }
 
-export interface PlaygroundManifest {
+export interface SwingManifest {
   scripts?: string[];
   styles?: string[];
   layout?: string;
@@ -23,15 +23,15 @@ export interface PlaygroundManifest {
   scriptType?: ScriptType;
   readmeBehavior?: ReadmeBehavior;
   tutorial?: string;
-  input?: PlaygroundInput;
+  input?: SwingInput;
 }
 
-export enum PlaygroundLibraryType {
+export enum SwingLibraryType {
   script = "scripts",
   style = "styles",
 }
 
-export enum PlaygroundFileType {
+export enum SwingFileType {
   config,
   markup,
   script,
@@ -41,18 +41,20 @@ export enum PlaygroundFileType {
   tour,
 }
 
-interface ActivePlayground {
-  uri: vscode.Uri;
+interface ActiveSwing {
+  rootUri: vscode.Uri;
+  currentUri: vscode.Uri;
+
   hasTour: boolean;
 
-  webView: PlaygroundWebview;
+  webView: SwingWebView;
   webViewPanel: vscode.WebviewPanel;
   console: vscode.OutputChannel;
   commentController?: vscode.CommentController;
 }
 
 export interface Store {
-  activePlayground?: ActivePlayground;
+  activeSwing?: ActiveSwing;
 }
 
 export const store: Store = {};

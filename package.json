@@ -1,6 +1,6 @@
 {
-  "name": "playground",
-  "displayName": "Playground",
+  "name": "codeswing",
+  "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "",
   "version": "0.0.1",
@@ -10,126 +10,134 @@
   "categories": [
     "Other"
   ],
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/codespaces-contrib/playground"
+    "url": "https://github.com/codespaces-contrib/codeswing"
   },
   "extensionKind": [
     "ui",
     "workspace"
   ],
   "activationEvents": [
-    "*",
-    "onCommand:playground.newPlayground"
+    "*"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "playground.addPlaygroundLibrary",
+        "command": "codeswing.addLibrary",
         "title": "Add Library",
-        "category": "Playground",
+        "category": "CodeSwing",
         "icon": "$(library)"
       },
       {
-        "command": "playground.changePlaygroundLayout",
+        "command": "codeswing.changeLayout",
         "title": "Change Layout",
-        "category": "Playground",
+        "category": "CodeSwing",
         "icon": "$(editor-layout)"
       },
       {
-        "command": "playground.newPlayground",
-        "title": "New Playground...",
-        "category": "Playground"
+        "command": "codeswing.newSwing",
+        "title": "New Swing...",
+        "category": "CodeSwing"
       },
       {
-        "command": "playground.newTemporaryPlayground",
-        "title": "New Temporary Playground",
-        "category": "Playground"
+        "command": "codeswing.newTemporarySwing",
+        "title": "New Temporary Swing...",
+        "category": "CodeSwing"
       },
       {
-        "command": "playground.openPlaygroundConsole",
+        "command": "codeswing.openConsole",
         "title": "Open Console",
-        "category": "Playground",
+        "category": "CodeSwing",
         "icon": "$(terminal)"
       },
       {
-        "command": "playground.openPlaygroundDeveloperTools",
+        "command": "codeswing.openDeveloperTools",
         "title": "Open Dev Tools",
-        "category": "Playground",
+        "category": "CodeSwing",
         "icon": "$(tools)"
       },
       {
-        "command": "playground.openPlayground",
-        "title": "Open Playground...",
-        "category": "Playground"
+        "command": "codeswing.openSwing",
+        "title": "Open Swing...",
+        "category": "CodeSwing"
       },
       {
-        "command": "playground.runPlayground",
-        "title": "Run",
-        "category": "Playground",
+        "command": "codeswing.recordCodeTour",
+        "title": "Record CodeTour"
+      },
+      {
+        "command": "codeswing.run",
+        "title": "Run Swing",
+        "category": "CodeSwing",
         "icon": "$(play)"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "playground.addPlaygroundLibrary",
-          "when": "playground:inPlayground"
+          "command": "codeswing.addLibrary",
+          "when": "codeswing:inSwing"
         },
         {
-          "command": "playground.changePlaygroundLayout",
-          "when": "playground:inPlayground"
+          "command": "codeswing.changeLayout",
+          "when": "codeswing:inSwing"
         },
         {
-          "command": "playground.openPlaygroundConsole",
-          "when": "playground:inPlayground"
+          "command": "codeswing.openConsole",
+          "when": "codeswing:inSwing"
         },
         {
-          "command": "playground.openPlaygroundDeveloperTools",
-          "when": "playground:inPlayground && !isWeb"
+          "command": "codeswing.openDeveloperTools",
+          "when": "codeswing:inSwing && !isWeb"
         },
         {
-          "command": "playground.runPlayground",
-          "when": "playground:inPlayground"
+          "command": "codeswing.run",
+          "when": "codeswing:inSwing"
+        },
+        {
+          "command": "codeswing.recordCodeTour",
+          "when": "false"
         }
       ],
       "editor/title": [
         {
-          "command": "playground.runPlayground",
-          "when": "playground:inPlayground",
+          "command": "codeswing.run",
+          "when": "codeswing:inSwing",
           "group": "navigation@1"
         },
         {
-          "command": "playground.openPlaygroundConsole",
-          "when": "playground:inPlayground",
+          "command": "codeswing.openConsole",
+          "when": "codeswing:inSwing",
           "group": "navigation@2"
         },
         {
-          "command": "playground.changePlaygroundLayout",
-          "when": "playground:inPlayground",
+          "command": "codeswing.changeLayout",
+          "when": "codeswing:inSwing",
           "group": "navigation@3"
         },
         {
-          "command": "playground.addPlaygroundLibrary",
-          "when": "playground:inPlayground",
+          "command": "codeswing.addLibrary",
+          "when": "codeswing:inSwing",
           "group": "navigation@4"
         },
         {
-          "command": "playground.openPlaygroundDeveloperTools",
-          "when": "playground:inPlayground && !isWeb",
+          "command": "codeswing.openDeveloperTools",
+          "when": "codeswing:inSwing && !isWeb",
           "group": "navigation@5"
         },
         {
-          "command": "playground.recordCodeTour",
-          "when": "playground:inPlayground && playground:allowCodeTourRecording",
+          "command": "codeswing.recordCodeTour",
+          "when": "codeswing:inSwing && codeswing:codeTourEnabled",
           "group": "codetour@1"
         }
       ]
     },
     "jsonValidation": [
       {
-        "fileMatch": "playground.json",
+        "fileMatch": "codeswing.json",
         "url": "https://gist.githubusercontent.com/lostintangent/21727eab0d79c7b9fd0dde92df7b1f50/raw/schema.json"
       },
       {
@@ -139,38 +147,23 @@
     ],
     "configuration": {
       "type": "object",
-      "title": "Playground",
+      "title": "CodeSwing",
       "properties": {
-        "playground.autoRun": {
+        "codeswing.autoRun": {
           "default": "onEdit",
           "enum": [
             "onEdit",
             "onSave",
             "never"
           ],
-          "description": "Specifies when to automatically run the code for a playground."
+          "description": "Specifies when to automatically run the code for a swing."
         },
-        "playground.autoSave": {
+        "codeswing.autoSave": {
           "default": false,
           "type": "boolean",
-          "description": "Specifies whether to automatically save your playground files (every 30s)."
+          "description": "Specifies whether to automatically save your swing files (every 30s)."
         },
-        "playground.includeMarkup": {
-          "default": true,
-          "type": "boolean",
-          "description": "Specifies whether to include a markup file (index.html) when creating new web playgrounds."
-        },
-        "playground.includeScript": {
-          "default": true,
-          "type": "boolean",
-          "description": "Specifies whether to include a script file (script.css) when creating new web playgrounds."
-        },
-        "playground.includeStylesheet": {
-          "default": true,
-          "type": "boolean",
-          "description": "Specifies whether to include a stylesheet file (style.css) when creating new web playgrounds."
-        },
-        "playground.layout": {
+        "codeswing.layout": {
           "default": "splitLeft",
           "enum": [
             "grid",
@@ -182,56 +175,26 @@
             "splitRightTabbed",
             "splitTop"
           ],
-          "description": "Specifies how to layout the editor windows when opening a playground."
+          "description": "Specifies how to layout the editor windows when opening a swing."
         },
-        "playground.readmeBehavior": {
+        "codeswing.readmeBehavior": {
           "default": "previewHeader",
           "enum": [
             "none",
             "previewFooter",
             "previewHeader"
           ],
-          "description": "Specifies how the playground's readme content should be displayed."
+          "description": "Specifies how the swing's readme content should be displayed."
         },
-        "playground.markupLanguage": {
-          "default": "html",
-          "enum": [
-            "html",
-            "markdown",
-            "pug"
-          ],
-          "description": "Specifies the default markup language to use when creating new web playgrounds."
-        },
-        "playground.scriptLanguage": {
-          "default": "javascript",
-          "enum": [
-            "javascript",
-            "javascriptreact",
-            "typescript",
-            "typescriptreact"
-          ],
-          "description": "Specifies the default scripting language to use when creating new web playgrounds."
-        },
-        "playground.stylesheetLanguage": {
-          "default": "css",
-          "enum": [
-            "css",
-            "less",
-            "sass",
-            "scss"
-          ],
-          "description": "Specifies the default stylesheet language to use when creating new web playgrounds."
-        },
-        "playground.showConsole": {
+        "codeswing.showConsole": {
           "default": false,
           "type": "boolean",
-          "description": "Specifies whether to automatically show the console when opening a playground."
+          "description": "Specifies whether to automatically show the console when opening a swing."
         },
-        "playground.templateGalleries": {
+        "codeswing.templateGalleries": {
           "default": [
             "web:basic",
-            "web:languages",
-            "web:libraries"
+            "web:languages"
           ],
           "type": "array",
           "items": {
@@ -249,18 +212,32 @@
               }
             ]
           },
-          "description": "Specifies one or more URLs that point of template galleries for creating playgrounds."
+          "description": "Specifies one or more URLs that point of template galleries for creating swings."
         }
       }
     },
-    "playground.templateGalleries": [
+    "languages": [
+      {
+        "id": "typescriptreact",
+        "filenames": [
+          "script.babel"
+        ]
+      },
+      {
+        "id": "yaml",
+        "filenames": [
+          ".block"
+        ]
+      }
+    ],
+    "codeswing.templateGalleries": [
       {
         "id": "web:basic",
-        "url": "https://gist.githubusercontent.com/lostintangent/5b8d7f1319cdf0321a6c3aeffa909876/raw/gallery.json"
+        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/basic.json"
       },
       {
         "id": "web:languages",
-        "url": "https://gist.githubusercontent.com/lostintangent/2c8209b16b9c3a6e20facb430d5424bc/raw/gallery.json"
+        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/languages.json"
       }
     ]
   },

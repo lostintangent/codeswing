@@ -32,20 +32,20 @@
           "filename": "script.js"
         },
         {
-          "filename": "playground.json",
+          "filename": "codeswing.json",
           "content": "{\"scripts\": [],\"showConsole\": true}"
         }
       ]
     },
     {
       "title": "JavaScript-Only (Module)",
-      "description": "Creates a playground where the JavaScript is treated as an ES module.",
+      "description": "Creates a swing where the JavaScript is treated as an ES module.",
       "files": [
         {
           "filename": "script.mjs"
         },
         {
-          "filename": "playground.json",
+          "filename": "codeswing.json",
           "content": "{\"scripts\": [],\"showConsole\": true}"
         }
       ]

@@ -14,7 +14,7 @@ import {
 import { EXTENSION_NAME } from "../constants";
 
 let fileId = 0;
-const playgroundFiles = new Map<string, Map<string, Uint8Array>>();
+const swingFiles = new Map<string, Map<string, Uint8Array>>();
 
 export class TempFileSystemProvider implements FileSystemProvider {
   private _onDidChangeFile = new EventEmitter<FileChangeEvent[]>();
@@ -23,7 +23,7 @@ export class TempFileSystemProvider implements FileSystemProvider {
 
   static async clear() {
     return Promise.all(
-      Array.from(playgroundFiles.keys()).map((file) =>
+      Array.from(swingFiles.keys()).map((file) =>
         workspace.fs.delete(Uri.parse(`${EXTENSION_NAME}:/${file}`))
       )
     );
@@ -38,30 +38,31 @@ export class TempFileSystemProvider implements FileSystemProvider {
   createDirectory(uri: Uri): void {}
 
   async delete(uri: Uri, options: { recursive: boolean }): Promise<void> {
-    if (!playgroundFiles.has(uri.authority)) {
+    if (!swingFiles.has(uri.authority)) {
       throw FileSystemError.FileNotFound(uri);
     }
 
-    playgroundFiles.get(uri.authority)!.delete(uri.path);
+    swingFiles.get(uri.authority)!.delete(uri.path);
     this._onDidChangeFile.fire([{ type: FileChangeType.Deleted, uri }]);
   }
 
   async readFile(uri: Uri): Promise<Uint8Array> {
-    if (!playgroundFiles.has(uri.authority)) {
+    if (!swingFiles.has(uri.authority)) {
       throw FileSystemError.FileNotFound(uri);
     }
 
-    return playgroundFiles.get(uri.authority)!.get(uri.path)!;
+    return swingFiles.get(uri.authority)!.get(uri.path)!;
   }
 
   async readDirectory(uri: Uri): Promise<[string, FileType][]> {
-    if (!playgroundFiles.has(uri.authority)) {
+    if (!swingFiles.has(uri.authority)) {
       throw FileSystemError.FileNotFound(uri);
     }
 
-    return Array.from(
-      playgroundFiles.get(uri.authority)!.keys()
-    ).map((file) => [file, FileType.File]);
+    return Array.from(swingFiles.get(uri.authority)!.keys()).map((file) => [
+      file,
+      FileType.File,
+    ]);
   }
 
   async rename(
@@ -69,9 +70,9 @@ export class TempFileSystemProvider implements FileSystemProvider {
     newUri: Uri,
     options: { overwrite: boolean }
   ): Promise<void> {
-    const content = playgroundFiles.get(oldUri.path)!;
-    playgroundFiles.set(newUri.path, content);
-    playgroundFiles.delete(oldUri.path);
+    const content = swingFiles.get(oldUri.path)!;
+    swingFiles.set(newUri.path, content);
+    swingFiles.delete(oldUri.path);
 
     this._onDidChangeFile.fire([
       { type: FileChangeType.Deleted, uri: oldUri },
@@ -90,13 +91,13 @@ export class TempFileSystemProvider implements FileSystemProvider {
     }
 
     if (
-      !playgroundFiles.get(uri.authority) ||
-      !playgroundFiles.get(uri.authority)!.has(uri.path)
+      !swingFiles.get(uri.authority) ||
+      !swingFiles.get(uri.authority)!.has(uri.path)
     ) {
       throw FileSystemError.FileNotFound(uri);
     }
 
-    const content = playgroundFiles.get(uri.authority)!.get(uri.path);
+    const content = swingFiles.get(uri.authority)!.get(uri.path);
     return {
       type: FileType.File,
       ctime: ++fileId,
@@ -110,12 +111,12 @@ export class TempFileSystemProvider implements FileSystemProvider {
     content: Uint8Array,
     options: { create: boolean; overwrite: boolean }
   ): Promise<void> {
-    if (!playgroundFiles.has(uri.authority)) {
-      playgroundFiles.set(uri.authority, new Map());
+    if (!swingFiles.has(uri.authority)) {
+      swingFiles.set(uri.authority, new Map());
     }
 
-    const isNew = playgroundFiles.get(uri.authority)!.has(uri.path);
-    playgroundFiles.get(uri.authority)!.set(uri.path, content);
+    const isNew = swingFiles.get(uri.authority)!.has(uri.path);
+    swingFiles.get(uri.authority)!.set(uri.path, content);
 
     const type = isNew ? FileChangeType.Created : FileChangeType.Changed;
     this._onDidChangeFile.fire([{ type, uri }]);

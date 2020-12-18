@@ -1,101 +1,69 @@
 import * as vscode from "vscode";
-import * as config from "../config";
-import { EXTENSION_NAME, PLAYGROUND_FILE } from "../constants";
-import { DEFAULT_MANIFEST, openPlayground } from "../preview";
-import { getNewMarkupFilename } from "../preview/languages/markup";
+import { EXTENSION_NAME, SWING_FILE } from "../constants";
+import { DEFAULT_MANIFEST, openSwing } from "../preview";
+import { stringToByteArray, withProgress } from "../utils";
 import {
-  getNewScriptFileName,
-  isReactFile,
-  REACT_SCRIPTS,
-} from "../preview/languages/script";
-import { getNewStylesheetFilename } from "../preview/languages/stylesheet";
-import { byteArrayToString, stringToByteArray, withProgress } from "../utils";
-import { enableGalleries, loadGalleries } from "./galleryProvider";
+  enableGalleries,
+  loadGalleries,
+  registerTemplateProvider,
+} from "./galleryProvider";
 import { TempFileSystemProvider } from "./tempFileSystem";
 
-// TODO: Enable user-provided playground templates
+// TODO: Enable user-provided swing templates
 
-interface PlaygroundFile {
+export interface SwingFile {
   filename: string;
   content?: string;
 }
 
-async function generateNewPlaygroundFiles(): Promise<PlaygroundFile[]> {
-  const manifest = {
-    ...DEFAULT_MANIFEST,
-  };
+/*
+async function getTemplateFiles(templateUri: vscode.Uri) {
+  const files = await vscode.workspace.fs.readDirectory(templateUri);
 
-  const files = [];
+  return Promise.all(
+    files.map(async ([filename, _]) => {
+      const sourceFileUri = vscode.Uri.joinPath(templateUri, filename);
+      const content = await vscode.workspace.fs.readFile(sourceFileUri);
 
-  if (await config.get("includeScript")) {
-    const scriptFileName = await getNewScriptFileName();
+      return { filename, content };
+    })
+  );
+}*/
 
-    files.push({
-      filename: scriptFileName,
-    });
-
-    if (isReactFile(scriptFileName)) {
-      manifest.scripts.push(...REACT_SCRIPTS);
-    }
-  }
-
-  if (config.get("includeStylesheet")) {
-    const stylesheetFileName = await getNewStylesheetFilename();
-
-    files.push({
-      filename: stylesheetFileName,
-    });
-  }
-
-  if (config.get("includeMarkup")) {
-    const markupFileName = await getNewMarkupFilename();
-
-    files.push({
-      filename: markupFileName,
-    });
-  }
-
-  files.push({
-    filename: PLAYGROUND_FILE,
-    content: JSON.stringify(manifest, null, 2),
-  });
-
-  return files;
+interface CodeSwingTemplateItem extends vscode.QuickPickItem {
+  files?: SwingFile[];
 }
 
-let PLAYGROUND_ID = 0;
-export async function newPlayground(
+let SWING_ID = 0;
+export async function newSwing(
   uri:
     | vscode.Uri
-    | ((files: PlaygroundFile[]) => Promise<vscode.Uri>) = vscode.Uri.parse(
-    `${EXTENSION_NAME}://${++PLAYGROUND_ID}/`
+    | ((files: SwingFile[]) => Promise<vscode.Uri>) = vscode.Uri.parse(
+    `${EXTENSION_NAME}://${++SWING_ID}/`
   ),
-  title: string = "Create new playground"
+  title: string = "Create new swing"
 ) {
   const quickPick = vscode.window.createQuickPick();
   quickPick.title = title;
-  quickPick.placeholder = "Select the playground template to use";
+  quickPick.placeholder = "Select the swing template to use";
   quickPick.matchOnDescription = true;
 
   const galleries = await loadGalleries();
 
-  const templates = galleries
+  const templates: CodeSwingTemplateItem[] = galleries
     .filter((gallery) => gallery.enabled)
-    .flatMap((gallery) => gallery.templates);
+    .flatMap((gallery) => gallery.templates)
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((t) => ({ ...t, label: t.title }));
 
   if (templates.length === 0) {
-    return newPlaygroundFromSettings(uri);
+    templates.push({
+      label:
+        "No templates available. Configure your template galleries and try again.",
+    });
   }
 
-  quickPick.items = [
-    ...templates.sort((a, b) => a.label.localeCompare(b.label)),
-    {
-      label: "$(arrow-right) Continue without a template",
-      alwaysShow: true,
-      description: "Create a playground based on your configured settings",
-    },
-  ];
-
+  quickPick.items = templates;
   quickPick.buttons = [
     {
       iconPath: new vscode.ThemeIcon("settings"),
@@ -110,72 +78,43 @@ export async function newPlayground(
   quickPick.onDidAccept(async () => {
     quickPick.hide();
 
-    const template = quickPick.selectedItems[0];
-    const gistId = (template as any).gist;
+    const template = quickPick.selectedItems[0] as CodeSwingTemplateItem;
+    if (template.files) {
+      const swingUri = await withProgress("Creating swing...", async () =>
+        newSwingFromTemplate(template.files!, uri)
+      );
 
-    const playgroundUri = await withProgress(
-      "Creating playground...",
-      async () => {
-        if (gistId) {
-          const templateUri = vscode.Uri.parse(`gist://${gistId}/`);
-          return newPlaygroundFromTemplate(templateUri, uri);
-        } else {
-          return newPlaygroundFromSettings(uri);
-        }
-      }
-    );
-
-    openPlayground(playgroundUri);
+      openSwing(swingUri);
+    }
   });
 
   quickPick.show();
 }
 
-async function newPlaygroundFromSettings(
-  uri: vscode.Uri | ((files: PlaygroundFile[]) => Promise<vscode.Uri>)
+async function newSwingFromTemplate(
+  files: SwingFile[],
+  uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>)
 ): Promise<vscode.Uri> {
-  const files = await generateNewPlaygroundFiles();
-  if (uri instanceof Function) {
-    return uri(files);
-  } else {
-    await Promise.all(
-      files.map(async (file) => {
-        const targetFileUri = vscode.Uri.joinPath(uri, file.filename);
-        const content = stringToByteArray(file.content || "");
-        return vscode.workspace.fs.writeFile(targetFileUri, content);
-      })
-    );
-    return uri;
+  if (!files.find((file) => file.filename === SWING_FILE)) {
+    const content = JSON.stringify(DEFAULT_MANIFEST, null, 2);
+    files.push({ filename: SWING_FILE, content });
   }
-}
-
-async function newPlaygroundFromTemplate(
-  templateUri: vscode.Uri,
-  uri: vscode.Uri | ((files: PlaygroundFile[]) => Promise<vscode.Uri>)
-): Promise<vscode.Uri> {
-  const files = await vscode.workspace.fs.readDirectory(templateUri);
-
-  const fileContents = await Promise.all(
-    files.map(async ([filename, _]) => {
-      const sourceFileUri = vscode.Uri.joinPath(templateUri, filename);
-      const content = await vscode.workspace.fs.readFile(sourceFileUri);
-
-      return { filename, content };
-    })
-  );
 
   if (uri instanceof Function) {
     return uri(
-      fileContents.map(({ filename, content }) => ({
+      files.map(({ filename, content }) => ({
         filename,
-        content: content ? byteArrayToString(content) : "",
+        content: content ? content : "",
       }))
     );
   } else {
     await Promise.all(
-      fileContents.map(({ filename, content }) => {
+      files.map(({ filename, content = "" }) => {
         const targetFileUri = vscode.Uri.joinPath(uri, filename);
-        return vscode.workspace.fs.writeFile(targetFileUri, content);
+        return vscode.workspace.fs.writeFile(
+          targetFileUri,
+          stringToByteArray(content)
+        );
       })
     );
     return uri;
@@ -183,7 +122,7 @@ async function newPlaygroundFromTemplate(
 }
 
 async function promptForGalleryConfiguration(
-  uri: vscode.Uri | ((files: PlaygroundFile[]) => Promise<vscode.Uri>),
+  uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>),
   title: string
 ) {
   const quickPick = vscode.window.createQuickPick();
@@ -192,9 +131,9 @@ async function promptForGalleryConfiguration(
     "Select the galleries you'd like to display templates from";
   quickPick.canSelectMany = true;
 
-  const galleries = (await loadGalleries()).sort((a, b) =>
-    a.label.localeCompare(b.label)
-  );
+  const galleries = (await loadGalleries())
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((gallery) => ({ ...gallery, label: gallery.title }));
 
   quickPick.items = galleries;
   quickPick.selectedItems = galleries.filter((gallery) => gallery.enabled);
@@ -202,7 +141,7 @@ async function promptForGalleryConfiguration(
   quickPick.buttons = [vscode.QuickInputButtons.Back];
   quickPick.onDidTriggerButton((e) => {
     if (e === vscode.QuickInputButtons.Back) {
-      return newPlayground(uri, title);
+      return newSwing(uri, title);
     }
   });
 
@@ -215,7 +154,7 @@ async function promptForGalleryConfiguration(
 
     quickPick.hide();
 
-    return newPlayground(uri, title);
+    return newSwing(uri, title);
   });
 
   quickPick.show();
@@ -227,27 +166,24 @@ export async function registerCreationModule(
 ) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.newTemporaryPlayground`,
-      newPlayground
+      `${EXTENSION_NAME}.newTemporarySwing`,
+      newSwing
     )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.newPlayground`,
-      async () => {
-        const folder = await vscode.window.showOpenDialog({
-          canSelectFolders: true,
-          canSelectFiles: false,
-          canSelectMany: false,
-          defaultUri: vscode.workspace.workspaceFolders?.[0].uri,
-        });
+    vscode.commands.registerCommand(`${EXTENSION_NAME}.newSwing`, async () => {
+      const folder = await vscode.window.showOpenDialog({
+        canSelectFolders: true,
+        canSelectFiles: false,
+        canSelectMany: false,
+        defaultUri: vscode.workspace.workspaceFolders?.[0].uri,
+      });
 
-        if (folder) {
-          newPlayground(folder[0]);
-        }
+      if (folder) {
+        newSwing(folder[0]);
       }
-    )
+    })
   );
 
   vscode.workspace.registerFileSystemProvider(
@@ -255,5 +191,6 @@ export async function registerCreationModule(
     new TempFileSystemProvider()
   );
 
-  api.newPlayground = newPlayground;
+  api.newSwing = newSwing;
+  api.registerTemplateProvider = registerTemplateProvider;
 }

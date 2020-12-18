@@ -1,6 +1,5 @@
 import * as path from "path";
 import { TextDocument } from "vscode";
-import * as config from "../../config";
 import { byteArrayToString } from "../../utils";
 
 export const STYLESHEET_BASE_NAME = "style";
@@ -18,11 +17,6 @@ export const STYLESHEET_EXTENSIONS = [
   StylesheetLanguage.sass,
   StylesheetLanguage.scss,
 ];
-
-export async function getNewStylesheetFilename() {
-  const stylesheetLanguage = config.get("stylesheetLanguage");
-  return `${STYLESHEET_BASE_NAME}${StylesheetLanguage[stylesheetLanguage]}`;
-}
 
 export async function getStylesheetContent(
   document: TextDocument

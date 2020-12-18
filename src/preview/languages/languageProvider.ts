@@ -1,18 +1,19 @@
 import * as vscode from "vscode";
+import { EXTENSION_NAME } from "../../constants";
 
-const CONTRIBUTION_NAME = "playground.languages";
+const CONTRIBUTION_NAME = `${EXTENSION_NAME}.languages`;
 
-type PlaygroundLanguageType = "markup" | "stylesheet" | "script";
+type SwingLanguageType = "markup" | "stylesheet" | "script";
 
-interface PlaygroundLanguageDefinition {
-  type: PlaygroundLanguageType;
+interface SwingLanguageDefinition {
+  type: SwingLanguageType;
   extensions: string[];
   source: string;
 }
 
-const languages = new Map<PlaygroundLanguageType, Map<string, string>>();
+const languages = new Map<SwingLanguageType, Map<string, string>>();
 
-export function getExtensions(type: PlaygroundLanguageType) {
+export function getExtensions(type: SwingLanguageType) {
   const languageDefinitions = languages.get(type);
   if (!languageDefinitions) {
     return [];
@@ -22,7 +23,7 @@ export function getExtensions(type: PlaygroundLanguageType) {
 }
 
 export async function compileCode(
-  type: PlaygroundLanguageType,
+  type: SwingLanguageType,
   extension: string,
   code: string
 ): Promise<string | null> {
@@ -44,11 +45,11 @@ async function getExtension(id: string) {
     await extensionInstance.activate();
   }
 
-  return extensionInstance.exports?.playgroundCompile;
+  return extensionInstance.exports?.swingCompile;
 }
 
 export function discoverLanguageProviders() {
-  const languageDefinitions: PlaygroundLanguageDefinition[] = vscode.extensions.all.flatMap(
+  const languageDefinitions: SwingLanguageDefinition[] = vscode.extensions.all.flatMap(
     (e) =>
       e.packageJSON.contributes && e.packageJSON.contributes[CONTRIBUTION_NAME]
         ? e.packageJSON.contributes[CONTRIBUTION_NAME].map((language: any) => ({

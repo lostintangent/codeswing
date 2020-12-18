@@ -1,6 +1,5 @@
 import * as path from "path";
 import { TextDocument } from "vscode";
-import * as config from "../../config";
 import { compileCode, getExtensions } from "./languageProvider";
 
 export const MARKUP_BASE_NAME = "index";
@@ -26,11 +25,6 @@ export function getCandidateMarkupFilenames() {
 export function getMarkupExtensions() {
   const customExtensions = getExtensions("markup");
   return [...MARKUP_EXTENSIONS, ...customExtensions];
-}
-
-export async function getNewMarkupFilename() {
-  const markupLanguage = await config.get("markupLanguage");
-  return `${MARKUP_BASE_NAME}${MarkupLanguage[markupLanguage]}`;
 }
 
 export async function getMarkupContent(

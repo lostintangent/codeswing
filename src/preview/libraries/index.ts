@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { Uri } from "vscode";
 import { DEFAULT_MANIFEST } from "..";
-import { PLAYGROUND_FILE, URI_PATTERN } from "../../constants";
-import { PlaygroundLibraryType, PlaygroundManifest, store } from "../../store";
+import { SWING_FILE, URI_PATTERN } from "../../constants";
+import { store, SwingLibraryType, SwingManifest } from "../../store";
 import { byteArrayToString, stringToByteArray } from "../../utils";
 import {
   getCDNJSLibraries,
@@ -73,9 +73,9 @@ const filterOutCommonJsFiles = (versions: string[]) => {
   return result;
 };
 
-export const getPlaygroundJson = (text: string): PlaygroundManifest => {
+export const getSwingManifest = (text: string): SwingManifest => {
   try {
-    const json = JSON.parse(text) as PlaygroundManifest;
+    const json = JSON.parse(text) as SwingManifest;
 
     return {
       ...DEFAULT_MANIFEST,
@@ -87,26 +87,26 @@ export const getPlaygroundJson = (text: string): PlaygroundManifest => {
 };
 
 async function addDependencyLink(
-  libraryType: PlaygroundLibraryType,
+  libraryType: SwingLibraryType,
   libraryUrl: string
 ) {
-  const uri = Uri.joinPath(store.activePlayground!.uri, PLAYGROUND_FILE);
+  const uri = Uri.joinPath(store.activeSwing!.rootUri, SWING_FILE);
 
-  let playgroundJSON;
+  let manifest;
   try {
     const content = byteArrayToString(await vscode.workspace.fs.readFile(uri));
-    playgroundJSON = getPlaygroundJson(content);
+    manifest = getSwingManifest(content);
   } catch (e) {
-    playgroundJSON = DEFAULT_MANIFEST;
+    manifest = DEFAULT_MANIFEST;
   }
 
-  playgroundJSON[libraryType]!.push(libraryUrl);
-  playgroundJSON[libraryType] = [...new Set(playgroundJSON[libraryType])];
+  manifest[libraryType]!.push(libraryUrl);
+  manifest[libraryType] = [...new Set(manifest[libraryType])];
 
-  const updatedContent = JSON.stringify(playgroundJSON, null, 2);
+  const updatedContent = JSON.stringify(manifest, null, 2);
   vscode.workspace.fs.writeFile(uri, stringToByteArray(updatedContent));
 
-  store.activePlayground!.webView.updateManifest(updatedContent, true);
+  store.activeSwing!.webView.updateManifest(updatedContent, true);
 }
 
 const createLatestUrl = (libraryAnswer: any) => {
@@ -114,12 +114,12 @@ const createLatestUrl = (libraryAnswer: any) => {
   return SUPPORTED_DEFAULT_LIBRARIES.indexOf(name) > -1 ? name : latest;
 };
 
-export async function addPlaygroundLibrary(libraryType: PlaygroundLibraryType) {
+export async function addSwingLibrary(libraryType: SwingLibraryType) {
   const libraries = await getCDNJSLibraries();
   const libraryPickListItems = librariesToPickList(libraries);
 
   const list = vscode.window.createQuickPick();
-  list.placeholder = "Select the library you'd like to add to the playground";
+  list.placeholder = "Select the library you'd like to add to the swing";
   list.items = libraryPickListItems;
 
   list.onDidChangeValue((value) => {

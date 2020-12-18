@@ -1,49 +1,35 @@
 import axios from "axios";
 import * as vscode from "vscode";
-import { openPlayground } from ".";
+import { openSwing } from ".";
 import * as config from "../config";
 import { URI_PATTERN } from "../constants";
-import { PlaygroundLibraryType, PlaygroundManifest, store } from "../store";
+import { store, SwingLibraryType, SwingManifest } from "../store";
+import { byteArrayToString } from "../utils";
 import { getScriptContent } from "./languages/script";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
 import { storage } from "./tutorials/storage";
 
-const EXIT_RESPONSE = "Exit Playground";
+const EXIT_RESPONSE = "Exit Swing";
 
-export class PlaygroundWebview {
+export class SwingWebView {
   private css: string = "";
   private html: string = "";
   private javascript: string = "";
   private isJavaScriptModule: boolean = false;
-  private manifest: PlaygroundManifest | undefined;
+  private manifest: SwingManifest | undefined;
   private readme: string = "";
   private config: string = "";
   private input: string = "";
-  private baseUrl = "";
-
-  private updateBaseUrl() {
-    // TODO
-    /* const owner = this.gist.owner ? this.gist.owner.login : "anonymous";
-
-    const version =
-      this.gist.history && this.gist.history[0]
-        ? `${this.gist.history[0].version}/`
-        : "";
-
-    this.baseUrl = `https://gist.githack.com/${owner}/${this.gist.id}/raw/${version}`;*/
-  }
 
   constructor(
     private webview: vscode.Webview,
     output: vscode.OutputChannel,
-    private playground: vscode.Uri,
+    private swing: vscode.Uri,
     private codePenScripts: string = "",
     private codePenStyles: string = "",
     private totalTutorialSteps?: number,
     private tutorialTitle?: string
   ) {
-    this.updateBaseUrl();
-
     webview.onDidReceiveMessage(async ({ command, value }) => {
       switch (command) {
         case "alert":
@@ -58,17 +44,27 @@ export class PlaygroundWebview {
           output.appendLine(value);
           break;
         case "httpRequest":
-          const response = await axios.request({
-            baseURL: this.baseUrl,
-            url: value.url,
-            method: value.method,
-            data: value.body,
-            headers: JSON.parse(value.headers || {}),
-            responseType: "text",
-            transformResponse: (data) => {
-              return data;
-            },
-          });
+          let response;
+          if (value.url.startsWith("http")) {
+            response = await axios.request({
+              url: value.url,
+              method: value.method,
+              data: value.body,
+              headers: JSON.parse(value.headers || {}),
+              responseType: "text",
+              transformResponse: (data) => {
+                return data;
+              },
+            });
+          } else {
+            const uri = vscode.Uri.joinPath(this.swing, value.url);
+            const contents = await vscode.workspace.fs.readFile(uri);
+            response = {
+              data: byteArrayToString(contents),
+              status: 200,
+              statusText: "OK",
+            };
+          }
 
           webview.postMessage({
             command: "httpResponse",
@@ -83,7 +79,7 @@ export class PlaygroundWebview {
           break;
 
         case "navigateCode":
-          const file = vscode.Uri.joinPath(playground, value.file);
+          const file = vscode.Uri.joinPath(swing, value.file);
           let editor = vscode.window.visibleTextEditors.find(
             (editor) => editor.document.uri.toString() === file.toString()
           );
@@ -109,8 +105,8 @@ export class PlaygroundWebview {
           const nextStep = currentStep + value;
 
           if (nextStep <= this.totalTutorialSteps!) {
-            storage.setCurrentTutorialStep(nextStep);
-            openPlayground(store.activePlayground!.uri);
+            await storage.setCurrentTutorialStep(nextStep);
+            openSwing(store.activeSwing!.rootUri);
           } else {
             const completionMessage =
               this.manifest!.input && this.manifest!.input!.completionMessage
@@ -124,24 +120,12 @@ export class PlaygroundWebview {
             );
 
             if (response === EXIT_RESPONSE) {
-              return store.activePlayground?.webViewPanel.dispose();
+              return store.activeSwing?.webViewPanel.dispose();
             }
           }
           break;
       }
     });
-
-    const globPattern = `${this.playground.toString()}/**/*.*`;
-    const watcher = vscode.workspace.createFileSystemWatcher(globPattern);
-
-    const updateWebView = () => {
-      this.updateBaseUrl();
-      this.rebuildWebview();
-    };
-
-    watcher.onDidChange(updateWebView);
-    watcher.onDidCreate(updateWebView);
-    watcher.onDidDelete(updateWebView);
   }
 
   public updateCSS(css: string, rebuild = false) {
@@ -217,9 +201,9 @@ export class PlaygroundWebview {
     }
   }
 
-  private async resolveLibraries(libraryType: PlaygroundLibraryType) {
+  private async resolveLibraries(libraryType: SwingLibraryType) {
     let libraries =
-      libraryType === PlaygroundLibraryType.script
+      libraryType === SwingLibraryType.script
         ? this.codePenScripts
         : this.codePenStyles;
 
@@ -238,7 +222,7 @@ export class PlaygroundWebview {
         }
 
         const appendLibrary = (url: string) => {
-          if (libraryType === PlaygroundLibraryType.style) {
+          if (libraryType === SwingLibraryType.style) {
             libraries += `<link href="${url}" rel="stylesheet" />`;
           } else {
             libraries += `<script src="${url}"></script>`;
@@ -265,10 +249,14 @@ export class PlaygroundWebview {
   }
 
   public async rebuildWebview() {
-    const styleId = `playground-style-${Math.random()}`;
+    // The URL needs to have a trailing slash, or end the URLs could get messed up.
+    const baseUrl = this.webview
+      .asWebviewUri(vscode.Uri.joinPath(this.swing, "/"))
+      .toString();
+    const styleId = `swing-style-${Math.random()}`;
 
-    const scripts = await this.resolveLibraries(PlaygroundLibraryType.script);
-    const styles = await this.resolveLibraries(PlaygroundLibraryType.style);
+    const scripts = await this.resolveLibraries(SwingLibraryType.script);
+    const styles = await this.resolveLibraries(SwingLibraryType.style);
 
     const scriptType = this.isJavaScriptModule
       ? "module"
@@ -289,7 +277,6 @@ export class PlaygroundWebview {
     let tutorialNavigation = "";
     if (this.totalTutorialSteps) {
       const currentTutorialStep = storage.currentTutorialStep();
-
       if (this.tutorialTitle) {
         title = `<span style='font-weight: bold'>${this.tutorialTitle}</span>`;
       }
@@ -345,7 +332,7 @@ export class PlaygroundWebview {
 
     this.webview.html = `<html>
   <head>
-    <base href="${this.baseUrl}" />
+    <base href="${baseUrl}" />
     <style>
 
       body {
@@ -370,7 +357,7 @@ export class PlaygroundWebview {
     <script>
 
     // Wrap this code in braces, so that none of the variables
-    // conflict with variables created by a playground's scripts.
+    // conflict with variables created by a swing's scripts.
     {
       document.getElementById("_defaultStyles").remove();
 
@@ -461,7 +448,7 @@ export class PlaygroundWebview {
       });
       mockXHRServer.install(window);
 
-      const LINK_PREFIX = "gist:";
+      const LINK_PREFIX = "swing:";
       document.addEventListener("click", (e) => {
         if (e.target.href && e.target.href.startsWith(LINK_PREFIX)) {
           e.preventDefault();
@@ -486,7 +473,7 @@ export class PlaygroundWebview {
         try {
         window.config = JSON.parse(config);
         } catch {
-          alert("The playground's config file ins't valid JSON.");
+          alert("The swing's config file ins't valid JSON.");
         }
       }
 

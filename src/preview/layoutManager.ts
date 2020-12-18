@@ -50,7 +50,7 @@ const EditorLayouts = {
   },
 };
 
-export enum PlaygroundLayout {
+export enum SwingLayout {
   grid = "grid",
   preview = "preview",
   splitBottom = "splitBottom",
@@ -75,7 +75,7 @@ export async function createLayoutManager(
   let editorLayout: any;
   if (includedFiles === 3) {
     editorLayout =
-      layout === PlaygroundLayout.grid
+      layout === SwingLayout.grid
         ? EditorLayouts.grid
         : EditorLayouts.splitThree;
   } else if (includedFiles === 2) {
@@ -84,7 +84,7 @@ export async function createLayoutManager(
     editorLayout = EditorLayouts.splitOne;
   }
 
-  if (layout === PlaygroundLayout.splitRight) {
+  if (layout === SwingLayout.splitRight) {
     editorLayout = {
       ...editorLayout,
       groups: [...editorLayout.groups].reverse(),
@@ -92,12 +92,12 @@ export async function createLayoutManager(
 
     currentViewColumn = ViewColumn.Two;
     previewViewColumn = ViewColumn.One;
-  } else if (layout === PlaygroundLayout.splitTop) {
+  } else if (layout === SwingLayout.splitTop) {
     editorLayout = {
       ...editorLayout,
       orientation: EditorLayoutOrientation.vertical,
     };
-  } else if (layout === PlaygroundLayout.splitBottom) {
+  } else if (layout === SwingLayout.splitBottom) {
     editorLayout = {
       orientation: EditorLayoutOrientation.vertical,
       groups: [...editorLayout.groups].reverse(),
@@ -105,10 +105,10 @@ export async function createLayoutManager(
 
     currentViewColumn = ViewColumn.Two;
     previewViewColumn = ViewColumn.One;
-  } else if (layout === PlaygroundLayout.splitLeftTabbed) {
+  } else if (layout === SwingLayout.splitLeftTabbed) {
     editorLayout = EditorLayouts.splitOne;
     previewViewColumn = ViewColumn.Two;
-  } else if (layout === PlaygroundLayout.splitRightTabbed) {
+  } else if (layout === SwingLayout.splitRightTabbed) {
     editorLayout = EditorLayouts.splitOne;
 
     currentViewColumn = ViewColumn.Two;
@@ -119,7 +119,7 @@ export async function createLayoutManager(
 
   // The preview layout mode only shows a single file,
   // so there's no need to set a custom editor layout for it.
-  if (includedFiles > 0 && layout !== PlaygroundLayout.preview) {
+  if (includedFiles > 0 && layout !== SwingLayout.preview) {
     await commands.executeCommand("vscode.setEditorLayout", editorLayout);
   }
 
@@ -129,7 +129,7 @@ export async function createLayoutManager(
       document: TextDocument,
       preserveFocus: boolean = true
     ) {
-      if (layout === PlaygroundLayout.preview) {
+      if (layout === SwingLayout.preview) {
         return;
       }
 
@@ -140,8 +140,8 @@ export async function createLayoutManager(
       });
 
       if (
-        layout !== PlaygroundLayout.splitLeftTabbed &&
-        layout !== PlaygroundLayout.splitRightTabbed
+        layout !== SwingLayout.splitLeftTabbed &&
+        layout !== SwingLayout.splitRightTabbed
       ) {
         currentViewColumn++;
       }

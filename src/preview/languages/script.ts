@@ -1,7 +1,6 @@
 import * as path from "path";
 import { TextDocument } from "vscode";
-import * as config from "../../config";
-import { PlaygroundManifest } from "../../store";
+import { SwingManifest } from "../../store";
 
 export const SCRIPT_BASE_NAME = "script";
 
@@ -44,14 +43,9 @@ export function includesReactScripts(scripts: string[]) {
   return REACT_SCRIPTS.every((script) => scripts.includes(script));
 }
 
-export async function getNewScriptFileName() {
-  const scriptLanguage = await config.get("scriptLanguage");
-  return `${SCRIPT_BASE_NAME}${ScriptLanguage[scriptLanguage]}`;
-}
-
 export function getScriptContent(
   document: TextDocument,
-  manifest: PlaygroundManifest | undefined
+  manifest: SwingManifest | undefined
 ): [string, boolean] | null {
   const extension = path.extname(document.uri.path).toLocaleLowerCase();
   let isModule = MODULE_EXTENSIONS.includes(extension);

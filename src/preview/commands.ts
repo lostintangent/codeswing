@@ -1,31 +1,29 @@
 import * as vscode from "vscode";
-import { openPlayground } from ".";
+import { openSwing } from ".";
 import * as config from "../config";
 import { EXTENSION_NAME } from "../constants";
-import { PlaygroundLibraryType, store } from "../store";
-import { PlaygroundLayout } from "./layoutManager";
-import { addPlaygroundLibrary } from "./libraries";
+import { store, SwingLibraryType } from "../store";
+import { SwingLayout } from "./layoutManager";
+import { addSwingLibrary } from "./libraries";
 
-export async function registerPlaygroundCommands(
-  context: vscode.ExtensionContext
-) {
+export async function registerSwingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.addPlaygroundLibrary`,
+      `${EXTENSION_NAME}.addLibrary`,
       async () => {
         const response = await vscode.window.showQuickPick(
           [
             {
               label: "Script",
               description:
-                "Adds a <script> reference, before your playground script",
-              libraryType: PlaygroundLibraryType.script,
+                "Adds a <script> reference, before your swing script",
+              libraryType: SwingLibraryType.script,
             },
             {
               label: "Stylesheet",
               description:
-                "Adds a <link rel='stylesheet' /> reference, before your playground styles",
-              libraryType: PlaygroundLibraryType.style,
+                "Adds a <link rel='stylesheet' /> reference, before your swing styles",
+              libraryType: SwingLibraryType.style,
             },
           ],
           {
@@ -34,22 +32,21 @@ export async function registerPlaygroundCommands(
         );
 
         if (response) {
-          addPlaygroundLibrary(response.libraryType);
+          addSwingLibrary(response.libraryType);
         }
       }
     )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.openPlaygroundConsole`,
-      () => store.activePlayground?.console.show()
+    vscode.commands.registerCommand(`${EXTENSION_NAME}.openConsole`, () =>
+      store.activeSwing?.console.show()
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.openPlaygroundDeveloperTools`,
+      `${EXTENSION_NAME}.openDeveloperTools`,
       () => {
         vscode.commands.executeCommand(
           "workbench.action.webview.openDeveloperTools"
@@ -59,46 +56,42 @@ export async function registerPlaygroundCommands(
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.runPlayground`,
-      async () => store.activePlayground?.webView.rebuildWebview()
+    vscode.commands.registerCommand(`${EXTENSION_NAME}.run`, async () =>
+      store.activeSwing?.webView.rebuildWebview()
     )
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.changePlaygroundLayout`,
+      `${EXTENSION_NAME}.changeLayout`,
       async () => {
         const { capital } = require("case");
-        const items = Object.keys(PlaygroundLayout).map((layout) => {
+        const items = Object.keys(SwingLayout).map((layout) => {
           return { label: capital(layout), layout };
         });
         const result = await vscode.window.showQuickPick(items, {
-          placeHolder: "Select the layout to use for playgrounds",
+          placeHolder: "Select the layout to use for swings",
         });
 
         if (result) {
           await config.set("layout", result.layout);
-          openPlayground(store.activePlayground!.uri);
+          openSwing(store.activeSwing!.rootUri);
         }
       }
     )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.openPlayground`,
-      async () => {
-        const folder = await vscode.window.showOpenDialog({
-          canSelectFolders: true,
-          canSelectFiles: false,
-          canSelectMany: false,
-        });
+    vscode.commands.registerCommand(`${EXTENSION_NAME}.openSwing`, async () => {
+      const folder = await vscode.window.showOpenDialog({
+        canSelectFolders: true,
+        canSelectFiles: false,
+        canSelectMany: false,
+      });
 
-        if (folder) {
-          openPlayground(folder[0]);
-        }
+      if (folder) {
+        openSwing(folder[0]);
       }
-    )
+    })
   );
 }

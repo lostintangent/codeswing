@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as vscode from "vscode";
+import { SwingFile } from ".";
 import * as config from "../config";
 import { EXTENSION_NAME } from "../constants";
 
@@ -8,14 +9,14 @@ interface Gallery {
   url: string;
   enabled: boolean;
   templates: GalleryTemplate[];
-  label: string;
+  title: string;
   description?: string;
 }
 
 interface GalleryTemplate {
-  label: string;
+  title: string;
   description?: string;
-  gist: string;
+  files: SwingFile[];
 }
 
 const CONTRIBUTION_NAME = `${EXTENSION_NAME}.templateGalleries`;
@@ -31,12 +32,26 @@ export async function loadGalleries() {
   loadGalleriesPromise = new Promise(async (resolve) => {
     loadGalleriesRunning = true;
 
-    const registrations = vscode.extensions.all.flatMap((e) => {
-      return e.packageJSON.contributes &&
-        e.packageJSON.contributes[CONTRIBUTION_NAME]
-        ? e.packageJSON.contributes[CONTRIBUTION_NAME]
-        : [];
-    });
+    const registrations = vscode.extensions.all
+      .flatMap((e) => {
+        return e.packageJSON.contributes &&
+          e.packageJSON.contributes[CONTRIBUTION_NAME]
+          ? e.packageJSON.contributes[CONTRIBUTION_NAME]
+          : [];
+      })
+      .concat(
+        Array.from(templateProviders.entries()).map(
+          ([name, [provider, options]]) => {
+            return {
+              id: name,
+              title: options.title || name,
+              description: options.description,
+              provider,
+              enabled: true,
+            };
+          }
+        )
+      );
 
     const settingContributions = await config.get("templateGalleries");
 
@@ -51,7 +66,6 @@ export async function loadGalleries() {
           id: gallery,
           url: gallery,
           enabled: true,
-          label: "",
           description: "",
         });
       }
@@ -65,14 +79,24 @@ export async function loadGalleries() {
 
     const galleries = await Promise.all(
       registrations.map(async (gallery) => {
-        const { data } = await axios.get(gallery.url);
+        if (gallery.url) {
+          const { data } = await axios.get(gallery.url);
 
-        gallery.label = data.label;
-        gallery.description = data.description;
-        gallery.templates = data.templates.map((template: GalleryTemplate) => ({
-          ...template,
-          label: `${data.label}: ${template.label}`,
-        }));
+          gallery.title = data.title;
+          gallery.description = data.description;
+          gallery.templates = data.templates.map(
+            (template: GalleryTemplate) => ({
+              ...template,
+              title: `${data.title}: ${template.title}`,
+            })
+          );
+        } else if (gallery.provider) {
+          const templates = await gallery.provider.provideTemplates();
+          gallery.templates = templates.map((template: GalleryTemplate) => ({
+            ...template,
+            title: `${gallery.title}: ${template.title}`,
+          }));
+        }
 
         return gallery;
       })
@@ -88,6 +112,31 @@ export async function loadGalleries() {
 export async function enableGalleries(galleryIds: string[]) {
   await config.set("templateGalleries", galleryIds);
   return loadGalleries();
+}
+
+interface CodeSwingTemplateProvider {
+  provideTemplates(): Promise<GalleryTemplate>;
+  onDidChangeTemplates(listener: () => void): vscode.Disposable;
+}
+
+interface CodeSwingTemplateProviderOptions {
+  title?: string;
+  description?: string;
+}
+
+const templateProviders = new Map<
+  string,
+  [CodeSwingTemplateProvider, CodeSwingTemplateProviderOptions]
+>();
+export function registerTemplateProvider(
+  providerName: string,
+  provider: CodeSwingTemplateProvider,
+  options: CodeSwingTemplateProviderOptions
+) {
+  templateProviders.set(providerName, [provider, options]);
+  provider.onDidChangeTemplates(loadGalleries);
+
+  loadGalleries();
 }
 
 vscode.extensions.onDidChange(loadGalleries);

@@ -3,20 +3,15 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { Uri } from "vscode";
 import * as config from "../config";
-import { EXTENSION_NAME, INPUT_SCHEME, PLAYGROUND_FILE } from "../constants";
+import { EXTENSION_NAME, INPUT_SCHEME, SWING_FILE } from "../constants";
 import { TempFileSystemProvider } from "../creation/tempFileSystem";
-import { PlaygroundFileType, PlaygroundManifest, store } from "../store";
-/*import {
-  endCurrentTour,
-  isCodeTourInstalled,
-  startTourFromFile,
-} from "../tour";*/
+import { store, SwingFileType, SwingManifest } from "../store";
 import {
   byteArrayToString,
   getFileContents,
   stringToByteArray,
 } from "../utils";
-import { registerPlaygroundCommands } from "./commands";
+import { registerSwingCommands } from "./commands";
 import { discoverLanguageProviders } from "./languages/languageProvider";
 import {
   getMarkupContent,
@@ -42,8 +37,16 @@ import {
 } from "./languages/stylesheet";
 import { createLayoutManager } from "./layoutManager";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
-import { initializeStorage, storage, TUTORIAL_KEY } from "./tutorials/storage";
-import { PlaygroundWebview } from "./webview";
+import {
+  endCurrentTour,
+  isCodeTourInstalled,
+  registerTourCommands,
+  startTourFromUri,
+  TOUR_FILE,
+} from "./tour";
+import { registerTutorialModule } from "./tutorials";
+import { storage, TUTORIAL_KEY } from "./tutorials/storage";
+import { SwingWebView } from "./webview";
 
 const CONFIG_FILE = "config.json";
 const CANVAS_FILE = "canvas.html";
@@ -53,22 +56,16 @@ export const DEFAULT_MANIFEST = {
   styles: [] as string[],
 };
 
-export function setActivePlaygroundHasTour() {
-  if (store.activePlayground) {
-    store.activePlayground.hasTour = true;
-  }
-}
-
-export const getCanvasContent = async (uri: Uri, files: string[]) => {
+async function getCanvasContent(uri: Uri, files: string[]) {
   if (!files.includes(CANVAS_FILE)) {
     return "";
   }
 
   return await getFileContents(uri, CANVAS_FILE);
-};
+}
 
-export async function getManifestContent(uri: Uri, files: string[]) {
-  const manifest = await getFileContents(uri, PLAYGROUND_FILE);
+async function getManifestContent(uri: Uri, files: string[]) {
+  const manifest = await getFileContents(uri, SWING_FILE);
   if (includesReactFiles(files)) {
     const parsedManifest = JSON.parse(manifest);
     if (!includesReactScripts(parsedManifest.scripts)) {
@@ -77,11 +74,7 @@ export async function getManifestContent(uri: Uri, files: string[]) {
 
       const content = JSON.stringify(parsedManifest, null, 2);
 
-      const manifestUri = getFileOfType(
-        uri,
-        files,
-        PlaygroundFileType.manifest
-      );
+      const manifestUri = getFileOfType(uri, files, SwingFileType.manifest);
 
       vscode.workspace.fs.writeFile(manifestUri!, stringToByteArray(content));
       return content;
@@ -91,16 +84,16 @@ export async function getManifestContent(uri: Uri, files: string[]) {
   return manifest;
 }
 
-function isPlaygroundDocument(
+function isSwingDocument(
   files: string[],
   document: vscode.TextDocument,
-  fileType: PlaygroundFileType
+  fileType: SwingFileType
 ) {
   if (
-    store.activePlayground!.uri.scheme !== document.uri.scheme ||
-    store.activePlayground!.uri.authority !== document.uri.authority ||
-    store.activePlayground!.uri.query !== document.uri.query ||
-    store.activePlayground!.uri.path !== path.dirname(document.uri.path) ||
+    store.activeSwing!.currentUri.scheme !== document.uri.scheme ||
+    store.activeSwing!.currentUri.authority !== document.uri.authority ||
+    store.activeSwing!.currentUri.query !== document.uri.query ||
+    !document.uri.path.startsWith(store.activeSwing!.currentUri.path) ||
     !files.includes(path.basename(document.uri.path))
   ) {
     return false;
@@ -109,27 +102,27 @@ function isPlaygroundDocument(
   let extensions: string[];
   let fileBaseName: string;
   switch (fileType) {
-    case PlaygroundFileType.markup:
+    case SwingFileType.markup:
       extensions = getMarkupExtensions();
       fileBaseName = MARKUP_BASE_NAME;
       break;
-    case PlaygroundFileType.script:
+    case SwingFileType.script:
       extensions = SCRIPT_EXTENSIONS;
       fileBaseName = SCRIPT_BASE_NAME;
       break;
-    case PlaygroundFileType.readme:
+    case SwingFileType.readme:
       extensions = README_EXTENSIONS;
       fileBaseName = README_BASE_NAME;
       break;
-    case PlaygroundFileType.manifest:
+    case SwingFileType.manifest:
       extensions = [""];
-      fileBaseName = PLAYGROUND_FILE;
+      fileBaseName = SWING_FILE;
       break;
-    case PlaygroundFileType.config:
+    case SwingFileType.config:
       extensions = [""];
       fileBaseName = CONFIG_FILE;
       break;
-    case PlaygroundFileType.stylesheet:
+    case SwingFileType.stylesheet:
     default:
       extensions = STYLESHEET_EXTENSIONS;
       fileBaseName = STYLESHEET_BASE_NAME;
@@ -143,41 +136,39 @@ function isPlaygroundDocument(
   return fileCandidates.find((candidate) => candidate.test(document.uri.path));
 }
 
-const TOUR_FILE = "main.tour";
-
 export function getFileOfType(
   uri: Uri,
   files: string[],
-  fileType: PlaygroundFileType
+  fileType: SwingFileType
 ): Uri | undefined {
   let extensions: string[];
   let fileBaseName: string;
   switch (fileType) {
-    case PlaygroundFileType.markup:
+    case SwingFileType.markup:
       extensions = getMarkupExtensions();
       fileBaseName = MARKUP_BASE_NAME;
       break;
-    case PlaygroundFileType.script:
+    case SwingFileType.script:
       extensions = SCRIPT_EXTENSIONS;
       fileBaseName = SCRIPT_BASE_NAME;
       break;
-    case PlaygroundFileType.readme:
+    case SwingFileType.readme:
       extensions = README_EXTENSIONS;
       fileBaseName = README_BASE_NAME;
       break;
-    case PlaygroundFileType.manifest:
+    case SwingFileType.manifest:
       extensions = [""];
-      fileBaseName = PLAYGROUND_FILE;
+      fileBaseName = SWING_FILE;
       break;
-    case PlaygroundFileType.tour:
+    case SwingFileType.tour:
       extensions = [""];
       fileBaseName = TOUR_FILE;
       break;
-    case PlaygroundFileType.config:
+    case SwingFileType.config:
       extensions = [""];
       fileBaseName = CONFIG_FILE;
       break;
-    case PlaygroundFileType.stylesheet:
+    case SwingFileType.stylesheet:
     default:
       extensions = STYLESHEET_EXTENSIONS;
       fileBaseName = STYLESHEET_BASE_NAME;
@@ -198,11 +189,12 @@ export function getFileOfType(
 }
 
 const TUTORIAL_STEP_PATTERN = /^#?(?<step>\d+)[^\/]*/;
-export async function openPlayground(uri: Uri) {
-  if (store.activePlayground) {
-    store.activePlayground.webViewPanel.dispose();
+export async function openSwing(uri: Uri) {
+  let currentUri = uri;
+  if (store.activeSwing) {
+    store.activeSwing.webViewPanel.dispose();
 
-    if (store.activePlayground?.uri.scheme === "playground") {
+    if (store.activeSwing?.rootUri.scheme === "codeswing") {
       await TempFileSystemProvider.clear();
     }
   }
@@ -210,11 +202,10 @@ export async function openPlayground(uri: Uri) {
   let files = (await vscode.workspace.fs.readDirectory(uri)).map(
     ([file, _]) => file
   );
+  const rootFiles = files;
 
-  // TODO: Seperate root and current URIs
-
-  let manifest: PlaygroundManifest = {};
-  if (getFileOfType(uri, files, PlaygroundFileType.manifest)) {
+  let manifest: SwingManifest = {};
+  if (getFileOfType(uri, files, SwingFileType.manifest)) {
     try {
       const manifestContent = await getManifestContent(uri, files);
       manifest = JSON.parse(manifestContent);
@@ -244,16 +235,15 @@ export async function openPlayground(uri: Uri) {
       file.match(new RegExp(`^#?${currentTutorialStep}`))
     );
 
-    uri = Uri.joinPath(uri, stepDirectory!, "/");
-
-    files = (await vscode.workspace.fs.readDirectory(uri)).map(
+    currentUri = Uri.joinPath(uri, stepDirectory!, "/");
+    files = (await vscode.workspace.fs.readDirectory(currentUri)).map(
       ([file, _]) => file
     );
 
     const stepManifestFile = getFileOfType(
-      uri,
+      currentUri,
       files,
-      PlaygroundFileType.manifest
+      SwingFileType.manifest
     );
 
     if (stepManifestFile) {
@@ -267,16 +257,16 @@ export async function openPlayground(uri: Uri) {
     }
   }
 
-  const markupFile = getFileOfType(uri, files, PlaygroundFileType.markup);
+  const markupFile = getFileOfType(currentUri, files, SwingFileType.markup);
   const stylesheetFile = getFileOfType(
-    uri,
+    currentUri,
     files,
-    PlaygroundFileType.stylesheet
+    SwingFileType.stylesheet
   );
 
-  const scriptFile = getFileOfType(uri, files, PlaygroundFileType.script);
-  const readmeFile = getFileOfType(uri, files, PlaygroundFileType.readme);
-  const configFile = getFileOfType(uri, files, PlaygroundFileType.config);
+  const scriptFile = getFileOfType(currentUri, files, SwingFileType.script);
+  const readmeFile = getFileOfType(currentUri, files, SwingFileType.readme);
+  const configFile = getFileOfType(currentUri, files, SwingFileType.config);
 
   const inputFile =
     manifest.input && manifest.input.fileName
@@ -346,13 +336,17 @@ export async function openPlayground(uri: Uri) {
   }
 
   const webViewPanel = vscode.window.createWebviewPanel(
-    "playground.preview",
+    `${EXTENSION_NAME}.preview`,
     "Preview",
     { viewColumn: layoutManager.previewViewColumn, preserveFocus: true },
-    { enableScripts: true }
+    {
+      enableScripts: true,
+      enableCommandUris: true,
+      localResourceRoots: [uri, currentUri],
+    }
   );
 
-  const output = vscode.window.createOutputChannel("Playground");
+  const output = vscode.window.createOutputChannel("CodeSwing");
 
   // In order to provide CodePen interop,
   // we'll look for an optional "scripts"
@@ -360,17 +354,17 @@ export async function openPlayground(uri: Uri) {
   // scripts that were added to the pen.
   let scripts: string | undefined;
   if (files.includes("scripts")) {
-    scripts = await getFileContents(uri, "scripts");
+    scripts = await getFileContents(currentUri, "scripts");
   }
   let styles: string | undefined;
   if (files.includes("styles")) {
-    styles = await getFileContents(uri, "styles");
+    styles = await getFileContents(currentUri, "styles");
   }
 
-  const htmlView = new PlaygroundWebview(
+  const htmlView = new SwingWebView(
     webViewPanel.webview,
     output,
-    uri,
+    currentUri,
     scripts,
     styles,
     totalTutorialSteps,
@@ -381,8 +375,9 @@ export async function openPlayground(uri: Uri) {
     output.show(false);
   }
 
-  store.activePlayground = {
-    uri,
+  store.activeSwing = {
+    rootUri: uri,
+    currentUri,
     webView: htmlView,
     webViewPanel,
     console: output,
@@ -395,22 +390,22 @@ export async function openPlayground(uri: Uri) {
   function processReadme(rawContent: string, runOnEdit: boolean = false) {
     // @ts-ignore
     if (manifest.readmeBehavior === "inputComment" && inputDocument) {
-      if (store.activePlayground!.commentController) {
-        store.activePlayground!.commentController.dispose();
+      if (store.activeSwing!.commentController) {
+        store.activeSwing!.commentController.dispose();
       }
 
-      store.activePlayground!.commentController = vscode.comments.createCommentController(
+      store.activeSwing!.commentController = vscode.comments.createCommentController(
         EXTENSION_NAME,
         EXTENSION_NAME
       );
 
-      const thread = store.activePlayground!.commentController.createCommentThread(
+      const thread = store.activeSwing!.commentController.createCommentThread(
         inputDocument.uri,
         new vscode.Range(0, 0, 0, 0),
         [
           {
             author: {
-              name: "Playground",
+              name: "CodeSwing",
               iconPath: vscode.Uri.parse(
                 "https://cdn.jsdelivr.net/gh/vsls-contrib/gistpad/images/icon.png"
               ),
@@ -432,15 +427,13 @@ export async function openPlayground(uri: Uri) {
 
   const documentChangeDisposable = vscode.workspace.onDidChangeTextDocument(
     debounce(async ({ document }) => {
-      if (isPlaygroundDocument(files, document, PlaygroundFileType.markup)) {
+      if (isSwingDocument(files, document, SwingFileType.markup)) {
         const content = await getMarkupContent(document);
 
         if (content !== null) {
           htmlView.updateHTML(content, runOnEdit);
         }
-      } else if (
-        isPlaygroundDocument(files, document, PlaygroundFileType.script)
-      ) {
+      } else if (isSwingDocument(files, document, SwingFileType.script)) {
         // If the user renamed the script file (e.g. from *.js to *.jsx)
         // than we need to update the manifest in case new scripts
         // need to be injected into the webview (e.g. "react").
@@ -456,15 +449,13 @@ export async function openPlayground(uri: Uri) {
           );
 
           htmlView.updateManifest(
-            await getManifestContent(uri, files),
+            await getManifestContent(currentUri, files),
             runOnEdit
           );
         }
 
         htmlView.updateJavaScript(document, runOnEdit);
-      } else if (
-        isPlaygroundDocument(files, document, PlaygroundFileType.manifest)
-      ) {
+      } else if (isSwingDocument(files, document, SwingFileType.manifest)) {
         htmlView.updateManifest(document.getText(), runOnEdit);
 
         if (jsDocument) {
@@ -474,21 +465,15 @@ export async function openPlayground(uri: Uri) {
           // actually impacts it (e.g. adding/removing react)
           htmlView.updateJavaScript(jsDocument, runOnEdit);
         }
-      } else if (
-        isPlaygroundDocument(files, document, PlaygroundFileType.stylesheet)
-      ) {
+      } else if (isSwingDocument(files, document, SwingFileType.stylesheet)) {
         const content = await getStylesheetContent(document);
         if (content !== null) {
           htmlView.updateCSS(content, runOnEdit);
         }
-      } else if (
-        isPlaygroundDocument(files, document, PlaygroundFileType.readme)
-      ) {
+      } else if (isSwingDocument(files, document, SwingFileType.readme)) {
         const rawContent = document.getText();
         processReadme(rawContent, runOnEdit);
-      } else if (
-        isPlaygroundDocument(files, document, PlaygroundFileType.config)
-      ) {
+      } else if (isSwingDocument(files, document, SwingFileType.config)) {
         htmlView.updateConfig(document.getText(), runOnEdit);
       } else if (document.uri.scheme === INPUT_SCHEME) {
         htmlView.updateInput(document.getText(), runOnEdit);
@@ -501,11 +486,10 @@ export async function openPlayground(uri: Uri) {
     documentSaveDisposeable = vscode.workspace.onDidSaveTextDocument(
       async (document) => {
         if (
-          document.uri.scheme === store.activePlayground!.uri.scheme &&
-          document.uri.authority === store.activePlayground?.uri.authority &&
-          document.uri.query === store.activePlayground?.uri.query &&
-          path.dirname(document.uri.path) ===
-            path.dirname(store.activePlayground.uri.path)
+          document.uri.scheme === store.activeSwing!.currentUri.scheme &&
+          document.uri.authority === store.activeSwing?.currentUri.authority &&
+          document.uri.query === store.activeSwing?.currentUri.query &&
+          document.uri.path.startsWith(store.activeSwing!.currentUri.path)
         ) {
           await htmlView.rebuildWebview();
         }
@@ -518,7 +502,7 @@ export async function openPlayground(uri: Uri) {
   htmlView.updateHTML(
     !!markupFile
       ? (await getMarkupContent(htmlDocument!)) || ""
-      : await getCanvasContent(uri, files)
+      : await getCanvasContent(uri, rootFiles)
   );
   htmlView.updateCSS(
     !!stylesheetFile ? (await getStylesheetContent(cssDocument!)) || "" : ""
@@ -548,7 +532,7 @@ export async function openPlayground(uri: Uri) {
 
   await vscode.commands.executeCommand(
     "setContext",
-    "playground:inPlayground",
+    `${EXTENSION_NAME}:inSwing`,
     true
   );
 
@@ -577,18 +561,12 @@ export async function openPlayground(uri: Uri) {
     documentChangeDisposable.dispose();
     documentSaveDisposeable?.dispose();
 
-    if (store.activePlayground?.hasTour) {
-      //
-      //TODO: endCurrentTour();
-      vscode.commands.executeCommand(
-        "setContext",
-        "playground:allowCodeTourRecording",
-        false
-      );
+    if (store.activeSwing?.hasTour) {
+      endCurrentTour();
     }
 
-    store.activePlayground?.commentController?.dispose();
-    store.activePlayground = undefined;
+    store.activeSwing?.commentController?.dispose();
+    store.activeSwing = undefined;
 
     if (autoSaveInterval) {
       clearInterval(autoSaveInterval);
@@ -596,35 +574,32 @@ export async function openPlayground(uri: Uri) {
 
     vscode.commands.executeCommand(
       "setContext",
-      "playground:inPlayground",
+      `${EXTENSION_NAME}:inSwing`,
       false
     );
   });
 
-  // TODO
-  /*if (await isCodeTourInstalled()) {
-    const tourFileName = getGistFileOfType(uri, files, PlaygroundFileType.tour);
-
-    if (tourFileName) {
-      store.activePlayground!.hasTour = true;
-      startTourFromFile(tourFileName, uri, false, playground.canEdit);
+  if (await isCodeTourInstalled()) {
+    const tourUri = getFileOfType(currentUri, files, SwingFileType.tour);
+    if (tourUri) {
+      store.activeSwing!.hasTour = true;
+      startTourFromUri(tourUri, currentUri);
     }
 
-    if (playground.canEdit) {
-      await vscode.commands.executeCommand(
-        "setContext",
-        "playground:allowCodeTourRecording",
-        true
-      );
-    }
-  }*/
+    vscode.commands.executeCommand(
+      "setContext",
+      `${EXTENSION_NAME}:codeTourEnabled`,
+      true
+    );
+  }
 }
 
 export function registerPreviewModule(
   context: vscode.ExtensionContext,
   api: any
 ) {
-  registerPlaygroundCommands(context);
+  registerSwingCommands(context);
+  registerTourCommands(context);
 
   getCDNJSLibraries();
   discoverLanguageProviders();
@@ -632,7 +607,7 @@ export function registerPreviewModule(
   // @ts-ignore
   context.globalState.setKeysForSync([TUTORIAL_KEY]);
 
-  api.openPlayground = openPlayground;
+  api.openSwing = openSwing;
 
-  initializeStorage(context);
+  registerTutorialModule(context);
 }
