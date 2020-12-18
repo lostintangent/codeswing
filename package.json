@@ -75,6 +75,15 @@
         "icon": "$(play)"
       }
     ],
+    "views": {
+      "explorer": [
+        {
+          "id": "codeswing.activeSwing",
+          "name": "CodeSwing",
+          "when": "codeswing:inSwing && !codeswing:inSwingWorkspace"
+        }
+      ]
+    },
     "menus": {
       "commandPalette": [
         {
@@ -266,6 +275,7 @@
     "debounce": "^1.2.0",
     "less": "^3.12.2",
     "markdown-it": "^12.0.3",
+    "mobx": "^6.0.4",
     "pug": "^3.0.0",
     "sass": "^1.30.0",
     "typescript": "^4.1.2"

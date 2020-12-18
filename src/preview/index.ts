@@ -44,6 +44,7 @@ import {
   startTourFromUri,
   TOUR_FILE,
 } from "./tour";
+import { registerTreeProvider } from "./tree/activeSwing";
 import { registerTutorialModule } from "./tutorials";
 import { storage, TUTORIAL_KEY } from "./tutorials/storage";
 import { SwingWebView } from "./webview";
@@ -198,6 +199,14 @@ export async function openSwing(uri: Uri) {
       await TempFileSystemProvider.clear();
     }
   }
+
+  const isWorkspaceSwing =
+    uri.toString() === vscode.workspace.workspaceFolders?.[0].uri.toString();
+  await vscode.commands.executeCommand(
+    "setContext",
+    "codeswing:inSwingWorkspace",
+    isWorkspaceSwing
+  );
 
   let files = (await vscode.workspace.fs.readDirectory(uri)).map(
     ([file, _]) => file
@@ -407,7 +416,7 @@ export async function openSwing(uri: Uri) {
             author: {
               name: "CodeSwing",
               iconPath: vscode.Uri.parse(
-                "https://cdn.jsdelivr.net/gh/codespaces-contrib/playground@main/images/icon.png"
+                "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/images/icon.png"
               ),
             },
             body: rawContent,
@@ -600,6 +609,7 @@ export function registerPreviewModule(
 ) {
   registerSwingCommands(context);
   registerTourCommands(context);
+  registerTreeProvider();
 
   getCDNJSLibraries();
   discoverLanguageProviders();

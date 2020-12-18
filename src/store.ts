@@ -1,3 +1,4 @@
+import { observable } from "mobx";
 import * as vscode from "vscode";
 import { SwingWebView } from "./preview/webview";
 
@@ -57,4 +58,4 @@ export interface Store {
   activeSwing?: ActiveSwing;
 }
 
-export const store: Store = {};
+export const store: Store = observable({});
