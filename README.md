@@ -2,17 +2,26 @@
 
 CodeSwing is an interactive coding environment for VS Code, that allows you to build rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions...oh my! When you create swings, you can use your favorite web languages (HTML/Pug, CSS/SCSS/Less, JS/TS) and libraries (React, Vue, Angular, etc.) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything. It's like a visual REPL for managing runnable code snippets.
 
+<img width="800px" src="https://user-images.githubusercontent.com/116461/102677518-b2a43c00-4157-11eb-9b45-b8530abe5213.png" />
+
 CodeSwing supports [template galleries](#template-galleries), which allows you to create and share re-usable swing templates. It also integrates with other VS Code extensions, to enable scenarios such as [managing your swings as GitHub Gists](#gistpad), [recording guided walkthroughs of your swings](#codetour), and [collaborating on a swing in real-time](#live-share). If that doesn't sound fun, then I don't know what is!
 
-- [Getting Started](#getting-started)
-  - [Creating Swings](#creating-swings)
-  - [Template Galleries](#template-galleries)
-  - [Swing Tutorials](#swing-tutorials)
-- Reference 
-  - [Swing Manifest](#swing-manifest)
-  - [Contributed Commands](#contributed-commands)
-  - [Configuration Settings](#configuration-settings)
-  - [Extensibility](#extensibility)
+> _What's the meaning of the name "swing"? As the extension's logo implies, it's referring to a [swing](https://en.wikipedia.org/wiki/Swing_(seat)) on playground, to elicit the idea of having fun. That said, if you interpret "swing" as the dance style, that's totally cool too! 💃\_
+
+---
+
+[Getting Started](#getting-started)
+
+- [Creating Swings](#creating-swings)
+- [Template Galleries](#template-galleries)
+- [Swing Tutorials](#swing-tutorials)<br />
+
+Reference
+
+- [Swing Manifest](#swing-manifest)
+- [Contributed Commands](#contributed-commands)
+- [Configuration Settings](#configuration-settings)
+- [Extensibility](#extensibility)
 
 ## Getting Started
 
@@ -32,23 +41,23 @@ Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scisso
 
 After you install the CodeSwing extension, you can create new swings at any time, using the following commands:
 
-* "CodeSwing: New Temporary Swing..." - Creates an ephemeral/in-memory swing, that allows you to quickly try something out (like a visual REPL!)
+- "CodeSwing: New Temporary Swing..." - Creates an ephemeral/in-memory swing, that allows you to quickly try something out (like a visual REPL!)
 
-* "CodeSwing: New Swing..." - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
+- "CodeSwing: New Swing..." - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
 
-After creating a swing, your editor layout will be automatically setup to accomodate the needs of the selected template. Furthermore, if you open a directory that represents a swing, or you run the "CodeSwing: Open Swing..." command, then the  selected swing will be automatically launched.
+After creating a swing, your editor layout will be automatically setup to accomodate the needs of the selected template. Furthermore, if you open a directory that represents a swing, or you run the "CodeSwing: Open Swing..." command, then the selected swing will be automatically launched.
 
 ### Language Support
 
 CodeSwing comes with support for all major web languages, and allows you to create new swings without worrying about building/bundling anything. When you create a swing, the templates list provides options for getting started quickly
 
-| Asset Type | Supported Languages |
-|-|-|
-| Markup | HTML, Pug, Markdown |
-| Stylesheet | CSS, SCSS/Saas, Less |
-| Script | JavaScript, TypeScript |
+| Asset Type | Supported Languages    |
+| ---------- | ---------------------- |
+| Markup     | HTML, Pug, Markdown    |
+| Stylesheet | CSS, SCSS/Saas, Less   |
+| Script     | JavaScript, TypeScript |
 
-Additionally, if your script file ends in ".jsx" or ".tsx", you can use JSX syntax. CodeSwing also recognizes a script file that ends in ".babel" and treats it like TypeScript. Finally, if your script file ends in ".mjs", then it will be treated as a  [JavaScript module](#modules).
+Additionally, if your script file ends in ".jsx" or ".tsx", you can use JSX syntax. CodeSwing also recognizes a script file that ends in ".babel" and treats it like TypeScript. Finally, if your script file ends in ".mjs", then it will be treated as a [JavaScript module](#modules).
 
 ### Swing Layout
 
@@ -72,7 +81,7 @@ If you need to add any external JavaScript libraries (e.g. `react`) or styleshee
 
 ![Add Library](https://user-images.githubusercontent.com/116461/71629251-4ed4dc00-2bb1-11ea-9488-78c3d71dbacd.gif)
 
-Behind the scenes, this command updates the swing's manifest file (`codeswing.json`), which you can also open/edit yourself manually if you'd prefer. 
+Behind the scenes, this command updates the swing's manifest file (`codeswing.json`), which you can also open/edit yourself manually if you'd prefer.
 
 ### Toolbar
 
@@ -123,7 +132,7 @@ If you'd like to add a link in your swing/readme, which references a file and/or
 Since swings are effectively runnable code
 snippets, they're great candidates for being saved as GitHub Gists. If you install the [GistPad](https://aka.ms/gistpad) extension, and sign in with your GitHub identity, then you can run the "GistPad: New CodeSwing" (or "GistPad: New Secret CodeSwing") command, in order to create a swing that is stored in a gist, as opposed to a local directory.
 
-The GistPad extension will recognize gists that are swings, and when you open them, the swing environment will be automatically launched. Furthermore, since GistPad lets you star gists and follow users, you can easily collaborate on swings, using gists as  your developer-oritented cloud storage.
+The GistPad extension will recognize gists that are swings, and when you open them, the swing environment will be automatically launched. Furthermore, since GistPad lets you star gists and follow users, you can easily collaborate on swings, using gists as your developer-oritented cloud storage.
 
 ### CodeTour
 
