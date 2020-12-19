@@ -33,22 +33,23 @@ Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scisso
 
 ### Language Support
 
-By default, new swings create an HTML, CSS and JavaScript file. However, if you're more productive using a different markup, stylesheet or scripting language, then simply rename the respective files to use the right extension, and the code will be automatically compiled for you on the fly! Specifically, CodeSwing supports the following languages:
+CodeSwing comes with support for all major web languages, and allows you to create new swings without worrying about building/bundling anything. When you create a swing, the templates list provides options for getting started quickly
 
-- **SCSS/Sass** - Rename the `style.css` file to `style.scss` or `style.sass`. \*Note: While VS Code ships with language support for SCSS out-of-the-box, it doesn't ship support for Sass (the "indentended" syntax). So if you plan to author swings with that syntax, it's recommended that you install [this extension](https://marketplace.visualstudio.com/items?itemName=Syler.sass-indented) along with CodeSwing.
-- **Less** - Rename the `style.css` file to `style.less`
-- **Markdown** - Rename the `index.html` file to `index.md`
-- **Pug** - Rename the `index.html` file to `index.pug`
-- **TypeScript** - Rename the `script.js` file to `script.ts` (or `script.tsx`, in order to use JSX in your code)
-- **JSX** - Rename the `script.js` file to `script.jsx` in order to enable JSX to be written in "vanilla" JavaScript files. Additionally, if you add the [`react` library](#external-libraries) to your gist's `codeswing.json` file, then `*.js` files can also include JSX.
+| Asset Type | Supported Languages |
+|-|-|
+| Markup | HTML, Pug, Markdown |
+| Stylesheet | CSS, SCSS/Saas, Less |
+| Script | JavaScript, TypeScript |
 
-### Layout
+Additionally, if your script file ends in ".jsx" or ".tsx", you can use JSX syntax. CodeSwing also recognizes a script file that ends in ".babel" and treats it like TypeScript. Finally, if your script file ends in ".mjs", then it will be treated as a  [JavaScript module](#modules).
 
-By default, when you create a swing, it will open in a "Split Left" layout, which vertically stacks the code editors on the left, and allows the preview window to occupy the fully IDE height on the right. However, if you want to change the layout, you can run the `CodeSwing: Change Layout` command and select `Grid`, `Preview`, `Split Bottom`, `Split Right`, or `Split Top`.
+### Swing Layout
+
+By default, when you create a swing, it will open in a "Split Left" layout, which vertically stacks the code editors on the left, and allows the preview window to occupy the fully IDE height on the right. However, if you want to change the layout, you can run the `CodeSwing: Change Layout` command and select `Grid`, `Preview`, `Split Bottom`, `Split Left Tabbed`, `Split Right`, `Split Right Tabbed` or `Split Top`.
 
 ![Layout](https://user-images.githubusercontent.com/116461/71560396-5152fc80-2a1e-11ea-9cff-a9590e1ea779.gif)
 
-Additionally, if you create a swing, that looks best in a specific layout, you can set the `layout` property in the swing's `codeswing.json` file to either: `grid`, `preview`, `splitLeft`, `splitLeftTabbed`, `splitRight`, `splitRightTabbed` or `splitTop`. Then, when you or someone else opens this swing, it will be opened with the specified layout, as opposed to the user's configured default layout.
+Additionally, if you create a swing, that looks best in a specific layout, you can set the `layout` property in the swing's `codeswing.json` file to either: `grid`, `preview`, `splitBottom`, `splitLeft`, `splitLeftTabbed`, `splitRight`, `splitRightTabbed` or `splitTop`. Then, when you or someone else opens this swing, it will be opened with the specified layout, as opposed to the user's configured default layout.
 
 ### Console Output
 
@@ -64,7 +65,7 @@ If you need to add any external JavaScript libraries (e.g. `react`) or styleshee
 
 ![Add Library](https://user-images.githubusercontent.com/116461/71629251-4ed4dc00-2bb1-11ea-9488-78c3d71dbacd.gif)
 
-Behind the scenes, this command update the swing's manifest file (`codeswing.json`), which you can also open/edit yourself manually if you'd prefer. Additionally, since Gist files provide an internet-accessible URL, you can use Gists as re-usable snippets for swings, and add references to them by right-clicking a gist file in the `Gists` tree, select `Copy GitHub URL`, and then adding it as a library reference to the appropriate swing.
+Behind the scenes, this command updates the swing's manifest file (`codeswing.json`), which you can also open/edit yourself manually if you'd prefer. 
 
 ### Toolbar
 
