@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "A fun and interactive coding environment for building rich web applications (aka swings).",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.51.0"
   },
@@ -187,7 +187,7 @@
           "description": "Specifies how to layout the editor windows when opening a swing."
         },
         "codeswing.readmeBehavior": {
-          "default": "previewHeader",
+          "default": "none",
           "enum": [
             "none",
             "previewFooter",

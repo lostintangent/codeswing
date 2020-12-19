@@ -291,7 +291,8 @@ export async function openSwing(uri: Uri) {
 
   const layoutManager = await createLayoutManager(
     includedFiles,
-    manifest.layout
+    manifest.layout,
+    isWorkspaceSwing
   );
 
   const [htmlDocument, cssDocument, jsDocument] = await Promise.all(

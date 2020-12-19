@@ -63,7 +63,8 @@ export enum SwingLayout {
 
 export async function createLayoutManager(
   includedFiles: number,
-  layout?: string
+  layout?: string,
+  isWorkspaceSwing: boolean = false
 ) {
   if (!layout) {
     layout = await config.get("layout");
@@ -117,6 +118,10 @@ export async function createLayoutManager(
 
   await commands.executeCommand("workbench.action.closeAllEditors");
   await commands.executeCommand("workbench.action.closePanel");
+
+  if (isWorkspaceSwing) {
+    await commands.executeCommand("workbench.action.closeSidebar");
+  }
 
   // The preview layout mode only shows a single file,
   // so there's no need to set a custom editor layout for it.
