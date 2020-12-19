@@ -111,7 +111,7 @@ If you'd like to add a link in your swing/readme, which references a file and/or
 ### GistPad
 
 Since swings are effectively runnable code
-snippets, they're great candidates for being saved as GitHub Gists. If you install the [GistPad(https://aka.ms/gistpad) extension, and sign in with your GitHub identity, then you can run the "GistPad: New CodeSwing" (or "GistPad: New Secret CodeSwing") command, in order to create a swing that is stored in a gist, as opposed to a local directory.
+snippets, they're great candidates for being saved as GitHub Gists. If you install the [GistPad](https://aka.ms/gistpad) extension, and sign in with your GitHub identity, then you can run the "GistPad: New CodeSwing" (or "GistPad: New Secret CodeSwing") command, in order to create a swing that is stored in a gist, as opposed to a local directory.
 
 The GistPad extension will recognize gists that are swings, and when you open them, the swing environment will be automatically launched. Furthermore, since GistPad lets you star gists and follow users, you can easily collaborate on swings, using gists as  your developer-oritented cloud storage.
 
@@ -120,6 +120,10 @@ The GistPad extension will recognize gists that are swings, and when you open th
 CodeSwing includes integration with [CodeTour](https://aka.ms/codetour), which allows you to author interactive walkthroughs of a codebase. This can be helpful for annotating relevant "markers" within a swing, and encouraging users/yourself where to focus. In order to create a code tour for a swing, simply open the swing, and click the `...` menu in the editor window of any of the swing's document or the preview window. Select `Record CodeTour` and then start adding step annotations to your swing's code. Then, anytime you or someone else opens your swing, the tour will be automatically started.
 
 > For more information on CodeTour, and how to navigate/author tours, refer to the [CodeTour](https://aka.ms/codetour) documentation.
+
+### Live Share
+
+If you'd like to collaborate with someone on a swing, then you can install the [Live Share](https://aka.ms/vsls) extension, start a session, and then co-edit your swing in real-time.
 
 ## Template Galleries
 
