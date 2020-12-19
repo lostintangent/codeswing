@@ -1,10 +1,12 @@
 # CodeSwing 🎢
 
+CodeSwing is an interactive coding environment for VS Code, that allows you to build rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions, oh my! When you create swings, you can use your favorite web languages (e.g. HTML/Pug, CSS/SCSS, JS/TS) and libraries (e.g. React, Vue) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything.
+
 - [Getting Started](#getting-started)
   - [Creating Swings](#creating-swings)
   - [Template Galleries](#template-galleries)
   - [Tutorials](#tutorials)
-- Reference
+- Reference 
   - [Swing Manifest](#swing-manifest)
   - [Contributed Commands](#contributed-commands)
   - [Configuration Settings](#configuration-settings)
@@ -12,21 +14,21 @@
 
 ## Getting Started
 
-1. Install this extension and then reload VS
+1. Install the CodeSwing extension and then reload VS Code
 
 1. Run the `CodeSwing: New Temporary Swing...` command, and select the `Basic: HTML/CSS/Javascript` template
 
-   > Alternatively, you can run the `CodeSwing: New Swing...` command if you'd like to save your swing to disk.
+   > Alternatively, you can run the `CodeSwing: New Swing...` command if you'd like to save your new swing to disk.
 
-1. Edit the HTML, CSS and JavaScript files and see the `CodeSwing` preview window update automatically 🚀
+1. Edit the HTML, CSS and JavaScript files and see the `CodeSwing` preview update automatically as you type 🚀
 
-From here, you can try [additional languages](#language-support), [change the swing layout](#layout), view [console output](#console-output), and include [external libraries](#external-libraries).
+From here, you can try [additional languages](#language-support), [change the swing layout](#layout), view [console output](#console-output), and include [external libraries](#external-libraries). We want to make it fun and easy to build/explore web ideas, and so if you have any feedback, please don't hesitate to reach out!
+
+If you'd like to try out a sample, clone the [Rock Paper Scissors](https://github.com/codespaces-contrib/rock-paper-scissors) repo, and open it up in VS Code. CodeSwing will detect that it's a swing and automatically layout your editor.
 
 ## Creating Swings
 
-### Toolbar
-
-When you open a swing, this activates the "swing toolbar", which is a collection of helpful utilities that are displayed in the editor's title bar. The following describes the available actions:
+When you create/open a swing, this activates the "swing toolbar", which is a collection of helpful utilities that are displayed in the editor's title bar. The following describes the available actions:
 
 - **Run Swing** - Re-runs the HTML, JavaScript and CSS of your swing. This can be useful when wanting to reset a swing's state and/or if you've disabled the auto-run behavior for swings.
 - **Open Console** - Opens the `CodeSwing` console, which allows you to view the output of any `console.log` calls that your swing makes ([details](#console-output)).
