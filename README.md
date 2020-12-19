@@ -6,7 +6,8 @@ CodeSwing is an interactive coding environment for VS Code, that allows you to b
 
 CodeSwing supports [template galleries](#template-galleries), which allows you to create and share re-usable swing templates. It also integrates with other VS Code extensions, to enable scenarios such as [managing your swings as GitHub Gists](#gistpad), [recording guided walkthroughs of your swings](#codetour), and [collaborating on a swing in real-time](#live-share). If that doesn't sound fun, then I don't know what is!
 
-> _What's the meaning of the name "swing"? As the extension's logo implies, it's referring to a [swing](https://en.wikipedia.org/wiki/Swing_(seat)) on playground, to elicit the idea of having fun. That said, if you interpret "swing" as the dance style, that's totally cool too! 💃\_
+<!--prettier-ignore-->
+> _**What's the meaning of the name "swing"?** As the extension's logo implies, it's referring to a [swing](<https://en.wikipedia.org/wiki/Swing_(seat)>) on playground, to elicit the idea of having fun. That said, if you interpret "swing" as the dance style, that's totally cool too! 💃_
 
 ---
 
