@@ -30,6 +30,13 @@ Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scisso
 
 ## Creating Swings
 
+After you install the CodeSwing extension, you can create new swings at any time, using the following commands:
+
+* "CodeSwing: New Temporary Swing..." - Creates an ephemeral/in-memory swing, that allows you to quickly try something out (like a visual REPL!)
+
+* "CodeSwing: New Swing..." - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
+
+After creating a swing, your editor layout will be automatically setup to accomodate the needs of the selected template. Furthermore, if you open a directory that represents a swing, or you run the "CodeSwing: Open Swing..." command, then the  selected swing will be automatically launched.
 
 ### Language Support
 
@@ -97,9 +104,16 @@ You can reference HTTP-based images within any of your swing files, and they'll 
 
 2. Copy/paste an image into your clipboard, open up an HTML or Pug file, right-click the editor and select `Paste Image`. This will transparently upload the image to the gist, and then insert a reference to it for you (e.g. adding an `<img />` tag). This solution works best when you want to paste a "transient" image into your swing, such as a captured screenshot, or an image that you copied from a webpage.
 
-### Gist Links
+### Code Links
 
-If you'd like to add a link in your gist/readme, which references a file and/or line/column within a file in the gist, simply add a hyperlink, whose `href` value uses the `gist:` scheme (kind of like a `mailto:`), and specifies the file name you'd like to open (e.g. `gist:index.html`). Optionally, you can specify a line and column number as well (e.g. `gist:index.html@23:5`), which allows you to highlight a specific line/span of code when the end-user clicks on it.
+If you'd like to add a link in your swing/readme, which references a file and/or line/column within a file in the swing, simply add a hyperlink, whose `href` value uses the `swing:` scheme (kind of like a `mailto:`), and specifies the file name you'd like to open (e.g. `swing:index.html`). Optionally, you can specify a line and column number as well (e.g. `swing:index.html@23:5`), which allows you to highlight a specific line/span of code when the end-user clicks on it.
+
+### GistPad
+
+Since swings are effectively runnable code
+snippets, they're great candidates for being saved as GitHub Gists. If you install the [GistPad(https://aka.ms/gistpad) extension, and sign in with your GitHub identity, then you can run the "GistPad: New CodeSwing" (or "GistPad: New Secret CodeSwing") command, in order to create a swing that is stored in a gist, as opposed to a local directory.
+
+The GistPad extension will recognize gists that are swings, and when you open them, the swing environment will be automatically launched. Furthermore, since GistPad lets you star gists and follow users, you can easily collaborate on swings, using gists as  your developer-oritented cloud storage.
 
 ### CodeTour
 
