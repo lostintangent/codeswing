@@ -86,6 +86,16 @@ When you create/open a swing, this activates the "swing toolbar", which is a col
 
 <img width="464" src="https://user-images.githubusercontent.com/116461/71629353-eafee300-2bb1-11ea-88f0-0996ab6149c4.png" />
 
+### Workspace swings
+
+If you open a directory in VS Code, and that directory represents a swing, then the swing environment will be automatically launched. If you accidentally close the CodeSwing preview, then you can re-open it by either reloading VS Code, or running the "CodeSwing: Open Workspace Swing" command.
+
+### CodeSwing tree view
+
+When you create or open a swing, a new tree view called "CodeSwing" will appear on the "Explorer" tab (though you can move it to anywhere you want!). It will display the list of files in the active swing, and allow you to edit them.
+
+If you open a swing directory as a workspace, then the "CodeSwing" tree won't appear, since it would be duplicative of the "Explorer" tree itself. Therefore, the "CodeSwing" tree is meant to accomodate temporary swings, swings you open from directories other than the active VS Code workspace, or swings you load from [gists](#gistpad).
+
 ### Readme
 
 If you'd like to give your swing an introduction, you can create a file in the swing called `README.md` (or `README.markdown`), and by default, it's contents will be rendered above the swing code in the preview window. When a swing is opened, the `README.md` file isn't opened, which allows the swing to be focused on the core code assets (e.g. `index.html`, `script.js`), and allow the preview window to include embedded documentation.
