@@ -2,8 +2,8 @@
   "name": "codeswing",
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
-  "description": "",
-  "version": "0.0.1",
+  "description": "A fun and interactive coding environment for building rich web applications (aka swings).",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.51.0"
   },
