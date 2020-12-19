@@ -94,4 +94,13 @@ export async function registerSwingCommands(context: vscode.ExtensionContext) {
       }
     })
   );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.openWorkspaceSwing`,
+      () => {
+        openSwing(vscode.workspace.workspaceFolders![0].uri);
+      }
+    )
+  );
 }

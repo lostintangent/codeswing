@@ -9,26 +9,10 @@ import {
 } from "./galleryProvider";
 import { TempFileSystemProvider } from "./tempFileSystem";
 
-// TODO: Enable user-provided swing templates
-
 export interface SwingFile {
   filename: string;
   content?: string;
 }
-
-/*
-async function getTemplateFiles(templateUri: vscode.Uri) {
-  const files = await vscode.workspace.fs.readDirectory(templateUri);
-
-  return Promise.all(
-    files.map(async ([filename, _]) => {
-      const sourceFileUri = vscode.Uri.joinPath(templateUri, filename);
-      const content = await vscode.workspace.fs.readFile(sourceFileUri);
-
-      return { filename, content };
-    })
-  );
-}*/
 
 interface CodeSwingTemplateItem extends vscode.QuickPickItem {
   files?: SwingFile[];
