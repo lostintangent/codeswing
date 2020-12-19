@@ -1,11 +1,13 @@
 # CodeSwing 🎢
 
-CodeSwing is an interactive coding environment for VS Code, that allows you to build rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions, oh my! When you create swings, you can use your favorite web languages (e.g. HTML/Pug, CSS/SCSS, JS/TS) and libraries (e.g. React, Vue) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything.
+CodeSwing is an interactive coding environment for VS Code, that allows you to build rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions...oh my! When you create swings, you can use your favorite web languages (HTML/Pug, CSS/SCSS/Less, JS/TS) and libraries (React, Vue, Angular, etc.) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything. It's like a visual REPL for managing runnable code snippets.
+
+CodeSwing supports [template galleries](#template-galleries), which allows you to create and share re-usable swing templates. It also integrates with other VS Code extensions, to enable scenarios such as [managing your swings as GitHub Gists](#gistpad), [recording guided walkthroughs of your swings](#codetour), and [collaborating on a swing in real-time](#live-share). If that doesn't sound fun, then I don't know what is!
 
 - [Getting Started](#getting-started)
   - [Creating Swings](#creating-swings)
   - [Template Galleries](#template-galleries)
-  - [Tutorials](#tutorials)
+  - [Swing Tutorials](#swing-tutorials)
 - Reference 
   - [Swing Manifest](#swing-manifest)
   - [Contributed Commands](#contributed-commands)
@@ -22,21 +24,12 @@ CodeSwing is an interactive coding environment for VS Code, that allows you to b
 
 1. Edit the HTML, CSS and JavaScript files and see the `CodeSwing` preview update automatically as you type 🚀
 
-From here, you can try [additional languages](#language-support), [change the swing layout](#layout), view [console output](#console-output), and include [external libraries](#external-libraries). We want to make it fun and easy to build/explore web ideas, and so if you have any feedback, please don't hesitate to reach out!
+From here, you can try [additional languages](#language-support), [change the swing layout](#layout), view [console output](#console-output), and include [external libraries](#external-libraries). We want to make it easy to build/explore web ideas, and so if you have any feedback, please don't hesitate to reach out!
 
-If you'd like to try out a sample, clone the [Rock Paper Scissors](https://github.com/codespaces-contrib/rock-paper-scissors) repo, and open it up in VS Code. CodeSwing will detect that it's a swing and automatically layout your editor.
+Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scissors](https://github.com/codespaces-contrib/rock-paper-scissors) repo, and open it up in VS Code. CodeSwing will detect that it's a swing and automatically layout your editor.
 
 ## Creating Swings
 
-When you create/open a swing, this activates the "swing toolbar", which is a collection of helpful utilities that are displayed in the editor's title bar. The following describes the available actions:
-
-- **Run Swing** - Re-runs the HTML, JavaScript and CSS of your swing. This can be useful when wanting to reset a swing's state and/or if you've disabled the auto-run behavior for swings.
-- **Open Console** - Opens the `CodeSwing` console, which allows you to view the output of any `console.log` calls that your swing makes ([details](#console-output)).
-- **Change Layout** - Allows you to change the layout configuration of the swing editors ([details](#layout)).
-- **Add Library** - Allows you to add an external library to your swing (e.g. React.js, Font-Awesome) ([details](#external-libraries))
-- **Open Developer Tools** - Opens the Chrome Dev Tools for your swing preview, which lets you use the DOM exlporer, evaluate JavaScript expressions in the console, etc.
-
-<img width="464" src="https://user-images.githubusercontent.com/116461/71629353-eafee300-2bb1-11ea-88f0-0996ab6149c4.png" />
 
 ### Language Support
 
@@ -73,6 +66,18 @@ If you need to add any external JavaScript libraries (e.g. `react`) or styleshee
 
 Behind the scenes, this command update the swing's manifest file (`codeswing.json`), which you can also open/edit yourself manually if you'd prefer. Additionally, since Gist files provide an internet-accessible URL, you can use Gists as re-usable snippets for swings, and add references to them by right-clicking a gist file in the `Gists` tree, select `Copy GitHub URL`, and then adding it as a library reference to the appropriate swing.
 
+### Toolbar
+
+When you create/open a swing, this activates the "swing toolbar", which is a collection of helpful utilities that are displayed in the editor's title bar. The following describes the available actions:
+
+- **Run Swing** - Re-runs the HTML, JavaScript and CSS of your swing. This can be useful when wanting to reset a swing's state and/or if you've disabled the auto-run behavior for swings.
+- **Open Console** - Opens the `CodeSwing` console, which allows you to view the output of any `console.log` calls that your swing makes ([details](#console-output)).
+- **Change Layout** - Allows you to change the layout configuration of the swing editors ([details](#layout)).
+- **Add Library** - Allows you to add an external library to your swing (e.g. React.js, Font-Awesome) ([details](#external-libraries))
+- **Open Developer Tools** - Opens the Chrome Dev Tools for your swing preview, which lets you use the DOM exlporer, evaluate JavaScript expressions in the console, etc.
+
+<img width="464" src="https://user-images.githubusercontent.com/116461/71629353-eafee300-2bb1-11ea-88f0-0996ab6149c4.png" />
+
 ### Readme
 
 If you'd like to give your swing an introduction, you can create a file in the swing called `README.md` (or `README.markdown`), and by default, it's contents will be rendered above the swing code in the preview window. When a swing is opened, the `README.md` file isn't opened, which allows the swing to be focused on the core code assets (e.g. `index.html`, `script.js`), and allow the preview window to include embedded documentation.
@@ -103,29 +108,27 @@ CodeSwing includes integration with [CodeTour](https://aka.ms/codetour), which a
 
 ## Template Galleries
 
-When you create a new swing, you'll see a list of templates, which let you create swings using a pre-defined set of files and external libraries (e.g. React.js, Vue). This makes it really easy to get started quickly, and reduce repetitive tasks/boilerplate. By default, CodeSwing includes a standard set of templates, which come from two built-in galleries: `web:languages` and `web:libraries`. If you don't intend to use one or both of these, you can disable them by clicking the gear icon when running the `New swing` (or `New Secret swing`) command, and de-selecting the galleries you don't want. Additionally, you can modify the `CodeSwing: Template Galleries` setting.
+When you create a new swing, you'll see a list of templates, which let you create swings using a pre-defined set of files and external libraries (e.g. React.js, Vue). This makes it really easy to get started quickly, and reduce repetitive tasks/boilerplate. By default, CodeSwing includes a standard set of templates, which come from two built-in galleries: `web:languages` and `web:basic`. If you don't intend to use one or both of these, you can disable them by clicking the gear icon when running the `New swing` command, and de-selecting the galleries you don't want. Additionally, you can modify the `CodeSwing: Template Galleries` setting.
 
-Behind the scenes, a template gallery is simply a JSON file, which is hosted somewhere (e.g. a gist, a git repo, your own web server), and defines a set of templates. A template is simply a gist, which includes the neccessary files (e.g. HTML, JavaScript, CSS, etc.), and then defines a name and description. To see an example of how to define a template gallery, see the built-in [`web:libraries` gallery](https://gist.githubusercontent.com/lostintangent/ece303a6b8c7cbf0293b850b600e3cb6/raw/gallery.json). Additionally, to see an example of a template, see the [React.js template](https://gist.github.com/lostintangent/f15a2e498523f364e36075691542af4c).
+Behind the scenes, a template gallery is simply a JSON file, which is hosted somewhere (e.g. a gist, a git repo, your own web server), and defines a set of templates. A template is simply a collection of files (e.g. HTML, JavaScript, CSS, etc.), along with a title and optional description. To see an example of how to define a template gallery, see the built-in [`web:languages` gallery](https://github.com/codespaces-contrib/codeswing/blob/main/templates/languages.json)
 
 When defining the template, you can use the `codeswing.json` file to indicate not only the JavaScript and CSS libraries that the playgroud needs, but also, the [layout](#layout) it should use by default, and whether or not the console should be automatically opened (e.g. because the swing relies on writing console logs). See [the docs](#swing-metadata) for more details on this file.
 
-### User Templates
+### Gist Gallery
 
-In addition to using/creating template galleries, you can also mark your own local swings gists as being templates, by simply setting `"template": true` in the swing's `codeswing.json` file. Then, when you create a new swing, you'll see your template in the list. This option is good for defining your own templates, that you don't intend to share with others.
+In addition to using/creating template galleries, you can also create user-defined templates using GitHub Gists. Simply install the [GistPad](https://aka.ms/gistpad) extension, create a swing by running the "GistPad: New Swing" command, and then add the `"template": true` property in the swing's `codeswing.json` file. Then, when you create a new swing, you'll see your template in the list. This option is good for defining your own templates, that you don't intend to share with others.
 
 Additionally, if you star a gist that is marked as a swing template, that will show up in the list of templates as well. That way, you can easily share templates with others, without needing to create a template gallery.
 
-## Tutorials
+## Swing Tutorials
 
 By default, a swing represents a single interactive sample. However, they can also represent multi-step tutorials/presentations, by making two simple changes:
 
 1. Specifying a tutorial title, by setting the `tutorial` property in the swing's `codeswing.json` file
 
-1. Defining a series of steps as gist [directories](#files-and-directories), whose name starts with the step number and includes an optional description (e.g. `1`, `1 - Discussion of text`, `#1 - Intro`). The contents of the directory match that of a standard swing (e.g. an `index.html`, `script.js` file, etc.), and it's encouraged that each step have a [readme](#readme) that includes instructions. The number of steps in the tutorial is determined by the number of directories in the gist that follow the aforementioned pattern.
+1. Defining a series of steps as child directories, whose name starts with the step number and includes an optional description (e.g. `1`, `1 - Discussion of text`, `#1 - Intro`). The contents of the directory match that of a standard swing (e.g. an `index.html`, `script.js` file, etc.), and it's encouraged that each step have a [readme](#readme) that includes instructions. The number of steps in the tutorial is determined by the number of child directories in the swing that follow the aforementioned pattern.
 
-When a user opens up a tutorial swing, they'll only see the contents of the current step, and the preview window will include a navigation header that allows moving forward and backwards in the tutorial. Additionally, the user's current step will be persisted so that they can take a tutorial and pick up where they left off when they re-open the tutorial. To try an example, view the [Learning MobX Tutorial](https://gist.github.com/lostintangent/c3bcd4bff4a13b2e1b3fc4a26332e2b6).
-
-![MobX](https://user-images.githubusercontent.com/116461/74594741-8d521900-4fee-11ea-97ac-1fdfac132724.gif)
+When a user opens up a tutorial swing, they'll only see the contents of the current step, and the preview window will include a navigation header that allows moving forward and backwards in the tutorial. Additionally, the user's current step will be persisted so that they can take a tutorial and pick up where they left off when they re-open the tutorial. To try an example, clone the [CSS Diner](https://github.com/codespaces-contrib/css-diner) repo and open it up in VS Code.
 
 ### Swing Config
 
