@@ -2,7 +2,7 @@
 
 CodeSwing is an interactive coding environment for VS Code, that allows you to build rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions...oh my! When you create swings, you can use your favorite web languages (HTML/Pug, CSS/SCSS/Less, JS/TS) and libraries (React, Vue, Angular, etc.) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything. It's like a visual REPL for managing runnable code snippets.
 
-<img width="800px" src="https://user-images.githubusercontent.com/116461/102677518-b2a43c00-4157-11eb-9b45-b8530abe5213.png" />
+<img width="800px" src="https://user-images.githubusercontent.com/116461/103024429-ae37a480-4504-11eb-85ea-37ba9b9a4d9a.gif" />
 
 CodeSwing supports [template galleries](#template-galleries), which allows you to create and share re-usable swing templates. It also integrates with other VS Code extensions, to enable scenarios such as [managing your swings as GitHub Gists](#gistpad), [recording guided walkthroughs of your swings](#codetour), and [collaborating on a swing in real-time](#live-share). If that doesn't sound fun, then I don't know what is!
 
