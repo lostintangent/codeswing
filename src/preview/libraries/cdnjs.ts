@@ -25,10 +25,7 @@ let libraries: ICDNJSLibrary[] | undefined;
 async function getLibrariesInternal(): Promise<ICDNJSLibrary[]> {
   try {
     const librariesResponse = await axios.get<{ results: ICDNJSLibrary[] }>(
-      `${LIBRARIES_URL}?fields=description`,
-      {
-        responseType: "json",
-      }
+      `${LIBRARIES_URL}?fields=description`
     );
 
     libraries = librariesResponse.data.results;
@@ -56,10 +53,7 @@ export async function getCDNJSLibraries() {
 export async function getLibraryVersions(libraryName: string) {
   try {
     const libraries = await axios.get<ICDNJSLibraryManifest>(
-      `${LIBRARIES_URL}/${libraryName}`,
-      {
-        responseType: "json",
-      }
+      `${LIBRARIES_URL}/${libraryName}`
     );
 
     const packageManifest = libraries.data;

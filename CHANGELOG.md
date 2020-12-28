@@ -1,3 +1,10 @@
+# v0.0.5 (12/19/2020)
+
+- Added initial Live Share support for workspace swings
+- Added support for exporting swings to CodePen via the new `CodeSwing: Export to CodePen` command
+- Added support for adding JavaScript module imports from Skypack
+- Temporary swings were renamed to "scratch swings", and are now stored in the temp directory instead of in-memory, and you can configure the location to write them to
+
 # v0.0.4 (12/19/2020)
 
 - Added the `CodeSwing: Open Workspace Swing` command, for re-opening the current workspace's swing after closing it.

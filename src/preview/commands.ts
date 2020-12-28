@@ -5,34 +5,50 @@ import { EXTENSION_NAME } from "../constants";
 import { store, SwingLibraryType } from "../store";
 import { SwingLayout } from "./layoutManager";
 import { addSwingLibrary } from "./libraries";
+import { addSkypackModule } from "./libraries/skypack";
 
 export async function registerSwingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       `${EXTENSION_NAME}.addLibrary`,
       async () => {
-        const response = await vscode.window.showQuickPick(
-          [
-            {
-              label: "Script",
-              description:
-                "Adds a <script> reference, before your swing script",
-              libraryType: SwingLibraryType.script,
-            },
-            {
-              label: "Stylesheet",
-              description:
-                "Adds a <link rel='stylesheet' /> reference, before your swing styles",
-              libraryType: SwingLibraryType.style,
-            },
-          ],
+        const items = [
           {
-            placeHolder: "Select the library type you'd like to add",
-          }
-        );
+            label: "Script",
+            description: "Adds a <script> reference, before your swing script",
+            libraryType: SwingLibraryType.script,
+          },
+          {
+            label: "Stylesheet",
+            description:
+              "Adds a <link rel='stylesheet' /> reference, before your swing styles",
+            libraryType: SwingLibraryType.style,
+          },
+        ];
+
+        if (store.activeSwing?.scriptEditor) {
+          items.unshift({
+            label: "Script module",
+            description:
+              "Adds a import statement to the top of your swing script",
+            // @ts-ignore
+            libraryType: "module",
+          });
+        }
+
+        const response = await vscode.window.showQuickPick(items, {
+          placeHolder: "Select the library type you'd like to add",
+        });
 
         if (response) {
-          addSwingLibrary(response.libraryType);
+          if (
+            response.libraryType === SwingLibraryType.script ||
+            response.libraryType === SwingLibraryType.style
+          ) {
+            addSwingLibrary(response.libraryType);
+          } else {
+            addSkypackModule();
+          }
         }
       }
     )

@@ -38,13 +38,18 @@
         "icon": "$(editor-layout)"
       },
       {
+        "command": "codeswing.exportToCodePen",
+        "title": "Export to CodePen",
+        "category": "CodeSwing"
+      },
+      {
         "command": "codeswing.newSwing",
         "title": "New Swing...",
         "category": "CodeSwing"
       },
       {
-        "command": "codeswing.newTemporarySwing",
-        "title": "New Temporary Swing...",
+        "command": "codeswing.newScratchSwing",
+        "title": "New Scratch Swing...",
         "category": "CodeSwing"
       },
       {
@@ -97,6 +102,10 @@
         },
         {
           "command": "codeswing.changeLayout",
+          "when": "codeswing:inSwing"
+        },
+        {
+          "command": "codeswing.exportToCodePen",
           "when": "codeswing:inSwing"
         },
         {
@@ -204,6 +213,11 @@
           ],
           "description": "Specifies how the swing's readme content should be displayed."
         },
+        "codeswing.scratchDirectory": {
+          "default": null,
+          "type": "string",
+          "markdownDescription": "Specifies the directory that you want to store scratch swings into, using an absolute path. Defaults to `$TMPDIR/codeswing`."
+        },
         "codeswing.showConsole": {
           "default": false,
           "type": "boolean",
@@ -282,11 +296,13 @@
     "axios": "^0.21.0",
     "case": "^1.6.3",
     "debounce": "^1.2.0",
+    "form-data": "^3.0.0",
     "less": "^3.12.2",
     "markdown-it": "^12.0.3",
     "mobx": "^6.0.4",
     "pug": "^3.0.0",
     "sass": "^1.30.0",
-    "typescript": "^4.1.2"
+    "typescript": "^4.1.2",
+    "vsls": "^1.0.3015"
   }
 }

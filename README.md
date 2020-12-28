@@ -28,7 +28,7 @@ Reference
 
 1. Install the CodeSwing extension and then reload VS Code
 
-1. Run the `CodeSwing: New Temporary Swing...` command, and select the `Basic: HTML/CSS/Javascript` template
+1. Run the `CodeSwing: New Scratch Swing...` command, and select the `Basic: HTML/CSS/Javascript` template
 
    > Alternatively, you can run the `CodeSwing: New Swing...` command if you'd like to save your new swing to disk.
 
@@ -42,7 +42,7 @@ Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scisso
 
 After you install the CodeSwing extension, you can create new swings at any time, using the following commands:
 
-- "CodeSwing: New Temporary Swing..." - Creates an ephemeral/in-memory swing, that allows you to quickly try something out (like a visual REPL!)
+- "CodeSwing: New Scratch Swing..." - Creates a temporary "scratch" swing, that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time. If you'd like to customize where scratch swings are stored, you can set the `CodeSwing: Scratch Directory` setting to the absolute path of the desired directory.
 
 - "CodeSwing: New Swing..." - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
 
@@ -78,11 +78,11 @@ Additionally, if you create a swing that depends on the console, you can set the
 
 ### External Libraries
 
-If you need to add any external JavaScript libraries (e.g. `react`) or stylesheets (e.g. `font-awesome`) to your swing, simply click the `Add swing Library` commmand in the swing "action bar" (or run `CodeSwing: Add Library` from the command palette). This will allow you to search for a library from CDNJS or paste a custom library URL. When you select a library, it will be automatically added to your swing.
+If you need to add any external JavaScript libraries (e.g. `react`) or stylesheets (e.g. `font-awesome`) to your swing, simply click the `Add swing Library` commmand in the swing "action bar" (or run `CodeSwing: Add Library` from the command palette). This will allow you to search for a library or paste a custom library URL. When you select a library, it will be automatically added to your swing.
 
 ![Add Library](https://user-images.githubusercontent.com/116461/71629251-4ed4dc00-2bb1-11ea-9488-78c3d71dbacd.gif)
 
-Behind the scenes, this command updates the swing's manifest file (`codeswing.json`), which you can also open/edit yourself manually if you'd prefer.
+Behind the scenes, this command updates the swing's manifest file (`codeswing.json`), which you can also open/edit yourself manually if you'd prefer. For more details about the `Script module` option, see [JavaScript modules](#javascript-modules).
 
 ### Toolbar
 
@@ -104,7 +104,7 @@ If you open a directory in VS Code, and that directory represents a swing, then 
 
 When you create or open a swing, a new tree view called "CodeSwing" will appear on the "Explorer" tab (though you can move it to anywhere you want!). It will display the list of files in the active swing, and allow you to edit them.
 
-If you open a swing directory as a workspace, then the "CodeSwing" tree won't appear, since it would be duplicative of the "Explorer" tree itself. Therefore, the "CodeSwing" tree is meant to accomodate temporary swings, swings you open from directories other than the active VS Code workspace, or swings you load from [gists](#gistpad).
+If you open a swing directory as a workspace, then the "CodeSwing" tree won't appear, since it would be duplicative of the "Explorer" tree itself. Therefore, the "CodeSwing" tree is meant to accomodate scratch swings, swings you open from directories other than the active VS Code workspace, or swings you load from [gists](#gistpad).
 
 ### Readme
 
@@ -112,9 +112,17 @@ If you'd like to give your swing an introduction, you can create a file in the s
 
 Your swing can customize how the readme is rendered by setting the `readmeBehavior` property in your `codeswing.json` file to either `previewFooter` (which renders the content beneath the preview content), `inputComment` (which renders the content beneath an [input file](#swing-input)), or `none` (which doesn't render the contents at all).
 
-### Modules
+### JavaScript Modules
 
-By default, swing's assume you're using "standard" JavaScript code (`<script type="text/javascript" />`), and allows you to add 3rd-party [libraries](#external-libraries), which are added via new `<script>` elements in the preview page. However, if you'd like to write JavaScript code using `import`/`export`, you can set the `scriptType` property to `module` in the swing's `codeswing.json` file, and then begin to `import` modules. To simplify the process of importing 3rd-party modules, we'd recommend using either [Unkpkg](https://unpkg.com) (adding the [`?module` parameter](https://unpkg.com/#query-params) to any URLs), or the [Pika CDN](https://www.pika.dev/cdn).
+By default, swings assume you're using "standard" JavaScript code (`<script type="text/javascript" />`), and allows you to add 3rd-party [libraries](#external-libraries), which are added via new `<script>` elements in the preview page. However, if you'd like to write JavaScript code using `import`/`export`, you can simply perform one of the following steps:
+
+1. Add an `import` statement to your script file
+1. Rename your script file to `script.mjs`
+1. Set the `scriptType` property to `module` in the swing's `codeswing.json` file
+
+Once you're using modules, we'd recommend you use [Skypack](https://skypack.dev) to load your desired libraries. To make this simpler, you can run the `CodeSwing: Add Library` command, select `Script module` and then specify the module you'd like to add.
+
+<img width="500px" src="https://user-images.githubusercontent.com/116461/103246626-09a8ce80-4919-11eb-9b01-b3a7a02a5634.gif" />
 
 ### Uploading Images
 
@@ -130,8 +138,7 @@ If you'd like to add a link in your swing/readme, which references a file and/or
 
 ### GistPad
 
-Since swings are effectively runnable code
-snippets, they're great candidates for being saved as GitHub Gists. If you install the [GistPad](https://aka.ms/gistpad) extension, and sign in with your GitHub identity, then you can run the "GistPad: New CodeSwing" (or "GistPad: New Secret CodeSwing") command, in order to create a swing that is stored in a gist, as opposed to a local directory.
+Since swings are effectively runnable code snippets, they're great candidates for being saved as GitHub Gists. If you install the [GistPad](https://aka.ms/gistpad) extension, and sign in with your GitHub identity, then you can run the "GistPad: New CodeSwing" (or "GistPad: New Secret CodeSwing") command, in order to create a swing that is stored in a gist, as opposed to a local directory.
 
 The GistPad extension will recognize gists that are swings, and when you open them, the swing environment will be automatically launched. Furthermore, since GistPad lets you star gists and follow users, you can easily collaborate on swings, using gists as your developer-oritented cloud storage.
 
@@ -143,7 +150,9 @@ CodeSwing includes integration with [CodeTour](https://aka.ms/codetour), which a
 
 ### Live Share
 
-If you'd like to collaborate with someone on a swing, then you can install the [Live Share](https://aka.ms/vsls) extension, start a session, and then co-edit your swing in real-time.
+If you'd like to collaborate with someone on a swing (e.g. doing a technical interview or remote tutoring session), then you can install the [Live Share](https://aka.ms/vsls) extension, start a session, and then co-edit your swing in real-time. Note that Live Share support is currently limited to [workspace swings](#workspace-swings). Scratch swings, and swings opened from GistPad (i.e. stored in a gist) aren't currently supported.
+
+<img width="700px" src="https://user-images.githubusercontent.com/116461/103246112-2d6b1500-4917-11eb-98af-cfbda51b1ace.gif" />
 
 ## Template Galleries
 
@@ -217,11 +226,27 @@ Whenever you create a swing, it includes a `codeswing.json` file, which defines 
 
 ## Contributed Commands
 
+When you install CodeSwing, the following commands are available from the command palette:
+
 - `CodeSwing: New Swing...` - Creates a new code swing, whose files are saved to a specified directory.
 
-- `CodeSwing: New Temporary Swing...` - Creates a new in-memory code swing, which can be useful for doing quick/ad-hoc explorations.
+- `CodeSwing: New Scratch Swing...` - Creates a new in-memory code swing, which can be useful for doing quick/ad-hoc explorations.
 
 - `CodeSwing: Open Swing...` - Opens a swing, based on the contents of a specified directory.
+
+Additionally, when you have a swing currently open, the following commands are available:
+
+- `CodeSwing: Add Library` - Allows you to insert a new JavaScript (e.g. React) or CSS (e.g. Tailwind) library into your swing.
+
+- `CodeSwing: Change Layout` - Allows you to select a pre-defined layout for the active swing.
+
+- `CodeSwing: Export to CodePen` - Exports the active swing to a new CodePen.
+
+- `CodeSwing: Open Console` - Opens the `CodeSwing` output window, which lets you views called to `console.log` in your swing script.
+
+- `CodeSwing: Open Dev Tools` - Launches the Chrome DevTools, connected to the swing preview. This is useful for diagnosing the DOM/JavaScript errors of your swing.
+
+- `CodeSwing: Run Swing` - Re-executes the code of the active swing.
 
 ## Configuration Settings
 
@@ -244,15 +269,17 @@ Whenever you create a swing, it includes a `codeswing.json` file, which defines 
   - `splitRightTabbed`: Opens a split-level layout, with the editors grouped into a single tab on the right, and the preview occupying the full IDE height on the right.
   - `splitTop`: Opens a split-level layout, with the editors horizontally stacked on the top, and the preview occupying the full IDE width on the bottom.
 
-* `Codeswing: Readme Behavior` - Specifies how to display the contents of a swing's readme, if it has one. Can be set to one of the following values:
+- `Codeswing: Readme Behavior` - Specifies how to display the contents of a swing's readme, if it has one. Can be set to one of the following values:
 
   - `none`: If a swing has a readme, then it won't be displayed automatically when someone opens it.
   - `previewFooter`: If a swing has a readme, then its contents will be rendered as the footer of the preview window.
   - `previewHeader` _(default)_: If a swing has a readme, then its contents will be rendered as the header of the preview window.
 
-* `Codeswing: Show Console` - Specifies whether to always show the console when opening a swing. Defaults to `false`.
+- `Codeswing: Scratch Directory` - Specifies the directory that you want to store scratch swings into, using an absolute path. Defaults to `$TMP/codeswing`.
 
-* `Codeswing: Template Galleries` - Specifies the list of template galleries to use, when displaying the available templates when creating a new swing. Defaults to `["web:basic", "web:languages"]`.
+- `Codeswing: Show Console` - Specifies whether to always show the console when opening a swing. Defaults to `false`.
+
+- `Codeswing: Template Galleries` - Specifies the list of template galleries to use, when displaying the available templates when creating a new swing. Defaults to `["web:basic", "web:languages"]`.
 
 ## Extensibility
 

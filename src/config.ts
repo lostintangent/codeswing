@@ -9,6 +9,7 @@ export function get(
 export function get(
   key: "readmeBehavior"
 ): "none" | "previewFooter" | "previewHeader";
+export function get(key: "scratchDirectory"): string;
 export function get(key: "showConsole"): boolean;
 export function get(key: "templateGalleries"): string[];
 export function get(key: any) {

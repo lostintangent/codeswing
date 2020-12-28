@@ -374,8 +374,6 @@ export class SwingWebView {
           const xhr = pendingHttpRequests.get(data.value.id);
           xhr.respond(data.value.status, JSON.parse(data.value.headers), data.value.body, data.value.statusText);
           pendingHttpRequests.delete(data.value.id);
-        } else if (data.command === "navigateTutorial") {
-          navigateTutorial(data.value);
         } else if (data.command === "updateInput") {
           triggerInput(data.value)
         }
@@ -389,18 +387,14 @@ export class SwingWebView {
       }
 
       function triggerInput(input) {
-        if (window.checkInput) {
-          const complete = window.checkInput(input);
-
-          if (complete) {
-            navigateTutorial(1);
-          }
+        if (window.checkInput && window.checkInput(input)) {
+          setTimeout(() => navigateTutorial(1), 2000);
         }
       }
 
       function serializeMessage(message) {
         if (typeof message === "string") {
-          return message
+          return message;
         } else {
           return JSON.stringify(message);
         }

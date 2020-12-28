@@ -52,6 +52,8 @@ interface ActiveSwing {
   webViewPanel: vscode.WebviewPanel;
   console: vscode.OutputChannel;
   commentController?: vscode.CommentController;
+
+  scriptEditor?: vscode.TextEditor;
 }
 
 export interface Store {

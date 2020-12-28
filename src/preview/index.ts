@@ -4,13 +4,13 @@ import * as vscode from "vscode";
 import { Uri } from "vscode";
 import * as config from "../config";
 import { EXTENSION_NAME, INPUT_SCHEME, SWING_FILE } from "../constants";
-import { TempFileSystemProvider } from "../creation/tempFileSystem";
 import { store, SwingFileType, SwingManifest } from "../store";
 import {
   byteArrayToString,
   getFileContents,
   stringToByteArray,
 } from "../utils";
+import { exportSwingToCodePen, registerCodePenCommands } from "./codepen";
 import { registerSwingCommands } from "./commands";
 import { discoverLanguageProviders } from "./languages/languageProvider";
 import {
@@ -194,10 +194,6 @@ export async function openSwing(uri: Uri) {
   let currentUri = uri;
   if (store.activeSwing) {
     store.activeSwing.webViewPanel.dispose();
-
-    if (store.activeSwing?.rootUri.scheme === "codeswing") {
-      await TempFileSystemProvider.clear();
-    }
   }
 
   const isWorkspaceSwing =
@@ -301,8 +297,10 @@ export async function openSwing(uri: Uri) {
     )
   );
 
-  [htmlDocument, cssDocument, jsDocument].forEach(
-    (document) => document && layoutManager.showDocument(document)
+  const editors = await Promise.all(
+    [htmlDocument, cssDocument, jsDocument].map(
+      (document) => document && layoutManager.showDocument(document)
+    )
   );
 
   let inputDocument: vscode.TextDocument;
@@ -392,6 +390,7 @@ export async function openSwing(uri: Uri) {
     webViewPanel,
     console: output,
     hasTour: false,
+    scriptEditor: editors[2],
   };
 
   const autoRun = config.get("autoRun");
@@ -610,6 +609,7 @@ export function registerPreviewModule(
 ) {
   registerSwingCommands(context);
   registerTourCommands(context);
+  registerCodePenCommands(context);
   registerTreeProvider();
 
   getCDNJSLibraries();
@@ -619,6 +619,7 @@ export function registerPreviewModule(
   context.globalState.setKeysForSync([TUTORIAL_KEY]);
 
   api.openSwing = openSwing;
+  api.exportSwingToCodePen = exportSwingToCodePen;
 
   registerTutorialModule(context);
 }

@@ -4,12 +4,7 @@ import { DEFAULT_MANIFEST } from "..";
 import { SWING_FILE, URI_PATTERN } from "../../constants";
 import { store, SwingLibraryType, SwingManifest } from "../../store";
 import { byteArrayToString, stringToByteArray } from "../../utils";
-import {
-  getCDNJSLibraries,
-  getLibraryVersions,
-  ICDNJSLibrary,
-  ICDNJSLibraryVersion,
-} from "./cdnjs";
+import { getCDNJSLibraries, getLibraryVersions } from "./cdnjs";
 
 const SUPPORTED_DEFAULT_LIBRARIES = [
   "angular.js",
@@ -23,57 +18,44 @@ const SUPPORTED_DEFAULT_LIBRARIES = [
   "mobx",
   "polymer",
   "vue",
+  "tailwindcss",
 ];
 
-const librariesToPickList = (libraries: ICDNJSLibrary[]) => {
-  return libraries.map((library) => {
-    return {
-      label: library.name,
-      description: library.description,
-      library,
-    };
-  });
-};
-
-const libraryVersionsToPickList = (versions: ICDNJSLibraryVersion[]) => {
+async function libraryToVersionsPickList(libraryName: string) {
+  const versions = await getLibraryVersions(libraryName);
   return versions.map((version) => {
     return {
       label: version.version,
       version,
     };
   });
-};
+}
 
-const libraryToVersionsPickList = async (libraryName: string) => {
-  const versions = await getLibraryVersions(libraryName);
-  return libraryVersionsToPickList(versions);
-};
-
-const libraryFilesToPickList = (files: string[]) => {
+function libraryFilesToPickList(files: string[]) {
   return files.map((file) => {
     return {
       label: file,
     };
   });
-};
+}
 
-const createLibraryUrl = (
+function createLibraryUrl(
   libraryName: string,
   libraryVersion: string,
   libraryFile: string
-) => {
+) {
   return `https://cdnjs.cloudflare.com/ajax/libs/${libraryName}/${libraryVersion}/${libraryFile}`;
-};
+}
 
-const filterOutCommonJsFiles = (versions: string[]) => {
+function filterOutCommonJsFiles(versions: string[]) {
   const result = versions.filter((file: string) => {
     return !file.startsWith("cjs");
   });
 
   return result;
-};
+}
 
-export const getSwingManifest = (text: string): SwingManifest => {
+function getSwingManifest(text: string): SwingManifest {
   try {
     const json = JSON.parse(text) as SwingManifest;
 
@@ -84,7 +66,7 @@ export const getSwingManifest = (text: string): SwingManifest => {
   } catch {
     return DEFAULT_MANIFEST;
   }
-};
+}
 
 async function addDependencyLink(
   libraryType: SwingLibraryType,
@@ -116,7 +98,13 @@ const createLatestUrl = (libraryAnswer: any) => {
 
 export async function addSwingLibrary(libraryType: SwingLibraryType) {
   const libraries = await getCDNJSLibraries();
-  const libraryPickListItems = librariesToPickList(libraries);
+  const libraryPickListItems = libraries.map((library) => {
+    return {
+      label: library.name,
+      description: library.description,
+      library,
+    };
+  });
 
   const list = vscode.window.createQuickPick();
   list.placeholder = "Select the library you'd like to add to the swing";

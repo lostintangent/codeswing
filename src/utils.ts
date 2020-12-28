@@ -21,6 +21,10 @@ export async function checkForSwingWorkspace() {
 
 export async function getFileContents(swingUri: Uri, file: string) {
   const uri = Uri.joinPath(swingUri, file);
+  return getUriContents(uri);
+}
+
+export async function getUriContents(uri: Uri) {
   const contents = await workspace.fs.readFile(uri);
   return byteArrayToString(contents);
 }

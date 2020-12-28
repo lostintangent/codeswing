@@ -1,4 +1,7 @@
+import * as os from "os";
+import * as path from "path";
 import * as vscode from "vscode";
+import * as config from "../config";
 import { EXTENSION_NAME, SWING_FILE } from "../constants";
 import { DEFAULT_MANIFEST, openSwing } from "../preview";
 import { stringToByteArray, withProgress } from "../utils";
@@ -7,7 +10,6 @@ import {
   loadGalleries,
   registerTemplateProvider,
 } from "./galleryProvider";
-import { TempFileSystemProvider } from "./tempFileSystem";
 
 export interface SwingFile {
   filename: string;
@@ -18,13 +20,8 @@ interface CodeSwingTemplateItem extends vscode.QuickPickItem {
   files?: SwingFile[];
 }
 
-let SWING_ID = 0;
 export async function newSwing(
-  uri:
-    | vscode.Uri
-    | ((files: SwingFile[]) => Promise<vscode.Uri>) = vscode.Uri.parse(
-    `${EXTENSION_NAME}://${++SWING_ID}/`
-  ),
+  uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>),
   title: string = "Create new swing"
 ) {
   const quickPick = vscode.window.createQuickPick();
@@ -150,8 +147,22 @@ export async function registerCreationModule(
 ) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.newTemporarySwing`,
-      newSwing
+      `${EXTENSION_NAME}.newScratchSwing`,
+      async () => {
+        const scratchDirectory =
+          config.get("scratchDirectory") ||
+          path.join(os.tmpdir(), EXTENSION_NAME);
+
+        const swingDirectory = path.join(
+          scratchDirectory,
+          new Date().toUTCString()
+        );
+
+        const uri = vscode.Uri.parse(swingDirectory);
+        await vscode.workspace.fs.createDirectory(uri);
+
+        newSwing(uri);
+      }
     )
   );
 
@@ -168,11 +179,6 @@ export async function registerCreationModule(
         newSwing(folder[0]);
       }
     })
-  );
-
-  vscode.workspace.registerFileSystemProvider(
-    EXTENSION_NAME,
-    new TempFileSystemProvider()
   );
 
   api.newSwing = newSwing;
