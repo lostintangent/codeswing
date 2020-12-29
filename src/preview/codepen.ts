@@ -1,15 +1,29 @@
-import axios from "axios";
-import * as FormData from "form-data";
+import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
 import { getFileOfType } from ".";
 import { EXTENSION_NAME, SWING_FILE, URI_PATTERN } from "../constants";
 import { store, SwingFileType } from "../store";
-import { getFileContents, getUriContents } from "../utils";
+import { getFileContents, getUriContents, stringToByteArray } from "../utils";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
 
-const CODEPEN_URI =
-  "https://codespaces-contrib.github.io/codeswing/codepen.html";
+function getExportMarkup(data: any) {
+  const value = JSON.stringify(data)
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+  return `<form action="https://codepen.io/pen/define" method="POST">
+<input type="hidden" name="data" value="${value}" />
+</form>
+
+<script>
+
+  window.onload = () => {
+      document.querySelector("form").submit();
+  };
+
+</script>
+`;
+}
 
 const SCRIPT_PATTERN = /<script src="(?<url>[^"]+)"><\/script>/gi;
 const STYLE_PATTERN = /<link href="(?<url>[^"]+)" rel="stylesheet" \/>/gi;
@@ -169,33 +183,24 @@ export async function exportSwingToCodePen(uri: vscode.Uri) {
     data.css_external = styles.join(";");
   }
 
-  const formData = new FormData();
-  formData.append("text", JSON.stringify(data));
-
-  const response = axios.post("https://file.io/?expires=1", formData, {
-    headers: formData.getHeaders(),
-  });
-
-  const definitionFile = (await response).data.link;
-  const definitionUrl = encodeURIComponent(definitionFile!);
-
-  return vscode.env.openExternal(
-    vscode.Uri.parse(`${CODEPEN_URI}?pen=${definitionUrl}`)
+  const exportMarkup = getExportMarkup(data);
+  const exportUri = vscode.Uri.parse(
+    path.join(os.tmpdir(), "codepenexport.html")
   );
+
+  await vscode.workspace.fs.writeFile(
+    exportUri,
+    stringToByteArray(exportMarkup)
+  );
+  await vscode.env.openExternal(exportUri);
+
+  setTimeout(() => vscode.workspace.fs.delete(exportUri), 2000);
 }
 
 export function registerCodePenCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.exportToCodePen`,
-      async () =>
-        vscode.window.withProgress(
-          {
-            title: "Exporting swing...",
-            location: vscode.ProgressLocation.Notification,
-          },
-          () => exportSwingToCodePen(store.activeSwing!.rootUri)
-        )
+    vscode.commands.registerCommand(`${EXTENSION_NAME}.exportToCodePen`, () =>
+      exportSwingToCodePen(store.activeSwing!.rootUri)
     )
   );
 }
