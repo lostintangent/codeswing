@@ -154,6 +154,10 @@ If you'd like to collaborate with someone on a swing (e.g. doing a technical int
 
 <img width="700px" src="https://user-images.githubusercontent.com/116461/103246112-2d6b1500-4917-11eb-98af-cfbda51b1ace.gif" />
 
+### CodePen
+
+Once you've created an awesome swing, you should share it with the world! In order to make this simple, you can export a swing to CodePen using the `CodeSwing: Export to CodePen` command. This will take the currently running swing and create a new pen using the same files, pre-processor settings and libraries.
+
 ## Template Galleries
 
 When you create a new swing, you'll see a list of templates, which let you create swings using a pre-defined set of files and external libraries (e.g. React.js, Vue). This makes it really easy to get started quickly, and reduce repetitive tasks/boilerplate. By default, CodeSwing includes a standard set of templates, which come from two built-in galleries: `web:languages` and `web:basic`. If you don't intend to use one or both of these, you can disable them by clicking the gear icon when running the `New swing` command, and de-selecting the galleries you don't want. Additionally, you can modify the `CodeSwing: Template Galleries` setting.
