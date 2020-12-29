@@ -1,10 +1,10 @@
 # CodeSwing 🎢
 
-CodeSwing is an interactive coding environment for VS Code, that allows you to build rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions...oh my! When you create swings, you can use your favorite web languages (HTML/Pug, CSS/SCSS/Less, JS/TS) and libraries (React, Vue, Angular, etc.) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything. It's like a visual REPL for managing runnable code snippets.
+CodeSwing is an interactive coding environment for VS Code, that allows you to build/explore/learn rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions...oh my! When you create swings, you can use your favorite web languages (HTML/Pug, CSS/SCSS/Less, JS/TS) and libraries (React, Vue, Angular, etc.) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything. It's like a visual REPL for managing runnable code snippets.
 
 <img width="800px" src="https://user-images.githubusercontent.com/116461/103024429-ae37a480-4504-11eb-85ea-37ba9b9a4d9a.gif" />
 
-CodeSwing supports [template galleries](#template-galleries), which allows you to create and share re-usable swing templates. It also integrates with other VS Code extensions, to enable scenarios such as [managing your swings as GitHub Gists](#gistpad), [recording guided walkthroughs of your swings](#codetour), and [collaborating on a swing in real-time](#live-share). If that doesn't sound fun, then I don't know what is!
+CodeSwing supports [template galleries](#template-galleries), which allows you to create re-usable swing templates. When you're happy with a swing, you can also [export it to CodePen](#codepen) in order to share it with the world! Finally, since CodeSwing is a VS Code extension, it can integrate with other VS Code extensions, to enable compelling scenarios such as [managing your swings as GitHub Gists](#gistpad), [recording guided walkthroughs of your swings](#codetour), and [collaborating on a swing in real-time](#live-share). If that doesn't sound fun, then I don't know what is!
 
 <!--prettier-ignore-->
 > _**What's the meaning of the name "swing"?** As the extension's logo implies, it's referring to a [swing](<https://en.wikipedia.org/wiki/Swing_(seat)>) on playground, to elicit the idea of having fun. That said, if you interpret "swing" as the dance style, that's totally cool too! 💃_
@@ -157,6 +157,8 @@ If you'd like to collaborate with someone on a swing (e.g. doing a technical int
 ### CodePen
 
 Once you've created an awesome swing, you should share it with the world! In order to make this simple, you can export a swing to CodePen using the `CodeSwing: Export to CodePen` command. This will take the currently running swing and create a new pen using the same files, pre-processor settings and libraries.
+
+<img width="500px" src="https://user-images.githubusercontent.com/116461/103309031-cd34ab80-49c8-11eb-9326-7a00577151ff.gif" />
 
 ## Template Galleries
 
