@@ -184,7 +184,7 @@ export async function exportSwingToCodePen(uri: vscode.Uri) {
   }
 
   const exportMarkup = getExportMarkup(data);
-  const exportUri = vscode.Uri.parse(
+  const exportUri = vscode.Uri.file(
     path.join(os.tmpdir(), "codepenexport.html")
   );
 

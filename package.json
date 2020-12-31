@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "An interactive coding environment for building web applications (aka swings).",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.51.0"
   },
@@ -22,7 +22,7 @@
   "activationEvents": [
     "*"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -274,7 +274,7 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "webpack",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "lint": "eslint src --ext ts",
@@ -289,12 +289,16 @@
     "@typescript-eslint/parser": "^4.1.1",
     "eslint": "^7.9.0",
     "glob": "^7.1.6",
+    "ts-loader": "^8.0.12",
     "typescript": "^4.1.2",
-    "vsce": "^1.81.1"
+    "vsce": "^1.81.1",
+    "webpack": "^5.11.1",
+    "webpack-cli": "^4.3.0"
   },
   "dependencies": {
     "axios": "^0.21.0",
     "case": "^1.6.3",
+    "dayjs": "^1.9.8",
     "debounce": "^1.2.0",
     "form-data": "^3.0.0",
     "less": "^3.12.2",

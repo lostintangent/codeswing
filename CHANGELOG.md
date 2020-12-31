@@ -1,4 +1,9 @@
-# v0.0.5 (12/19/2020)
+# v0.0.6 (12/30/2020)
+
+- Fixed a couple of bugs that impacted the swing experience on Windows
+- The extension is now bundled with Webpack in order to improve peformance and reduce file size
+
+# v0.0.5 (12/28/2020)
 
 - Added initial Live Share support for workspace swings
 - Added support for exporting swings to CodePen via the new `CodeSwing: Export to CodePen` command

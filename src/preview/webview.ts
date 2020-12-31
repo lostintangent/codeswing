@@ -478,13 +478,13 @@ export class SwingWebView {
     }
 
     </script>
-    ${scripts}
   </head>
   <body>
     ${tutorialNavigation}
     ${header}
     ${this.html}
     ${footer}
+    ${scripts}
     <script type="${scriptType}">
       ${this.javascript}
     </script>

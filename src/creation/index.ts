@@ -153,12 +153,11 @@ export async function registerCreationModule(
           config.get("scratchDirectory") ||
           path.join(os.tmpdir(), EXTENSION_NAME);
 
-        const swingDirectory = path.join(
-          scratchDirectory,
-          new Date().toUTCString()
-        );
+        const dayjs = require("dayjs");
+        const timestamp = dayjs().format("YYYY-MM-DD (hh-mm-ss A)");
+        const swingDirectory = path.join(scratchDirectory, timestamp);
 
-        const uri = vscode.Uri.parse(swingDirectory);
+        const uri = vscode.Uri.file(swingDirectory);
         await vscode.workspace.fs.createDirectory(uri);
 
         newSwing(uri);

@@ -85,16 +85,21 @@ async function getManifestContent(uri: Uri, files: string[]) {
   return manifest;
 }
 
+function localeCompare(a: string, b: string) {
+  return a.localeCompare(b, undefined, { sensitivity: "base" }) === 0;
+}
+
 function isSwingDocument(
   files: string[],
   document: vscode.TextDocument,
   fileType: SwingFileType
 ) {
+  const swingUri = store.activeSwing!.currentUri;
   if (
-    store.activeSwing!.currentUri.scheme !== document.uri.scheme ||
-    store.activeSwing!.currentUri.authority !== document.uri.authority ||
-    store.activeSwing!.currentUri.query !== document.uri.query ||
-    !document.uri.path.startsWith(store.activeSwing!.currentUri.path) ||
+    !localeCompare(swingUri.scheme, document.uri.scheme) ||
+    !localeCompare(swingUri.authority, document.uri.authority) ||
+    !localeCompare(swingUri.query, document.uri.query) ||
+    !document.uri.path.toUpperCase().startsWith(swingUri.path.toUpperCase()) ||
     !files.includes(path.basename(document.uri.path))
   ) {
     return false;
