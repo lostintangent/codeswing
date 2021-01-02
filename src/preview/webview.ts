@@ -23,7 +23,7 @@ export class SwingWebView {
 
   constructor(
     private webview: vscode.Webview,
-    output: vscode.OutputChannel,
+    private output: vscode.OutputChannel,
     private swing: vscode.Uri,
     private codePenScripts: string = "",
     private codePenStyles: string = "",
@@ -50,11 +50,9 @@ export class SwingWebView {
               url: value.url,
               method: value.method,
               data: value.body,
-              headers: JSON.parse(value.headers || {}),
-              responseType: "text",
-              transformResponse: (data) => {
-                return data;
-              },
+              headers: JSON.parse(value.headers || "{}"),
+              responseType: value.responseType || "text",
+              transformResponse: (data) => data,
             });
           } else {
             const uri = vscode.Uri.joinPath(this.swing, value.url);
@@ -66,13 +64,20 @@ export class SwingWebView {
             };
           }
 
+          const body =
+            value.responseType === "arraybuffer"
+              ? byteArrayToString(response.data)
+              : response.data;
+
           webview.postMessage({
             command: "httpResponse",
             value: {
               id: value.id,
-              body: response.data,
+              body,
+              responseType: value.responseType,
               status: response.status,
               statusText: response.statusText,
+              source: value.source,
               headers: JSON.stringify(response.headers || {}),
             },
           });
@@ -249,6 +254,10 @@ export class SwingWebView {
   }
 
   public async rebuildWebview() {
+    if (config.get("clearConsoleOnRun")) {
+      this.output.clear();
+    }
+
     // The URL needs to have a trailing slash, or end the URLs could get messed up.
     const baseUrl = this.webview
       .asWebviewUri(vscode.Uri.joinPath(this.swing, "/"))
@@ -354,6 +363,7 @@ export class SwingWebView {
       ${this.css}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/mock-xmlhttprequest@5.1.0/dist/mock-xmlhttprequest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fetch-mock/es5/client-bundle.js"></script>
     <script>
 
     // Wrap this code in braces, so that none of the variables
@@ -366,14 +376,28 @@ export class SwingWebView {
   
       let httpRequestId = 1;
       const pendingHttpRequests = new Map();
+      const pendingFetchRequests = new Map();
 
       window.addEventListener("message", ({ data }) => {  
         if (data.command === "updateCSS") {
           style.textContent = data.value;
         } else if (data.command === "httpResponse") {
-          const xhr = pendingHttpRequests.get(data.value.id);
-          xhr.respond(data.value.status, JSON.parse(data.value.headers), data.value.body, data.value.statusText);
-          pendingHttpRequests.delete(data.value.id);
+          const id = data.value.id;
+          const status = data.value.status;
+          const headers = JSON.parse(data.value.headers);
+
+          // TODO: Add support for other response types
+          const body = data.value.responseType === "arraybuffer" ? new TextEncoder().encode(data.value.body).buffer : data.value.body;
+
+          if (data.value.source === "fetch") { 
+            const resolve = pendingFetchRequests.get(id);
+            resolve({ status, headers, body });
+            pendingFetchRequests.delete(id);
+          } else {
+            const xhr = pendingHttpRequests.get(id);
+            xhr.respond(status, headers, body, data.value.statusText);
+            pendingHttpRequests.delete(id);
+          }
         } else if (data.command === "updateInput") {
           triggerInput(data.value)
         }
@@ -426,6 +450,8 @@ export class SwingWebView {
         originalLog.call(console, message, ...args);
       };
 
+      // TODO: Add support for sending FormData, URLSearchParams,
+      // ArrayBuffer, or Blob objects as the request body.
       const mockXHRServer = MockXMLHttpRequest.newServer();
       mockXHRServer.setDefaultHandler((xhr) => {
         pendingHttpRequests.set(httpRequestId, xhr);
@@ -436,11 +462,30 @@ export class SwingWebView {
             url: xhr.url,
             method: xhr.method,
             body: xhr.body,
-            headers: JSON.stringify(xhr.headers || {})
+            responseType: xhr.responseType,
+            headers: JSON.stringify(xhr.headers || {}),
+            source: "xhr"
           }
         });
       });
       mockXHRServer.install(window);
+
+      fetchMock.any((url, options = {}) => {
+        return new Promise(async (resolve) => {
+          pendingFetchRequests.set(httpRequestId, resolve);
+          vscode.postMessage({
+            command: "httpRequest",
+            value: {
+              id: httpRequestId++,
+              url,
+              method: options.method,
+              body: options.body,
+              headers: JSON.stringify(options.headers || {}),
+              source: "fetch"
+            }
+          });
+        });
+      });
 
       const LINK_PREFIX = "swing:";
       document.addEventListener("click", (e) => {
@@ -480,11 +525,11 @@ export class SwingWebView {
     </script>
   </head>
   <body>
+    ${scripts}
     ${tutorialNavigation}
     ${header}
     ${this.html}
     ${footer}
-    ${scripts}
     <script type="${scriptType}">
       ${this.javascript}
     </script>

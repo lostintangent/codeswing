@@ -3,6 +3,7 @@ import { EXTENSION_NAME } from "./constants";
 
 export function get(key: "autoRun"): "onEdit" | "onSave" | "never";
 export function get(key: "autoSave"): boolean;
+export function get(key: "clearConsoleOnRun"): boolean;
 export function get(
   key: "layout"
 ): "grid" | "splitLeft" | "splitRight" | "splitTop";

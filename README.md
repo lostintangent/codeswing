@@ -23,6 +23,7 @@ Reference
 - [Contributed Commands](#contributed-commands)
 - [Configuration Settings](#configuration-settings)
 - [Extensibility](#extensibility)
+- [Known Limitations](#known-limitations)
 
 ## Getting Started
 
@@ -264,6 +265,8 @@ Additionally, when you have a swing currently open, the following commands are a
 
 - `Codeswing: Auto Save` - Specifies whether to automatically save your swing files (every 30s). If you've already set the `Files: Auto Save` setting to `afterDelay`, then that setting will be respected. Defaults to `false`.
 
+- `Codeswing: Clear Console on Run` - Specifies whether to automatically clear the console when the active swing is run.
+
 - `Codeswing: Layout` - Specifies how to layout the editor windows when opening a swing. Can be set to one of the following values:
 
   - `grid`: Opens a 2x2 grid of editors, with the editors and preview window occupying an equal amount of space.
@@ -308,3 +311,7 @@ By default, CodeSwing ships with support for a handful of [languages](#additiona
 When your extension contributes a custom language, CodeSwing expects that your extension returns an API, that includes the following members:
 
 - `codeSwingCompile(extension: string, code: string): string` - Takes in the code and associated file extension (e.g. `.haml`) and returns the compiled version of the code. For example, if your extension contributes support for Haml, then when the end-user opens a swing using a `.haml` file, this method would be passed the raw Haml code, and the `.haml` extension, and you'd need to return the compiled HTML string.
+
+## Known Limitations
+
+- **Playing audio and video** - [VS Code doesn't ship with ffmpeg](https://stackoverflow.com/questions/48321919/show-html5-video-on-previewhtml-command-in-vscode-extension), and therefore, it isn't capable of playing most common audio (e.g. WAV, MP3, MIDI) and video (e.g. MP4) formats ([example](https://gist.github.com/lostintangent/5e286fa15f739b029ae2bedcf323db5e)). As a result, if you try to use an `<audio>`/`<video>` tag and/or, the WebAudio API, you won't be able to decode most media. You can, however, use the web audio API to dynamically create audio ([sample](https://gist.github.com/lostintangent/baf485f08c6e471d7e145e058cb16cd8)).

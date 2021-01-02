@@ -190,6 +190,11 @@
           "type": "boolean",
           "description": "Specifies whether to automatically save your swing files (every 30s)."
         },
+        "codeswing.clearConsoleOnRun": {
+          "default": true,
+          "type": "boolean",
+          "description": "Specifies whether to automatically clear the console when running a swing."
+        },
         "codeswing.layout": {
           "default": "splitLeft",
           "enum": [
