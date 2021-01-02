@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "An interactive coding environment for building web applications (aka swings).",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "engines": {
     "vscode": "^1.51.0"
   },

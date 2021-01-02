@@ -1,4 +1,4 @@
-# v0.0.07 (01/01/2021)
+# v0.0.7 (01/02/2021)
 
 - Added support for the `fetch` API, in addition to the existing support for `XMLHttpRequest`
 - Introduced the `CodeSwing: Clear Console on Run` setting (defaults to `true`)
