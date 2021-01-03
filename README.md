@@ -303,9 +303,9 @@ By default, CodeSwing ships with a set of template galleries, however, extension
 
 ### Custom Languages
 
-By default, CodeSwing ships with support for a handful of [languages](#additional-language-support) you can use in. However, extensions can introduce support for new languages by adding a `codeswing.languages` contribution to their `package.json` file. This contribution point is simply an object of objects with the following properties:
+By default, CodeSwing ships with support for a handful of [languages](#additional-language-support) you can use in. However, extensions can introduce support for new languages by adding a `codeswing.languages` contribution to their `package.json` file. This contribution point is simply an array of objects with the following properties:
 
-- `type` - The "type" of language that your extension is supporting. One of `markup`, `stylesheet` or `script`.
+- `type` - The "type" of language that your extension is supporting. Only `markup` is supported right now.
 - `extensions` - An array of file extensions that your extension supports, including the leading period (e.g `.haml`).
 
 When your extension contributes a custom language, CodeSwing expects that your extension returns an API, that includes the following members:
