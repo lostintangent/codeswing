@@ -1,3 +1,8 @@
+# v0.0.8 (01/26/2021)
+
+- Fixed a bug with tutorial navigation
+- Optimized the extension to only activate when needed
+
 # v0.0.7 (01/02/2021)
 
 - Added support for the `fetch` API, in addition to the existing support for `XMLHttpRequest`

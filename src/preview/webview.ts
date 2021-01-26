@@ -400,6 +400,8 @@ export class SwingWebView {
           }
         } else if (data.command === "updateInput") {
           triggerInput(data.value)
+        } else if (data.command === "navigateTutorial") {
+          navigateTutorial(data.value);
         }
       });
     
