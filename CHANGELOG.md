@@ -1,5 +1,6 @@
 # v0.0.9 (02/12/2021)
 
+- Introduced support for React component swings
 - Added a keybinding for running a swing via `cmd+shift+b` (macOS/Linux) and `ctrl+shift+b` (Windows)
 - Fixed a bug with creating swings from a user-defined template
 

@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "An interactive coding environment for building web applications (aka swings).",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.51.0"
   },
@@ -287,6 +287,10 @@
       {
         "id": "web:languages",
         "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/languages.json"
+      },
+      {
+        "id": "web:libraries",
+        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/libraries.json"
       }
     ]
   },
