@@ -2,7 +2,7 @@
   "name": "codeswing",
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
-  "description": "An interactive coding environment for building web applications (aka swings).",
+  "description": "Interactive coding playground for building web applications (aka swings).",
   "version": "0.0.9",
   "engines": {
     "vscode": "^1.51.0"
@@ -244,6 +244,7 @@
                 "type": "string",
                 "enum": [
                   "web:basic",
+                  "web:components",
                   "web:languages"
                 ]
               },
