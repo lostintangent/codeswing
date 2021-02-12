@@ -290,6 +290,12 @@ Additionally, when you have a swing currently open, the following commands are a
 
 - `Codeswing: Template Galleries` - Specifies the list of template galleries to use, when displaying the available templates when creating a new swing. Defaults to `["web:basic", "web:languages"]`.
 
+## Keybindings
+
+When you install this extension, it contributes the following keybindings while you're actively working on a swing:
+
+- `cmd+shift+b` (macOS/Linux), `ctrl+shift+b` (Windows) - Run the currently active swing. This uses the same keybinding as the `Tasks: Run Build Task` command, in order to enable folks to treat swings like they would with their existing apps.
+
 ## Extensibility
 
 In order to allow other extensions to extend the default behavior and/or settings of CodeSwing, the following extensibility points are provided:

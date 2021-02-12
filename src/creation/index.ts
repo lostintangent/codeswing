@@ -8,7 +8,7 @@ import { stringToByteArray, withProgress } from "../utils";
 import {
   enableGalleries,
   loadGalleries,
-  registerTemplateProvider,
+  registerTemplateProvider
 } from "./galleryProvider";
 
 export interface SwingFile {
@@ -76,9 +76,20 @@ async function newSwingFromTemplate(
   files: SwingFile[],
   uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>)
 ): Promise<vscode.Uri> {
-  if (!files.find((file) => file.filename === SWING_FILE)) {
+  const manifest = files.find((file) => file.filename === SWING_FILE)
+  if (!manifest) {
     const content = JSON.stringify(DEFAULT_MANIFEST, null, 2);
     files.push({ filename: SWING_FILE, content });
+  } else if (manifest.content) {
+    try {
+      const content = JSON.parse(manifest.content);
+      delete content.template;
+      manifest.content = JSON.stringify(content, null, 2);
+    } catch {
+      // If the template included an invalid
+      // manifest file, then there's nothing
+      // we can really do about it.
+    }
   }
 
   if (uri instanceof Function) {

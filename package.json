@@ -271,6 +271,14 @@
         ]
       }
     ],
+    "keybindings": [
+      {
+        "command" : "codeswing.run",
+        "when" : "codeswing:inSwing",
+        "key" : "cmd+shift+b",
+        "win": "ctrl+shift+b"
+      }
+    ],
     "codeswing.templateGalleries": [
       {
         "id": "web:basic",
