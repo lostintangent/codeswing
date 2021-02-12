@@ -49,7 +49,7 @@ export async function getMarkupContent(
       return content;
     } else if (REACT_EXTENSIONS.includes(extension)) {
       const [scriptCode] = (await getScriptContent(document, undefined))!
-      const [component] = scriptCode.match(/export\sdefault\s(?:(?:class|function)\s)?(\w+)?/)!;
+      const [, component] = scriptCode.match(/export\sdefault\s(?:(?:class|function)\s)?(\w+)?/)!;
       
 
       return `<div id="app"></div>
