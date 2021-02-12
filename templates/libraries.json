@@ -1,0 +1,25 @@
+{
+  "id": "web:libraries",
+  "title": "Libraries",
+  "description": "Get started with commonly-used libraries and frameworks.",
+  "templates": [
+    {
+      "title": "React.js",
+      "files": [
+        {
+          "filename": "index.jsx",
+          "contents": "export default function App() {\\nreturn <div>Hello world</div>;\n\n}"
+        }
+      ]
+    },
+    {
+      "title": "React.js w/TypeScript",
+      "files": [
+        {
+          "filename": "index.tsx",
+          "contents": "export default function App() {\\nreturn <div>Hello world</div>;\n\n}"
+        }
+      ]
+    }
+  ]
+}
