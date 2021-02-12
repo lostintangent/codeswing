@@ -13,7 +13,7 @@ export const ScriptLanguage = {
   typescriptreact: ".tsx",
 };
 
-const REACT_EXTENSIONS = [
+export const REACT_EXTENSIONS = [
   ScriptLanguage.babel,
   ScriptLanguage.javascriptreact,
   ScriptLanguage.typescriptreact,
