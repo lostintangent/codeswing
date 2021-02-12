@@ -1,23 +1,15 @@
 import * as path from "path";
 import { TextDocument } from "vscode";
 import { compileCode, getExtensions } from "./languageProvider";
-import { getScriptContent } from "./script";
+import { getScriptContent, REACT_EXTENSIONS } from "./script";
 
 export const MARKUP_BASE_NAME = "index";
 
 const MarkupLanguage = {
   html: ".html",
   markdown: ".md",
-  pug: ".pug",
-  jsx: ".jsx",
-  tsx: ".tsx"
+  pug: ".pug"
 };
-
-const REACT_EXTENSIONS = [
-  MarkupLanguage.html,
-  MarkupLanguage.jsx,
-  MarkupLanguage.tsx,
-];
 
 const MARKUP_EXTENSIONS = [
   MarkupLanguage.html,
@@ -55,19 +47,19 @@ export async function getMarkupContent(
       return markdown.render(content);
     } else if (extension === MarkupLanguage.html) {
       return content;
-    } else if (extension === MarkupLanguage.jsx || extension === MarkupLanguage.tsx) {
+    } else if (REACT_EXTENSIONS.includes(extension)) {
       const [scriptCode] = (await getScriptContent(document, undefined))!
-      const component = scriptCode!.match(/export\sdefault\s(?:(?:class|function)\s)?(\w+)/)![1];
-  
+      const [component] = scriptCode.match(/export\sdefault\s(?:(?:class|function)\s)?(\w+)?/)!;
+      
+
       return `<div id="app"></div>
 <script type="module">
-        import React from "https://cdn.skypack.dev/react";
-        import ReactDOM from "https://cdn.skypack.dev/react-dom";
-
-        ${scriptCode}
+  
+  ${scriptCode}
         
-        ReactDOM.render(<${component} />, document.queryElementById("app"));
-</script>`
+  ReactDOM.render(React.createElement(${component}), document.getElementById("app"));
+  
+</script>`;
     } else {
       return await compileCode("markup", extension, content);
     }

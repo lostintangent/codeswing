@@ -1,7 +1,7 @@
 {
-  "id": "web:libraries",
-  "title": "Libraries",
-  "description": "Get started with commonly-used libraries and frameworks.",
+  "id": "web:components",
+  "title": "Components",
+  "description": "Create components using popular libraries and frameworks.",
   "templates": [
     {
       "title": "React.js",
