@@ -29,6 +29,15 @@
           "content": "<template>\n  <div>Hello world</div>\n</template>\n\n<script>\n  export default {\n  \n}\n</script>\n\n<style>\n \n</style>"
         }
       ]
+    },
+    {
+      "title": "Svelte",
+      "files": [
+        {
+          "filename": "index.svelte",
+          "content": "<script>\nlet name = \"world\";\n</script>\n\n<h1>Hello {name}!</h1>"
+        }
+      ]
     }
   ]
 }

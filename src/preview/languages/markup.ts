@@ -9,7 +9,8 @@ const MarkupLanguage = {
   html: ".html",
   markdown: ".md",
   pug: ".pug",
-  vue: ".vue"
+  vue: ".vue",
+  svelte: ".svelte"
 };
 
 const MARKUP_EXTENSIONS = [
@@ -17,6 +18,7 @@ const MARKUP_EXTENSIONS = [
   MarkupLanguage.markdown,
   MarkupLanguage.pug,
   MarkupLanguage.vue,
+  MarkupLanguage.svelte,
   ...REACT_EXTENSIONS
 ];
 
@@ -81,7 +83,21 @@ export async function getMarkupContent(
   });
   
 </script>`;
-    } else {
+    } else if (extension === MarkupLanguage.svelte) {
+      const svelte = require("svelte/compiler")
+      const { js: { code } } = svelte.compile(content, { sveltePath: "https://cdn.skypack.dev/svelte" });
+      return `<div id="app"></div>
+<script type="module">
+ 
+  ${code}
+
+  new Component({
+    target: document.getElementById("app")
+  });
+
+</script>`
+    }
+     else {
       return await compileCode("markup", extension, content);
     }
   } catch {
