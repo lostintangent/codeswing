@@ -26,7 +26,7 @@
       "files": [
         {
           "filename": "index.vue",
-          "content": "<template>\n  <div>Hello world</div>\n</template>\n<script>\n  export default {\n  \n}\n</script>"
+          "content": "<template>\n  <div>Hello world</div>\n</template>\n\n<script>\n  export default {\n  \n}\n</script>\n\n<style>\n \n</style>"
         }
       ]
     }

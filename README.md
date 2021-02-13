@@ -63,7 +63,15 @@ Additionally, if your script file ends in `.jsx` or `.tsx`, you can use JSX synt
 
 ### Components
 
-In addition to the aforementioned languages, CodeSwing also allows you to create component-based swings, using either React.js or Vue (single-file components). A component-based swing is unique in that it's a single file that lets you focus on just your component, and have all of the code to initialize and render it automatically handled.
+In addition to the aforementioned languages, CodeSwing also allows you to create component-based swings, using either React.js or Vue (single-file components). A component-based swing is unique in that it's a single file that lets you focus on just your component, and have all initialization and rendering logic handled automatically.
+
+#### React
+
+When create a React component swing, you can define either a function-based or class-based component. You can name the component whatever you'd like, but you need to export it as the default export (e.g. `export default function Foo`). The `react` and `react-dom` libraries will be automatically included, and your exported component will be rendered into the page. If you need to access the React API (e.g. to use a hook), you can access `React` from within your component code. Additionally, if you need to include any other libraries, you can simply [import them](#javascript-modules).
+
+#### Vue
+
+Using a Vue component swing, you can define your template, script and styles within a single-file component. Furthermore, you can add the `lang` attribute to the `template`, `script` or `style` elements, in order to use any of the [supported languages](#language-support).
 
 > Note: VS Code doesn't ship with support for `.vue` files out of the box, so if you want to create Vue swings, it's recommended that you install the [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur) extension.
 

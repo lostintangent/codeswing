@@ -235,6 +235,7 @@
         "codeswing.templateGalleries": {
           "default": [
             "web:basic",
+            "web:components",
             "web:languages"
           ],
           "type": "array",
