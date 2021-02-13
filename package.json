@@ -274,9 +274,9 @@
     ],
     "keybindings": [
       {
-        "command" : "codeswing.run",
-        "when" : "codeswing:inSwing",
-        "key" : "cmd+shift+b",
+        "command": "codeswing.run",
+        "when": "codeswing:inSwing",
+        "key": "cmd+shift+b",
         "win": "ctrl+shift+b"
       }
     ],
@@ -318,6 +318,7 @@
     "webpack-cli": "^4.3.0"
   },
   "dependencies": {
+    "@vue/component-compiler": "^4.2.3",
     "axios": "^0.21.0",
     "case": "^1.6.3",
     "dayjs": "^1.9.8",
@@ -326,9 +327,11 @@
     "less": "^3.12.2",
     "markdown-it": "^12.0.3",
     "mobx": "^6.0.4",
+    "postcss": "^8.2.6",
     "pug": "^3.0.0",
     "sass": "^1.30.0",
     "typescript": "^4.1.2",
-    "vsls": "^1.0.3015"
+    "vsls": "^1.0.3015",
+    "vue-template-compiler": "^2.6.12"
   }
 }

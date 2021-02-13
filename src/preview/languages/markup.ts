@@ -8,13 +8,15 @@ export const MARKUP_BASE_NAME = "index";
 const MarkupLanguage = {
   html: ".html",
   markdown: ".md",
-  pug: ".pug"
+  pug: ".pug",
+  vue: ".vue"
 };
 
 const MARKUP_EXTENSIONS = [
   MarkupLanguage.html,
   MarkupLanguage.markdown,
   MarkupLanguage.pug,
+  MarkupLanguage.vue,
   ...REACT_EXTENSIONS
 ];
 
@@ -50,7 +52,6 @@ export async function getMarkupContent(
     } else if (REACT_EXTENSIONS.includes(extension)) {
       const [scriptCode] = (await getScriptContent(document, undefined))!
       const [, component] = scriptCode.match(/export\sdefault\s(?:(?:class|function)\s)?(\w+)?/)!;
-      
 
       return `<div id="app"></div>
 <script type="module">
@@ -59,6 +60,22 @@ export async function getMarkupContent(
         
   ReactDOM.render(React.createElement(${component}), document.getElementById("app"));
   
+</script>`;
+    } else if (extension === MarkupLanguage.vue) {
+      const { assemble, createDefaultCompiler } = require("@vue/component-compiler")
+
+      const compiler = createDefaultCompiler();
+       const descriptor = compiler.compileToDescriptor("index.vue", content);
+       const { code } = assemble(compiler, "index.vue", descriptor, {});
+       
+       return `<div id="app"></div>
+<script type="module">
+
+  import Vue from 'https://cdn.skypack.dev/vue'
+
+  ${code}
+
+  Vue.createApp(__vue_component__).mount("#app");
 </script>`;
     } else {
       return await compileCode("markup", extension, content);

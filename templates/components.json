@@ -20,6 +20,15 @@
           "content": "export default function App() {\n   return <div>Hello world</div>;\n}"
         }
       ]
+    },
+    {
+      "title": "Vue.js",
+      "files": [
+        {
+          "filename": "index.vue",
+          "content": "<template>\n  <div>Hello world</div>\n</template>\n<script>\n  export default {\n  }\n</script>"
+        }
+      ]
     }
   ]
 }
