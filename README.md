@@ -1,6 +1,6 @@
 # CodeSwing 🎢
 
-CodeSwing is an interactive coding environment for VS Code, that allows you to build/explore/learn rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions...oh my! When you create swings, you can use your favorite web languages (HTML/Pug, CSS/SCSS/Less, JS/TS) and libraries (React, Vue, Angular, etc.) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything. It's like a visual REPL for managing runnable code snippets.
+CodeSwing is an interactive coding playground for VS Code, that allows you to build/explore/learn rich web applications ("swings"). It's like having the magic of a traditional web playground (e.g. CodePen, JSFiddle), but available directly from your highly-personalized editor: themes, keybindings, and extensions...oh my! When you create swings, you can use your favorite web languages (HTML/Pug, CSS/SCSS/Less, JS/TS) and libraries (React, Vue, Angular, etc.) and have a live preview <ins>as you type</ins>, without needing to worry about compiling or bundling anything. It's like a visual REPL for managing runnable code snippets.
 
 <img width="800px" src="https://user-images.githubusercontent.com/116461/103024429-ae37a480-4504-11eb-85ea-37ba9b9a4d9a.gif" />
 
@@ -43,15 +43,15 @@ Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scisso
 
 After you install the CodeSwing extension, you can create new swings at any time, using the following commands:
 
-- "CodeSwing: New Scratch Swing..." - Creates a temporary "scratch" swing, that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time. If you'd like to customize where scratch swings are stored, you can set the `CodeSwing: Scratch Directory` setting to the absolute path of the desired directory.
+- `CodeSwing: New Scratch Swing...` - Creates a temporary "scratch" swing, that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time. If you'd like to customize where scratch swings are stored, you can set the `CodeSwing: Scratch Directory` setting to the absolute path of the desired directory.
 
-- "CodeSwing: New Swing..." - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
+- `CodeSwing: New Swing...` - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
 
-After creating a swing, your editor layout will be automatically setup to accomodate the needs of the selected template. Furthermore, if you open a directory that represents a swing, or you run the "CodeSwing: Open Swing..." command, then the selected swing will be automatically launched.
+After creating a swing, your editor layout will be automatically setup to accomodate the needs of the selected template. Furthermore, if you open a directory that represents a swing, or you run the `CodeSwing: Open Swing...` command, then the selected swing will be automatically launched.
 
 ### Language Support
 
-CodeSwing comes with support for all major web languages, and allows you to create new swings without worrying about building/bundling anything. When you create a swing, the templates list provides options for getting started quickly
+CodeSwing comes with support for all major web languages, and allows you to create new swings without worrying about building or bundling anything. When you create a swing, the templates list provides options for getting started quickly
 
 | Asset Type | Supported Languages    |
 | ---------- | ---------------------- |
@@ -59,7 +59,13 @@ CodeSwing comes with support for all major web languages, and allows you to crea
 | Stylesheet | CSS, SCSS/Saas, Less   |
 | Script     | JavaScript, TypeScript |
 
-Additionally, if your script file ends in ".jsx" or ".tsx", you can use JSX syntax. CodeSwing also recognizes a script file that ends in ".babel" and treats it like TypeScript. Finally, if your script file ends in ".mjs", then it will be treated as a [JavaScript module](#modules).
+Additionally, if your script file ends in `.jsx` or `.tsx`, you can use JSX syntax. CodeSwing also recognizes a script file that ends in `.babel` and treats it like TypeScript. Finally, if your script file ends in ".mjs", then it will be treated as a [JavaScript module](#modules).
+
+### Components
+
+In addition to the aforementioned languages, CodeSwing also allows you to create component-based swings, using either React.js or Vue (single-file components). A component-based swing is unique in that it's a single file that lets you focus on just your component, and have all of the code to initialize and render it automatically handled.
+
+> Note: VS Code doesn't ship with support for `.vue` files out of the box, so if you want to create Vue swings, it's recommended that you install the [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur) extension.
 
 ### Swing Layout
 
@@ -124,14 +130,6 @@ By default, swings assume you're using "standard" JavaScript code (`<script type
 Once you're using modules, we'd recommend you use [Skypack](https://skypack.dev) to load your desired libraries. To make this simpler, you can run the `CodeSwing: Add Library` command, select `Script module` and then specify the module you'd like to add.
 
 <img width="500px" src="https://user-images.githubusercontent.com/116461/103246626-09a8ce80-4919-11eb-9b01-b3a7a02a5634.gif" />
-
-### Uploading Images
-
-You can reference HTTP-based images within any of your swing files, and they'll be downloaded/rendered automatically. However, if you need to add local images to your swing, you can upload them in one of two ways:
-
-1. Right-click the gist in the `Gists` view and select `Upload Files(s)`. This supports any file type, and therefore is the most general-purpose solution. Once the image is uploaded, you can then reference it from your swing using only its filename (e.g. `<img src="myImage.png" />`), since the swing preview understands the context of the "surrounding gist".
-
-2. Copy/paste an image into your clipboard, open up an HTML or Pug file, right-click the editor and select `Paste Image`. This will transparently upload the image to the gist, and then insert a reference to it for you (e.g. adding an `<img />` tag). This solution works best when you want to paste a "transient" image into your swing, such as a captured screenshot, or an image that you copied from a webpage.
 
 ### Code Links
 

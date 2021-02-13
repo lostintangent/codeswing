@@ -283,15 +283,15 @@
     "codeswing.templateGalleries": [
       {
         "id": "web:basic",
-        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/basic.json"
+        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@HEAD/templates/basic.json"
       },
       {
         "id": "web:languages",
-        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/languages.json"
+        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@HEAD/templates/languages.json"
       },
       {
         "id": "web:components",
-        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/components.json"
+        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@HEAD/templates/components.json"
       }
     ]
   },

@@ -71,11 +71,15 @@ export async function getMarkupContent(
        return `<div id="app"></div>
 <script type="module">
 
-  import Vue from 'https://cdn.skypack.dev/vue'
+  import Vue from 'https://cdn.skypack.dev/vue';
 
   ${code}
 
-  Vue.createApp(__vue_component__).mount("#app");
+  new Vue({
+    el: "#app",
+    render: h => h(__vue_component__)
+  });
+  
 </script>`;
     } else {
       return await compileCode("markup", extension, content);
