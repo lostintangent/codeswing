@@ -77,7 +77,7 @@ Using a Vue component swing, you can define your template, script and styles wit
 
 #### Svelte
 
-When creating a Svelte component swing, you can define your template, script and styles within a single `.svelte` component.
+When creating a Svelte component swing, you can define your template, script and styles within a single `.svelte` component. If you need to access APIs from Svelte itself, simply add an `import` statement from `svelte` and use the API you need (e.g. `import { tweened } from 'svelte/motion')
 
 > Note: VS Code doesn't ship with support for `.svelte` files out of the box, so if you want to create Svelte swings, it's recommended that you install the [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) extension.
 
