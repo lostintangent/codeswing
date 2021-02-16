@@ -8,21 +8,26 @@ interface SkypackPackage {
   description: string;
 }
 
-const SEARCH_URL = "https://api.skypack.dev/v1/autocomplete_package";
-
 async function getModules(searchString: string) {
   const librariesResponse = await axios.get<{ results: SkypackPackage[] }>(
-    `${SEARCH_URL}?q=${searchString}`
+    `https://api.skypack.dev/v1/autocomplete_package?q=${searchString}`
   );
 
   return librariesResponse.data.results;
 }
 
-async function hasDefaultExport(packageName: string) {
-  const response = await axios.get(
-    `https://cdn.skypack.dev/${packageName}?meta`
+async function hasDefaultExport(moduleName: string) {
+  const moduleUrl = getModuleUrl(moduleName);
+  const { data } = await axios.get(
+    `${moduleUrl}?meta`
   );
-  return response.data.packageExports?.["."]?.hasDefaultExport || false;
+  return data.packageExports?.["."]?.hasDefaultExport || false;
+}
+
+const IMPORT_PATTERN = /(import\s.+\sfrom\s)(["'])(?!\.\/|http)(.+)\2/gi;
+const IMPORT_SUBSTITION = `$1$2https://cdn.skypack.dev/$3$2`;
+export function processImports(code: string) {
+  return code.replace(IMPORT_PATTERN, IMPORT_SUBSTITION);
 }
 
 const DEFAULT_MODULES = [
@@ -41,6 +46,10 @@ async function addModuleImport(moduleName: string, moduleUrl: string) {
   store.activeSwing!.scriptEditor?.edit((edit) => {
     edit.insert(new vscode.Position(0, 0), importContent);
   });
+}
+
+export function getModuleUrl(moduleName: string) {
+  return `https://cdn.skypack.dev/${moduleName}`;
 }
 
 export async function addSkypackModule() {
@@ -85,7 +94,7 @@ export async function addSkypackModule() {
     }
 
     const moduleName = moduleAnswer.label;
-    const moduleUrl = `https://cdn.skypack.dev/${moduleName}`;
+    const moduleUrl = getModuleUrl(moduleName);
     await addModuleImport(moduleName, moduleUrl);
   });
 

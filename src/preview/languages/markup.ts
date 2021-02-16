@@ -1,7 +1,8 @@
 import * as path from "path";
 import { TextDocument } from "vscode";
+import { getModuleUrl, processImports } from "../libraries/skypack";
 import { compileCode, getExtensions } from "./languageProvider";
-import { getScriptContent, REACT_EXTENSIONS } from "./script";
+import { REACT_EXTENSIONS } from "./script";
 
 export const MARKUP_BASE_NAME = "index";
 
@@ -13,13 +14,17 @@ const MarkupLanguage = {
   svelte: ".svelte"
 };
 
+const COMPONENT_EXTENSIONS = [
+  MarkupLanguage.vue,
+  MarkupLanguage.svelte,
+  ...REACT_EXTENSIONS
+];
+
 const MARKUP_EXTENSIONS = [
   MarkupLanguage.html,
   MarkupLanguage.markdown,
   MarkupLanguage.pug,
-  MarkupLanguage.vue,
-  MarkupLanguage.svelte,
-  ...REACT_EXTENSIONS
+  ...COMPONENT_EXTENSIONS
 ];
 
 export function getCandidateMarkupFilenames() {
@@ -33,6 +38,13 @@ export function getMarkupExtensions() {
   return [...MARKUP_EXTENSIONS, ...customExtensions];
 }
 
+const COMPONENT_TYPE: { [extension: string]: string } = {
+  ".jsx": "react",
+  ".tsx": "react",
+  ".vue": "vue",
+  ".svelte": "svelte"
+}
+
 export async function getMarkupContent(
   document: TextDocument
 ): Promise<string | null> {
@@ -43,62 +55,30 @@ export async function getMarkupContent(
 
   const extension = path.extname(document.uri.path).toLocaleLowerCase();
   try {
-    if (extension === MarkupLanguage.pug) {
-      const pug = require("pug");
-      return pug.render(content);
-    } else if (extension === MarkupLanguage.markdown) {
-      const markdown = require("markdown-it")();
-      return markdown.render(content);
-    } else if (extension === MarkupLanguage.html) {
-      return content;
-    } else if (REACT_EXTENSIONS.includes(extension)) {
-      const [scriptCode] = (await getScriptContent(document, undefined))!
-      const [, component] = scriptCode.match(/export\sdefault\s(?:(?:class|function)\s)?(\w+)?/)!;
-
+    if (COMPONENT_EXTENSIONS.includes(extension)) {
+      const componentType = COMPONENT_TYPE[extension];
+      const { compileComponent } = require(`./components/${componentType}`);
+      const [component, appInit, imports] = await compileComponent(content, document);
+      const code = processImports(component);
       return `<div id="app"></div>
 <script type="module">
-  
-  ${scriptCode}
-        
-  ReactDOM.render(React.createElement(${component}), document.getElementById("app"));
-  
-</script>`;
-    } else if (extension === MarkupLanguage.vue) {
-      const { assemble, createDefaultCompiler } = require("@vue/component-compiler")
-
-      const compiler = createDefaultCompiler();
-       const descriptor = compiler.compileToDescriptor("index.vue", content);
-       const { code } = assemble(compiler, "index.vue", descriptor, {});
-       
-       return `<div id="app"></div>
-<script type="module">
-
-  import Vue from 'https://cdn.skypack.dev/vue';
-
+  ${imports && imports.map(([name, lib]: any) => `import ${name} from "${getModuleUrl(lib)}";\n`)}
   ${code}
-
-  new Vue({
-    el: "#app",
-    render: h => h(__vue_component__)
-  });
-  
-</script>`;
-    } else if (extension === MarkupLanguage.svelte) {
-      const svelte = require("svelte/compiler")
-      const { js: { code } } = svelte.compile(content, { sveltePath: "https://cdn.skypack.dev/svelte" });
-      return `<div id="app"></div>
-<script type="module">
- 
-  ${code}
-
-  new Component({
-    target: document.getElementById("app")
-  });
-
+  ${appInit}
 </script>`
     }
-     else {
-      return await compileCode("markup", extension, content);
+
+    switch (extension) {
+      case MarkupLanguage.pug:
+        const pug = require("pug");
+        return pug.render(content);
+      case MarkupLanguage.markdown:
+        const markdown = require("markdown-it")();
+        return markdown.render(content);
+      case MarkupLanguage.html:
+        return content;
+      default:
+        return compileCode("markup", extension, content);
     }
   } catch {
     return null;

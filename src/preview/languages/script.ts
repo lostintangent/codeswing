@@ -1,6 +1,7 @@
 import * as path from "path";
 import { TextDocument } from "vscode";
 import { SwingManifest } from "../../store";
+import { processImports } from "../libraries/skypack";
 
 export const SCRIPT_BASE_NAME = "script";
 
@@ -57,6 +58,10 @@ export function getScriptContent(
     isModule = isModule || content.trim().startsWith("import ");
   }
 
+  if (isModule) {
+    content = processImports(content);
+  }
+  
   const includesJsx =
     manifest && manifest.scripts && manifest.scripts.includes("react");
   if (TYPESCRIPT_EXTENSIONS.includes(extension) || includesJsx) {

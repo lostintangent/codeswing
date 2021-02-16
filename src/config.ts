@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import { workspace } from "vscode";
 import { EXTENSION_NAME } from "./constants";
 
 export function get(key: "autoRun"): "onEdit" | "onSave" | "never";
@@ -14,11 +14,11 @@ export function get(key: "scratchDirectory"): string;
 export function get(key: "showConsole"): boolean;
 export function get(key: "templateGalleries"): string[];
 export function get(key: any) {
-  const extensionConfig = vscode.workspace.getConfiguration(EXTENSION_NAME);
+  const extensionConfig = workspace.getConfiguration(EXTENSION_NAME);
   return extensionConfig.get(key);
 }
 
 export async function set(key: string, value: any) {
-  const extensionConfig = vscode.workspace.getConfiguration(EXTENSION_NAME);
+  const extensionConfig = workspace.getConfiguration(EXTENSION_NAME);
   return extensionConfig.update(key, value, true);
 }

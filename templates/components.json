@@ -38,6 +38,15 @@
           "content": "<script>\nlet name = \"world\";\n</script>\n\n<h1>Hello {name}!</h1>"
         }
       ]
+    },
+    {
+      "title": "Svelte w/TypeScript",
+      "files": [
+        {
+          "filename": "index.svelte",
+          "content": "<script lang=\"ts\">\nlet name: string = \"world\";\n</script>\n\n<h1>Hello {name}!</h1>"
+        }
+      ]
     }
   ]
 }

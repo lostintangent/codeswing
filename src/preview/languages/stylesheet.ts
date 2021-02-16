@@ -21,39 +21,35 @@ export const STYLESHEET_EXTENSIONS = [
 export async function getStylesheetContent(
   document: TextDocument
 ): Promise<string | null> {
-  let content = document.getText();
+  const content = document.getText();
   if (content.trim() === "") {
     return content;
   }
 
   const extension = path.extname(document.uri.path).toLocaleLowerCase();
-  if (
-    extension === StylesheetLanguage.scss ||
-    extension === StylesheetLanguage.sass
-  ) {
-    const sass = require("sass");
 
-    try {
-      return byteArrayToString(
-        sass.renderSync({
-          data: content,
-          indentedSyntax: extension === StylesheetLanguage.sass,
-        }).css
-      );
-    } catch (e) {
-      // Something failed when trying to transpile SCSS,
-      // so don't attempt to return anything
-      return null;
+  try {
+    switch (extension) {
+      case StylesheetLanguage.scss:
+      case StylesheetLanguage.sass: {
+        const sass = require("sass");
+        return byteArrayToString(
+          sass.renderSync({
+            data: content,
+            indentedSyntax: extension === StylesheetLanguage.sass,
+          }).css
+        );
+      }  
+      case StylesheetLanguage.less: {
+        const less = require("less").default;
+        const output = await less.render(content);
+        return output.css;
+      }
+      default:
+        return content;
     }
-  } else if (extension === StylesheetLanguage.less) {
-    try {
-      const less = require("less").default;
-      const output = await less.render(content);
-      return output.css;
-    } catch (e) {
-      return null;
-    }
-  } else {
-    return content;
+  }
+  catch {
+    return null;
   }
 }
