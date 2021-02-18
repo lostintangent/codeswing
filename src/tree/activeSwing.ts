@@ -11,8 +11,8 @@ import {
   window,
   workspace,
 } from "vscode";
-import { EXTENSION_NAME } from "../../constants";
-import { store } from "../../store";
+import { EXTENSION_NAME } from "../constants";
+import { store } from "../store";
 import { CodeSwingDirectoryNode, CodeSwingFileNode } from "./nodes";
 
 async function getSwingFiles(subDirectory?: string) {
@@ -25,9 +25,10 @@ async function getSwingFiles(subDirectory?: string) {
   return files
     .sort(([_, typeA], [__, typeB]) => typeB - typeA)
     .map(([file, fileType]) => {
+      const filePath = `${directory}${file}`;
       return fileType === FileType.Directory
-        ? new CodeSwingDirectoryNode(swingUri, file)
-        : new CodeSwingFileNode(swingUri, file);
+        ? new CodeSwingDirectoryNode(swingUri, filePath)
+        : new CodeSwingFileNode(swingUri, filePath);
     });
 }
 
@@ -40,10 +41,7 @@ class ActiveSwingTreeProvider
     .event;
 
   constructor() {
-    reaction(
-      () => [store.activeSwing],
-      () => this._onDidChangeTreeData.fire()
-    );
+    reaction(() => [store.activeSwing], this.refreshTree.bind(this));
   }
 
   getTreeItem = (node: TreeItem) => node;
@@ -63,12 +61,22 @@ class ActiveSwingTreeProvider
   dispose() {
     this._disposables.forEach((disposable) => disposable.dispose());
   }
+
+  refreshTree() {
+    this._onDidChangeTreeData.fire();
+  }
+}
+
+let treeDataProvider: ActiveSwingTreeProvider;
+export function refreshTreeView() {
+  treeDataProvider.refreshTree();
 }
 
 export function registerTreeProvider() {
+  treeDataProvider = new ActiveSwingTreeProvider();
   window.createTreeView(`${EXTENSION_NAME}.activeSwing`, {
     showCollapseAll: true,
-    treeDataProvider: new ActiveSwingTreeProvider(),
+    treeDataProvider,
     canSelectMany: true,
   });
 }

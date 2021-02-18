@@ -1,8 +1,9 @@
+import * as path from "path";
 import { ThemeIcon, TreeItem, TreeItemCollapsibleState, Uri } from "vscode";
 
 export class CodeSwingFileNode extends TreeItem {
   constructor(public swingUri: Uri, public file: string) {
-    super(file, TreeItemCollapsibleState.None);
+    super(path.basename(file), TreeItemCollapsibleState.None);
 
     this.iconPath = ThemeIcon.File;
     this.resourceUri = Uri.joinPath(swingUri, file);
@@ -18,7 +19,7 @@ export class CodeSwingFileNode extends TreeItem {
 
 export class CodeSwingDirectoryNode extends TreeItem {
   constructor(public swingUri: Uri, public directory: string) {
-    super(directory, TreeItemCollapsibleState.Collapsed);
+    super(path.basename(directory), TreeItemCollapsibleState.Collapsed);
 
     this.iconPath = ThemeIcon.Folder;
     this.resourceUri = Uri.joinPath(swingUri, directory);

@@ -8,7 +8,7 @@ import { store, SwingFileType, SwingManifest } from "../store";
 import {
   byteArrayToString,
   getFileContents,
-  stringToByteArray
+  stringToByteArray,
 } from "../utils";
 import { exportSwingToCodePen, registerCodePenCommands } from "./codepen";
 import { registerSwingCommands } from "./commands";
@@ -16,24 +16,24 @@ import { discoverLanguageProviders } from "./languages/languageProvider";
 import {
   getMarkupContent,
   getMarkupExtensions,
-  MARKUP_BASE_NAME
+  MARKUP_BASE_NAME,
 } from "./languages/markup";
 import {
   getReadmeContent,
   README_BASE_NAME,
-  README_EXTENSIONS
+  README_EXTENSIONS,
 } from "./languages/readme";
 import {
   includesReactFiles,
   includesReactScripts,
   REACT_SCRIPTS,
   SCRIPT_BASE_NAME,
-  SCRIPT_EXTENSIONS
+  SCRIPT_EXTENSIONS,
 } from "./languages/script";
 import {
   getStylesheetContent,
   STYLESHEET_BASE_NAME,
-  STYLESHEET_EXTENSIONS
+  STYLESHEET_EXTENSIONS,
 } from "./languages/stylesheet";
 import { createLayoutManager } from "./layoutManager";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
@@ -42,9 +42,8 @@ import {
   isCodeTourInstalled,
   registerTourCommands,
   startTourFromUri,
-  TOUR_FILE
+  TOUR_FILE,
 } from "./tour";
-import { registerTreeProvider } from "./tree/activeSwing";
 import { registerTutorialModule } from "./tutorials";
 import { storage, TUTORIAL_KEY } from "./tutorials/storage";
 import { SwingWebView } from "./webview";
@@ -395,7 +394,8 @@ export async function openSwing(uri: Uri) {
     webViewPanel,
     console: output,
     hasTour: false,
-    scriptEditor: editors[2] || (includesReactFiles(files) ? editors[0] : undefined),
+    scriptEditor:
+      editors[2] || (includesReactFiles(files) ? editors[0] : undefined),
   };
 
   const autoRun = config.get("autoRun");
@@ -615,7 +615,6 @@ export function registerPreviewModule(
   registerSwingCommands(context);
   registerTourCommands(context);
   registerCodePenCommands(context);
-  registerTreeProvider();
 
   getCDNJSLibraries();
   discoverLanguageProviders();

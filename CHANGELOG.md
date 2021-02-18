@@ -1,11 +1,26 @@
-# v0.0.10 (02/16/2021)
+# Coming Up
 
+- Supporting NPM imports in import'd files (workaround: use Skypack directly)
+- Being able to import Svelte/Vue components
+- Auto-running the swing when a secondary file is saved
+- Adding the ability to upload local files to a swing
+
+# v0.0.12
+
+- You can now use the `@import` and `@use` statements in Sass files
+
+# v0.0.11 (02/16/2021)
+
+- You can now add/rename/delete files from the CodeSwing tree (including files within sub-directories)
 - NPM modules can now be `import`'d into React/Svelte/Vue components or script modules
 - Added support for using TypeScript and Scss/Sass within Svelte components
 
-# v0.0.9 (02/12/2021)
+# v0.0.10 (02/14/2021)
 
 - Introduced support for React/Svelte/Vue component-based swings
+
+# v0.0.9 (02/12/2021)
+
 - Added a keybinding for running a swing via `cmd+shift+b` (macOS/Linux) and `ctrl+shift+b` (Windows)
 - Fixed a bug with creating swings from a user-defined template
 

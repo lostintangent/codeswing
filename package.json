@@ -36,10 +36,19 @@
         "icon": "$(library)"
       },
       {
+        "command": "codeswing.addSwingFile",
+        "title": "Add File",
+        "icon": "$(add)"
+      },
+      {
         "command": "codeswing.changeLayout",
         "title": "Change Layout",
         "category": "CodeSwing",
         "icon": "$(editor-layout)"
+      },
+      {
+        "command": "codeswing.deleteSwingFile",
+        "title": "Delete File"
       },
       {
         "command": "codeswing.exportToCodePen",
@@ -81,6 +90,10 @@
       {
         "command": "codeswing.recordCodeTour",
         "title": "Record CodeTour"
+      },
+      {
+        "command": "codeswing.renameSwingFile",
+        "title": "Delete File"
       },
       {
         "command": "codeswing.run",
@@ -129,7 +142,19 @@
           "when": "codeswing:inSwing"
         },
         {
+          "command": "codeswing.addSwingFile",
+          "when": "false"
+        },
+        {
+          "command": "codeswing.deleteSwingFile",
+          "when": "false"
+        },
+        {
           "command": "codeswing.recordCodeTour",
+          "when": "false"
+        },
+        {
+          "command": "codeswing.renameSwingFile",
           "when": "false"
         }
       ],
@@ -163,6 +188,30 @@
           "command": "codeswing.recordCodeTour",
           "when": "codeswing:inSwing && codeswing:codeTourEnabled",
           "group": "codetour@1"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "codeswing.addSwingFile",
+          "when": "view == codeswing.activeSwing",
+          "group": "navigation@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "codeswing.addSwingFile",
+          "when": "viewItem == swing.directory",
+          "group": "mutation@1"
+        },
+        {
+          "command": "codeswing.renameSwingFile",
+          "when": "viewItem == swing.file",
+          "group": "mutation@1"
+        },
+        {
+          "command": "codeswing.deleteSwingFile",
+          "when": "viewItem == swing.file",
+          "group": "mutation@2"
         }
       ]
     },

@@ -12,6 +12,8 @@ export function stringToByteArray(value: string) {
 
 export async function checkForSwingWorkspace() {
   if (workspace.workspaceFolders) {
+    // TODO: Check how to make this work
+    // for non-file system workspaces
     const files = await workspace.findFiles(SWING_FILE);
     if (files.length > 0) {
       openSwing(workspace.workspaceFolders[0].uri);
