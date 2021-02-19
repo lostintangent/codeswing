@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "Interactive coding playground for building web applications (aka swings).",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "engines": {
     "vscode": "^1.51.0"
   },
@@ -93,13 +93,18 @@
       },
       {
         "command": "codeswing.renameSwingFile",
-        "title": "Delete File"
+        "title": "Rename File"
       },
       {
         "command": "codeswing.run",
         "title": "Run Swing",
         "category": "CodeSwing",
         "icon": "$(play)"
+      },
+      {
+        "command": "codeswing.uploadSwingFile",
+        "title": "Upload File(s)",
+        "icon": "$(cloud-upload)"
       }
     ],
     "views": {
@@ -156,6 +161,10 @@
         {
           "command": "codeswing.renameSwingFile",
           "when": "false"
+        },
+        {
+          "command": "codeswing.uploadSwingFile",
+          "when": "false"
         }
       ],
       "editor/title": [
@@ -192,9 +201,14 @@
       ],
       "view/title": [
         {
-          "command": "codeswing.addSwingFile",
+          "command": "codeswing.uploadSwingFile",
           "when": "view == codeswing.activeSwing",
           "group": "navigation@1"
+        },
+        {
+          "command": "codeswing.addSwingFile",
+          "when": "view == codeswing.activeSwing",
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [
@@ -202,6 +216,11 @@
           "command": "codeswing.addSwingFile",
           "when": "viewItem == swing.directory",
           "group": "mutation@1"
+        },
+        {
+          "command": "codeswing.uploadSwingFile",
+          "when": "viewItem == swing.directory",
+          "group": "mutation@2"
         },
         {
           "command": "codeswing.renameSwingFile",
@@ -379,7 +398,7 @@
     "mobx": "^6.0.4",
     "postcss": "^8.2.6",
     "pug": "^3.0.0",
-    "sass": "^1.30.0",
+    "sass": "^1.32.7",
     "svelte": "^3.32.3",
     "typescript": "^4.1.2",
     "vsls": "^1.0.3015",

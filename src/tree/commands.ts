@@ -1,6 +1,7 @@
-import { EXTENSION_NAME } from "src/constants";
-import { store } from "src/store";
+import * as path from "path";
 import { commands, ExtensionContext, Uri, window, workspace } from "vscode";
+import { EXTENSION_NAME } from "../constants";
+import { store } from "../store";
 import { refreshTreeView } from "./activeSwing";
 import { CodeSwingDirectoryNode, CodeSwingFileNode } from "./nodes";
 
@@ -29,6 +30,36 @@ export function registerTreeViewCommands(context: ExtensionContext) {
 
   context.subscriptions.push(
     commands.registerCommand(
+      `${EXTENSION_NAME}.uploadSwingFile`,
+      async (node?: CodeSwingDirectoryNode) => {
+        const files = await window.showOpenDialog({
+          canSelectFiles: true,
+          canSelectFolders: false,
+          canSelectMany: true,
+          openLabel: "Upload",
+        })
+
+        if (!files) {
+          return;
+        }
+
+        await Promise.all(files.map(async file => {
+          const contents = await workspace.fs.readFile(file);
+
+          const fileName = path.basename(file.path);
+          const filePath = node ? `${node.directory}/${fileName}` : fileName;
+          const uri = Uri.joinPath(store.activeSwing!.rootUri, filePath);
+
+          await workspace.fs.writeFile(uri, contents);
+        }));
+
+        refreshTreeView();
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    commands.registerCommand(
       `${EXTENSION_NAME}.renameSwingFile`,
       async (node: CodeSwingFileNode) => {
         const file = await window.showInputBox({
@@ -40,8 +71,8 @@ export function registerTreeViewCommands(context: ExtensionContext) {
           return;
         }
 
-        const uri = Uri.joinPath(node.resourceUri!, file);
-        await workspace.fs.rename(uri, uri);
+        const newUri = Uri.joinPath(store.activeSwing!.rootUri, file);
+        await workspace.fs.rename(node.resourceUri!, newUri);
         refreshTreeView();
       }
     )

@@ -373,6 +373,18 @@ export class SwingWebView {
 
       const vscode = acquireVsCodeApi();
       const style = document.getElementById("${styleId}");
+      
+      window.addEventListener("DOMContentLoaded", () => {
+        const linkedStyle = document.querySelector("link[href='style.css']");
+        if (linkedStyle) {
+          linkedStyle.parentElement.removeChild(linkedStyle);
+        }
+
+        const linkedScript = document.querySelector("script[src='script.js']");
+        if (linkedScript) {
+          linkedScript.parentElement.removeChild(linkedScript);
+        }
+      });
   
       let httpRequestId = 1;
       const pendingHttpRequests = new Map();
