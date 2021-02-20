@@ -7,6 +7,7 @@ import { store, SwingLibraryType, SwingManifest } from "../store";
 import { byteArrayToString } from "../utils";
 import { getScriptContent } from "./languages/script";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
+import { ProxyFileSystemProvider } from "./proxyFileSystemProvider";
 import { storage } from "./tutorials/storage";
 
 const EXIT_RESPONSE = "Exit Swing";
@@ -260,7 +261,7 @@ export class SwingWebView {
 
     // The URL needs to have a trailing slash, or end the URLs could get messed up.
     const baseUrl = this.webview
-      .asWebviewUri(vscode.Uri.joinPath(this.swing, "/"))
+      .asWebviewUri(ProxyFileSystemProvider.getProxyUri(vscode.Uri.joinPath(this.swing, "/")))
       .toString();
     const styleId = `swing-style-${Math.random()}`;
 
@@ -342,6 +343,7 @@ export class SwingWebView {
     this.webview.html = `<html>
   <head>
     <base href="${baseUrl}" />
+    <meta charset="UTF-8" />
     <style>
 
       body {

@@ -1,10 +1,14 @@
 # Coming Up
 
-- Supporting NPM imports in import'd files (workaround: use Skypack directly)
-- Being able to import Svelte/Vue components
+
 - Auto-running the swing when a secondary file is saved
 
-# v0.0.12
+# v0.0.13 (02/19/2021)
+
+- Supporting NPM imports in import'd files
+- Being able to import Svelte/Vue components
+
+# v0.0.12 (02/19/2021)
 
 - You can now use the `@import` and `@use` statements in Sass files (file-based swings only)
 - Added the ability to upload local files to a swing
