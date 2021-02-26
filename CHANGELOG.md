@@ -1,7 +1,11 @@
 # Coming Up
 
-
 - Auto-running the swing when a secondary file is saved
+
+# v0.0.14 (02/21/2021)
+
+- File extensions can now be renamed and immediately edited (e.g. `.js` -> `.ts`, `.css` -> `.scss`)
+- Fixed an issue with explicitly importing `react` from within a React component swing
 
 # v0.0.13 (02/19/2021)
 
@@ -10,7 +14,7 @@
 
 # v0.0.12 (02/19/2021)
 
-- You can now use the `@import` and `@use` statements in Sass files (file-based swings only)
+- You can now use the `@import` and `@use` statements in Sass files (file-based swings only) 
 - Added the ability to upload local files to a swing
 - Your `style.css` and `script.js` files can now be explicitly linked from your `index.html` file, without breaking the run-on-type behavior.
 

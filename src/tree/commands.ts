@@ -2,6 +2,7 @@ import * as path from "path";
 import { commands, ExtensionContext, Uri, window, workspace } from "vscode";
 import { EXTENSION_NAME } from "../constants";
 import { store } from "../store";
+import { withProgress } from "../utils";
 import { refreshTreeView } from "./activeSwing";
 import { CodeSwingDirectoryNode, CodeSwingFileNode } from "./nodes";
 
@@ -72,7 +73,20 @@ export function registerTreeViewCommands(context: ExtensionContext) {
         }
 
         const newUri = Uri.joinPath(store.activeSwing!.rootUri, file);
-        await workspace.fs.rename(node.resourceUri!, newUri);
+
+        await withProgress("Renaming file...", async () => {
+          // If the file being renamed is dirty, then we 
+          // need to save it before renaming it. Otherwise,
+          // VS Code will retain the old file and show it as
+          // deleted, since they don't want to lose the changing.
+          const visibleDocument = window.visibleTextEditors.find(editor => editor.document.uri.toString() === node.resourceUri!.toString())
+          if (visibleDocument) {
+            await visibleDocument.document.save();
+          }
+        
+          await workspace.fs.rename(node.resourceUri!, newUri);
+        });
+
         refreshTreeView();
       }
     )

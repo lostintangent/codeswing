@@ -90,7 +90,6 @@ function localeCompare(a: string, b: string) {
 }
 
 function isSwingDocument(
-  files: string[],
   document: vscode.TextDocument,
   fileType: SwingFileType
 ) {
@@ -99,8 +98,7 @@ function isSwingDocument(
     !localeCompare(swingUri.scheme, document.uri.scheme) ||
     !localeCompare(swingUri.authority, document.uri.authority) ||
     !localeCompare(swingUri.query, document.uri.query) ||
-    !document.uri.path.toUpperCase().startsWith(swingUri.path.toUpperCase()) ||
-    !files.includes(path.basename(document.uri.path))
+    !document.uri.path.toUpperCase().startsWith(swingUri.path.toUpperCase())
   ) {
     return false;
   }
@@ -442,13 +440,12 @@ export async function openSwing(uri: Uri) {
 
   const documentChangeDisposable = vscode.workspace.onDidChangeTextDocument(
     debounce(async ({ document }) => {
-      if (isSwingDocument(files, document, SwingFileType.markup)) {
+      if (isSwingDocument(document, SwingFileType.markup)) {
         const content = await getMarkupContent(document);
-
         if (content !== null) {
           htmlView.updateHTML(content, runOnEdit);
         }
-      } else if (isSwingDocument(files, document, SwingFileType.script)) {
+      } else if (isSwingDocument(document, SwingFileType.script)) {
         // If the user renamed the script file (e.g. from *.js to *.jsx)
         // than we need to update the manifest in case new scripts
         // need to be injected into the webview (e.g. "react").
@@ -470,7 +467,7 @@ export async function openSwing(uri: Uri) {
         }
 
         htmlView.updateJavaScript(document, runOnEdit);
-      } else if (isSwingDocument(files, document, SwingFileType.manifest)) {
+      } else if (isSwingDocument(document, SwingFileType.manifest)) {
         htmlView.updateManifest(document.getText(), runOnEdit);
 
         if (jsDocument) {
@@ -480,15 +477,15 @@ export async function openSwing(uri: Uri) {
           // actually impacts it (e.g. adding/removing react)
           htmlView.updateJavaScript(jsDocument, runOnEdit);
         }
-      } else if (isSwingDocument(files, document, SwingFileType.stylesheet)) {
+      } else if (isSwingDocument(document, SwingFileType.stylesheet)) {
         const content = await getStylesheetContent(document);
         if (content !== null) {
           htmlView.updateCSS(content, runOnEdit);
         }
-      } else if (isSwingDocument(files, document, SwingFileType.readme)) {
+      } else if (isSwingDocument( document, SwingFileType.readme)) {
         const rawContent = document.getText();
         processReadme(rawContent, runOnEdit);
-      } else if (isSwingDocument(files, document, SwingFileType.config)) {
+      } else if (isSwingDocument(document, SwingFileType.config)) {
         htmlView.updateConfig(document.getText(), runOnEdit);
       } else if (document.uri.scheme === INPUT_SCHEME) {
         htmlView.updateInput(document.getText(), runOnEdit);

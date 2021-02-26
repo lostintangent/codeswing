@@ -349,6 +349,7 @@ export class SwingWebView {
       body {
         background-color: white;
         font-size: var(---vscode-font-size);
+        padding: 0;
       }
 
       iframe#tutorial-navigation {

@@ -7,7 +7,7 @@ function getComponentName(code: string) {
 }
 
 export async function compileComponent(content: string, document: TextDocument) {
-    const [code] = (await getScriptContent(document, undefined))!
+    const [code] = (await getScriptContent(document, { scripts: ["react"] }))!
     const componentName = getComponentName(code);
 
     const init = `ReactDOM.render(React.createElement(${componentName}), document.getElementById("app"));`

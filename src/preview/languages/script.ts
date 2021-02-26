@@ -58,12 +58,20 @@ export function getScriptContent(
     isModule = isModule || content.trim().startsWith("import ");
   }
 
+  const includesJsx =
+  manifest && manifest.scripts && manifest.scripts.includes("react");
+     
   if (isModule) {
+    if (includesJsx) {
+      // React can only be imported into the page once, and so if the user's
+      // code is trying to import it, we need to replace that import statement.
+      content = content.replace(/import (.+) from (["'])react\2/, "const $1 = React");
+    }
+
     content = processImports(content);
   }
   
-  const includesJsx =
-    manifest && manifest.scripts && manifest.scripts.includes("react");
+  
   if (TYPESCRIPT_EXTENSIONS.includes(extension) || includesJsx) {
     const typescript = require("typescript");
     const compilerOptions: any = {
