@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "Interactive coding playground for building web applications (aka swings).",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "engines": {
     "vscode": "^1.51.0"
   },
@@ -21,8 +21,10 @@
   ],
   "activationEvents": [
     "onCommand:codeswing.newSwing",
-    "onCommand:codeswing.newScratchSwing",
+    "onCommand:codeswing.newSwingDirectory",
+    "onCommand:codeswing.newSwingFromLastTemplate",
     "onCommand:codeswing.openSwing",
+    "onCommand:codeswing.openSwingInNewWindow",
     "workspaceContains:codeswing.json",
     "onStartupFinished"
   ],
@@ -56,13 +58,18 @@
         "category": "CodeSwing"
       },
       {
+        "command": "codeswing.newSwingDirectory",
+        "title": "New Swing in Directory...",
+        "category": "CodeSwing"
+      },
+      {
         "command": "codeswing.newSwing",
         "title": "New Swing...",
         "category": "CodeSwing"
       },
       {
-        "command": "codeswing.newScratchSwing",
-        "title": "New Scratch Swing...",
+        "command": "codeswing.newSwingFromLastTemplate",
+        "title": "New Swing from Last Template",
         "category": "CodeSwing"
       },
       {
@@ -83,8 +90,13 @@
         "category": "CodeSwing"
       },
       {
+        "command": "codeswing.openSwingInNewWindow",
+        "title": "Open Swing in New Window...",
+        "category": "CodeSwing"
+      },
+      {
         "command": "codeswing.openWorkspaceSwing",
-        "title": "Open Workspace Swing",
+        "title": "Re-Open Workspace Swing",
         "category": "CodeSwing"
       },
       {
@@ -100,6 +112,11 @@
         "title": "Run Swing",
         "category": "CodeSwing",
         "icon": "$(play)"
+      },
+      {
+        "command": "codeswing.saveCurrentSwing",
+        "title": "Save Current Swing As...",
+        "category": "CodeSwing"
       },
       {
         "command": "codeswing.uploadSwingFile",
@@ -135,6 +152,10 @@
           "when": "codeswing:inSwing"
         },
         {
+          "command": "codeswing.newSwingFromLastTemplate",
+          "when": "codeswing:hasTemplateMRU"
+        },
+        {
           "command": "codeswing.openDeveloperTools",
           "when": "codeswing:inSwing && !isWeb"
         },
@@ -144,6 +165,10 @@
         },
         {
           "command": "codeswing.run",
+          "when": "codeswing:inSwing"
+        },
+        {
+          "command": "codeswing.saveCurrentSwing",
           "when": "codeswing:inSwing"
         },
         {
@@ -290,10 +315,10 @@
           ],
           "description": "Specifies how the swing's readme content should be displayed."
         },
-        "codeswing.scratchDirectory": {
+        "codeswing.tempDirectory": {
           "default": null,
           "type": "string",
-          "markdownDescription": "Specifies the directory that you want to store scratch swings into, using an absolute path. Defaults to `$TMPDIR/codeswing`."
+          "markdownDescription": "Specifies the directory that you want to store swings into, using an absolute path. Defaults to `$TMPDIR/codeswing`."
         },
         "codeswing.showConsole": {
           "default": false,

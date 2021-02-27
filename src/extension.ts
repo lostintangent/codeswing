@@ -7,11 +7,17 @@ import { registerTreeViewModule } from "./tree";
 import { checkForSwingWorkspace } from "./utils";
 
 export async function activate(context: vscode.ExtensionContext) {
-  registerCreationModule(context, api);
-  registerPreviewModule(context, api);
+  const syncKeys: string[] = [];
+
+  registerCreationModule(context, api, syncKeys);
+  registerPreviewModule(context, api, syncKeys);
+
+  context.globalState.setKeysForSync(syncKeys);
+  
   registerTreeViewModule(context);
   registerLiveShareModule();
 
   checkForSwingWorkspace();
+  
   return api;
 }

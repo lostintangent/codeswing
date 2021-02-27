@@ -29,11 +29,11 @@ Reference
 
 1. Install the CodeSwing extension and then reload VS Code
 
-1. Run the `CodeSwing: New Scratch Swing...` command, and select the `Basic: HTML/CSS/Javascript` template
+1. Run the `CodeSwing: New Swing...` command, and select the desired template
 
-   > Alternatively, you can run the `CodeSwing: New Swing...` command if you'd like to save your new swing to disk.
+1. Edit any of the opened files and see the `CodeSwing` preview update automatically as you type 🚀
 
-1. Edit the HTML, CSS and JavaScript files and see the `CodeSwing` preview update automatically as you type 🚀
+1. _(Optiona)_ If you'd like to save this sample to a permanent location, run the `CodeSwing: Save Current Swing As...` command and select a directory
 
 From here, you can try [additional languages](#language-support), [change the swing layout](#layout), view [console output](#console-output), and include [external libraries](#external-libraries). We want to make it easy to build/explore web ideas, and so if you have any feedback, please don't hesitate to reach out!
 
@@ -43,9 +43,11 @@ Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scisso
 
 After you install the CodeSwing extension, you can create new swings at any time, using the following commands:
 
-- `CodeSwing: New Scratch Swing...` - Creates a temporary "scratch" swing, that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time. If you'd like to customize where scratch swings are stored, you can set the `CodeSwing: Scratch Directory` setting to the absolute path of the desired directory.
+- `CodeSwing: New Swing...` - Creates a temporary "scratch" swing, that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time. If you'd like to customize where scratch swings are stored, you can set the `CodeSwing: Scratch Directory` setting to the absolute path of the desired directory.
 
-- `CodeSwing: New Swing...` - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
+- `CodeSwing: New Swing from Last Template` - Creates a swing using the last template that you used. This can be useful when you tend to use the same template over and over again.
+
+- `CodeSwing: New Swing in Directory...` - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
 
 After creating a swing, your editor layout will be automatically setup to accomodate the needs of the selected template. Furthermore, if you open a directory that represents a swing, or you run the `CodeSwing: Open Swing...` command, then the selected swing will be automatically launched.
 
@@ -119,7 +121,7 @@ When you create/open a swing, this activates the "swing toolbar", which is a col
 
 ### Workspace swings
 
-If you open a directory in VS Code, and that directory represents a swing, then the swing environment will be automatically launched. If you accidentally close the CodeSwing preview, then you can re-open it by either reloading VS Code, or running the "CodeSwing: Open Workspace Swing" command.
+If you open a directory in VS Code, and that directory represents a swing, then the swing environment will be automatically launched. If you accidentally close the CodeSwing preview, then you can re-open it by either reloading VS Code, or running the "CodeSwing: Re-Open Workspace Swing" command.
 
 ### CodeSwing tree view
 

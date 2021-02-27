@@ -112,6 +112,20 @@ export async function registerSwingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
+    vscode.commands.registerCommand(`${EXTENSION_NAME}.openSwingInNewWindow`, async () => {
+      const folder = await vscode.window.showOpenDialog({
+        canSelectFolders: true,
+        canSelectFiles: false,
+        canSelectMany: false,
+      });
+
+      if (folder) {
+        vscode.commands.executeCommand("vscode.openFolder", folder[0], { forceNewWindow: true });
+      }
+    })
+  );
+
+  context.subscriptions.push(
     vscode.commands.registerCommand(
       `${EXTENSION_NAME}.openWorkspaceSwing`,
       () => {

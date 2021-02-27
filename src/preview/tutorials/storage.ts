@@ -2,7 +2,7 @@ import { ExtensionContext, Uri } from "vscode";
 import { EXTENSION_NAME } from "../../constants";
 import { store } from "../../store";
 
-export const TUTORIAL_KEY = `${EXTENSION_NAME}:tutorials`;
+const TUTORIAL_KEY = `${EXTENSION_NAME}:tutorials`;
 
 export interface IStorage {
   currentTutorialStep(uri?: Uri): number;
@@ -12,7 +12,7 @@ export interface IStorage {
 type TutorialStatus = [string, number];
 
 export let storage: IStorage;
-export async function initializeStorage(context: ExtensionContext) {
+export async function initializeStorage(context: ExtensionContext, syncKeys: string[]) {
   storage = {
     currentTutorialStep(uri: Uri = store.activeSwing!.rootUri): number {
       const tutorials = context.globalState.get<TutorialStatus[]>(
@@ -40,4 +40,6 @@ export async function initializeStorage(context: ExtensionContext) {
       return context.globalState.update(TUTORIAL_KEY, tutorials);
     },
   };
+
+  syncKeys.push(TUTORIAL_KEY);
 }

@@ -46,7 +46,7 @@ import {
   TOUR_FILE
 } from "./tour";
 import { registerTutorialModule } from "./tutorials";
-import { storage, TUTORIAL_KEY } from "./tutorials/storage";
+import { storage } from "./tutorials/storage";
 import { SwingWebView } from "./webview";
 
 const CONFIG_FILE = "config.json";
@@ -608,7 +608,8 @@ export async function openSwing(uri: Uri) {
 
 export function registerPreviewModule(
   context: vscode.ExtensionContext,
-  api: any
+  api: any,
+  syncKeys: string[]
 ) {
   registerSwingCommands(context);
   registerTourCommands(context);
@@ -618,11 +619,8 @@ export function registerPreviewModule(
   getCDNJSLibraries();
   discoverLanguageProviders();
 
-  // @ts-ignore
-  context.globalState.setKeysForSync([TUTORIAL_KEY]);
-
   api.openSwing = openSwing;
   api.exportSwingToCodePen = exportSwingToCodePen;
 
-  registerTutorialModule(context);
+  registerTutorialModule(context, syncKeys);
 }

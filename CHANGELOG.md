@@ -2,6 +2,14 @@
 
 - Auto-running the swing when a secondary file is saved
 
+# v0.0.15 (02/27/2021)
+
+- Introduced an MRU for templates, so that the last three templates you used show up at the top of the list
+- Introduced a new `CodeSwing: New Swing from Last Template` command, that creates a swing from your last used template
+- Renamed the `CodeSwing: New Scratch Swing...` command to `CodeSwing: New Swing...`, and `CodeSwing: New Swing..` to `CodeSwing: New Swing in Directory...`
+- Introduced a new `CodeSwing: Save Current Swing As...` command, that lets you save the current swing in a specific location
+- Added the `CodeSwing: Open Swing in New Window...` command
+
 # v0.0.14 (02/21/2021)
 
 - File extensions can now be renamed and immediately edited (e.g. `.js` -> `.ts`, `.css` -> `.scss`)

@@ -39,7 +39,6 @@
     },
     {
       "title": "JavaScript-Only (Module)",
-      "description": "Creates a swing where the JavaScript is treated as an ES module.",
       "files": [
         {
           "filename": "script.mjs"
