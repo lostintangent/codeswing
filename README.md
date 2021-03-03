@@ -65,7 +65,7 @@ Additionally, if your script file ends in `.jsx` or `.tsx`, you can use JSX synt
 
 ### Components
 
-In addition to the aforementioned languages, CodeSwing also allows you to create component-based swings, using either React.js, Vue (single-file components) or Svelte. A component-based swing is unique in that it's a single file that lets you focus on just your component, and have all initialization and rendering logic handled automatically.
+In addition to the aforementioned languages, CodeSwing also allows you to create component-based swings, using either React, React Native, Vue (single-file components) or Svelte. A component-based swing is unique in that it's a single file that lets you focus on just your component, and have all initialization and rendering logic handled automatically.
 
 #### React
 

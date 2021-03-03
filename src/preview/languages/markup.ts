@@ -4,7 +4,7 @@ import { getModuleUrl, processImports } from "../libraries/skypack";
 import { compileCode, getExtensions } from "./languageProvider";
 import { REACT_EXTENSIONS } from "./script";
 
-export const MARKUP_BASE_NAME = "index";
+const MARKUP_BASE_NAMES = ["index", "App"];
 
 const MarkupLanguage = {
   html: ".html",
@@ -27,15 +27,15 @@ const MARKUP_EXTENSIONS = [
   ...COMPONENT_EXTENSIONS
 ];
 
-export function getCandidateMarkupFilenames() {
-  return getMarkupExtensions().map(
-    (extension) => `${MARKUP_BASE_NAME}${extension}`
-  );
-}
-
-export function getMarkupExtensions() {
+function getMarkupExtensions() {
   const customExtensions = getExtensions("markup");
   return [...MARKUP_EXTENSIONS, ...customExtensions];
+}
+
+export function getCandidateMarkupFilenames() {
+  return getMarkupExtensions().flatMap(
+    (extension) => MARKUP_BASE_NAMES.map(baseName => `${baseName}${extension}`)
+  );
 }
 
 const COMPONENT_TYPE: { [extension: string]: string } = {

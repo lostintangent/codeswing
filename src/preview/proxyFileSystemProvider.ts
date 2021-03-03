@@ -15,8 +15,8 @@ export class ProxyFileSystemProvider implements vscode.FileSystemProvider {
   stat(uri: vscode.Uri): vscode.FileStat {
     return {
       type: vscode.FileType.File,
-      ctime: 0,
-      mtime: 0,
+      ctime: Date.now(),
+      mtime: Date.now(),
       size: 0,
     };
   }

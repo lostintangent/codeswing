@@ -27,7 +27,9 @@ async function hasDefaultExport(moduleName: string) {
 const IMPORT_PATTERN = /(import\s.+\sfrom\s)(["'])(?!\.\/|http)(.+)\2/gi;
 const IMPORT_SUBSTITION = `$1$2https://cdn.skypack.dev/$3$2`;
 export function processImports(code: string) {
-  return code.replace(IMPORT_PATTERN, IMPORT_SUBSTITION).replace(/\.\/(\S+)\.(svelte|vue)/g, "./$1.js?type=$2");
+  return code
+    .replace(IMPORT_PATTERN, IMPORT_SUBSTITION)
+    .replace(/\.\/(\S+)\.(svelte|vue)/g, "./$1.js?type=$2");
 }
 
 const DEFAULT_MODULES = [

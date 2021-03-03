@@ -65,7 +65,10 @@ export function getScriptContent(
     if (includesJsx) {
       // React can only be imported into the page once, and so if the user's
       // code is trying to import it, we need to replace that import statement.
-      content = content.replace(/import (.+) from (["'])react\2/, "const $1 = React");
+      content = content
+        .replace(/import (?:\* as )?React from (["'])react\1/, "")
+        .replace(/import (.+) from (["'])react\2/, "const $1 = React")
+        .replace(/(?<=from ["'])react-native(?=["'])/, "https://gistcdn.githack.com/lostintangent/6de9be49a0f112dd36eff3b8bc771b9e/raw/ce12b9075322245be20a79eba4d89d4e5152a4aa/index.js")
     }
 
     content = processImports(content);

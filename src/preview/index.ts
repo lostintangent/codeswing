@@ -14,9 +14,8 @@ import { exportSwingToCodePen, registerCodePenCommands } from "./codepen";
 import { registerSwingCommands } from "./commands";
 import { discoverLanguageProviders } from "./languages/languageProvider";
 import {
-  getMarkupContent,
-  getMarkupExtensions,
-  MARKUP_BASE_NAME
+  getCandidateMarkupFilenames,
+  getMarkupContent
 } from "./languages/markup";
 import {
   getReadmeContent,
@@ -103,12 +102,13 @@ function isSwingDocument(
     return false;
   }
 
-  let extensions: string[];
+  let extensions: string[] | undefined;
   let fileBaseName: string;
+  let fileCandidates: string[] | undefined;
+
   switch (fileType) {
     case SwingFileType.markup:
-      extensions = getMarkupExtensions();
-      fileBaseName = MARKUP_BASE_NAME;
+      fileCandidates = getCandidateMarkupFilenames();
       break;
     case SwingFileType.script:
       extensions = SCRIPT_EXTENSIONS;
@@ -133,11 +133,13 @@ function isSwingDocument(
       break;
   }
 
-  const fileCandidates = extensions.map(
-    (extension) => new RegExp(`${fileBaseName}${extension}`)
-  );
+  if (!fileCandidates && extensions) {
+    fileCandidates = extensions.map(
+      (extension) => `${fileBaseName}${extension}`
+    );
+  }
 
-  return fileCandidates.find((candidate) => candidate.test(document.uri.path));
+  return fileCandidates!.find((candidate) => candidate === path.basename(document.uri.path));
 }
 
 export function getFileOfType(
@@ -145,12 +147,13 @@ export function getFileOfType(
   files: string[],
   fileType: SwingFileType
 ): Uri | undefined {
-  let extensions: string[];
-  let fileBaseName: string;
+  let extensions: string[] | undefined;
+  let fileBaseName: string | undefined;
+  let fileCandidates: string[] | undefined;
+
   switch (fileType) {
     case SwingFileType.markup:
-      extensions = getMarkupExtensions();
-      fileBaseName = MARKUP_BASE_NAME;
+      fileCandidates = getCandidateMarkupFilenames();
       break;
     case SwingFileType.script:
       extensions = SCRIPT_EXTENSIONS;
@@ -179,12 +182,14 @@ export function getFileOfType(
       break;
   }
 
-  const fileCandidates = extensions.map(
-    (extension) => `${fileBaseName}${extension}`
-  );
+  if (!fileCandidates && extensions) {
+    fileCandidates = extensions.map(
+      (extension) => `${fileBaseName}${extension}`
+    );
+  }
 
   const file = files.find((file) =>
-    fileCandidates.find((candidate) => candidate === file)
+    fileCandidates!.find((candidate) => candidate === file)
   );
 
   if (file) {

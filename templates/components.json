@@ -7,7 +7,7 @@
       "title": "React.js",
       "files": [
         {
-          "filename": "index.jsx",
+          "filename": "App.jsx",
           "content": "export default function App() {\n   return <div>Hello world</div>;\n}"
         }
       ]
@@ -16,8 +16,17 @@
       "title": "React.js w/TypeScript",
       "files": [
         {
-          "filename": "index.tsx",
+          "filename": "App.tsx",
           "content": "export default function App() {\n   return <div>Hello world</div>;\n}"
+        }
+      ]
+    },
+    {
+      "title": "React Native",
+      "files": [
+        {
+            "filename": "App.jsx",
+            "content": "import { Text, View } from \"react-native\";\n\nexport default function App() {\n   return (\n    <View><Text>Hello world</Text></View>\n);\n}"
         }
       ]
     },
@@ -25,7 +34,7 @@
       "title": "Vue.js",
       "files": [
         {
-          "filename": "index.vue",
+          "filename": "App.vue",
           "content": "<template>\n  <div>Hello world</div>\n</template>\n\n<script>\n  export default {\n  \n}\n</script>\n\n<style>\n \n</style>"
         }
       ]
@@ -34,7 +43,7 @@
       "title": "Svelte",
       "files": [
         {
-          "filename": "index.svelte",
+          "filename": "App.svelte",
           "content": "<script>\nlet name = \"world\";\n</script>\n\n<h1>Hello {name}!</h1>"
         }
       ]
@@ -43,7 +52,7 @@
       "title": "Svelte w/TypeScript",
       "files": [
         {
-          "filename": "index.svelte",
+          "filename": "App.svelte",
           "content": "<script lang=\"ts\">\nlet name: string = \"world\";\n</script>\n\n<h1>Hello {name}!</h1>"
         }
       ]

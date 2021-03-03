@@ -38,13 +38,16 @@ export class SwingWebView {
             vscode.window.showInformationMessage(value);
           }
           break;
+          
         case "clear":
           output.clear();
           break;
+
         case "log":
           output.appendLine(value);
           break;
-        case "httpRequest":
+
+        case "httpRequest": {
           let response;
           if (value.url.startsWith("http")) {
             response = await axios.request({
@@ -83,8 +86,9 @@ export class SwingWebView {
             },
           });
           break;
-
-        case "navigateCode":
+        }
+        
+        case "navigateCode": {
           const file = vscode.Uri.joinPath(swing, value.file);
           let editor = vscode.window.visibleTextEditors.find(
             (editor) => editor.document.uri.toString() === file.toString()
@@ -105,11 +109,16 @@ export class SwingWebView {
 
           editor.revealRange(range);
           break;
+        }
 
-        case "navigateTutorial":
+        case "navigateTutorial": {
           const currentStep = storage.currentTutorialStep();
           const nextStep = currentStep + value;
 
+          // Save all open files, to prevent the user
+          // from getting a save dialog upon navigation.
+          await vscode.workspace.saveAll();
+          
           if (nextStep <= this.totalTutorialSteps!) {
             await storage.setCurrentTutorialStep(nextStep);
             openSwing(store.activeSwing!.rootUri);
@@ -130,6 +139,7 @@ export class SwingWebView {
             }
           }
           break;
+        }
       }
     });
   }
@@ -346,6 +356,11 @@ export class SwingWebView {
     <meta charset="UTF-8" />
     <style>
 
+      html, body {
+        height: 100%;
+        width: 100%;
+      }
+      
       body {
         background-color: white;
         font-size: var(---vscode-font-size);
