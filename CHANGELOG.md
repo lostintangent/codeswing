@@ -3,7 +3,7 @@
 - Auto-running the swing when a secondary file is saved
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
 
-# v0.0.16
+# v0.0.16 (03/02/2021)
 
 - Added support for React Native web 🚀
 - Markup files/components can now be named `App.<extension>` in addition to `index.<extension>`
