@@ -26,7 +26,7 @@
       "files": [
         {
             "filename": "App.jsx",
-            "content": "import { Text, View } from \"react-native\";\n\nexport default function App() {\n   return (\n    <View><Text>Hello world</Text></View>\n);\n}"
+            "content": "import { StyleSheet, Text, View } from \"react-native\";\n\nexport default function App() {\n   return (\n      <View>\n         <Text style={styles.text}>Hello world 🎉</Text>\n      </View>\n   );\n}\n\nconst styles = StyleSheet.create({\n   text: {\n      fontWeight: \"bold\",\n      fontSize: \"1.5rem\",\n      marginVertical: \"1em\",\n      textAlign: \"center\"\n   }\n});"
         }
       ]
     },

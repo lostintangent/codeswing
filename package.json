@@ -385,7 +385,7 @@
       },
       {
         "id": "web:components",
-        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@HEAD/templates/components.json"
+        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/components.json"
       }
     ]
   },
