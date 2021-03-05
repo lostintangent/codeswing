@@ -35,7 +35,7 @@
       "files": [
         {
           "filename": "App.vue",
-          "content": "<template>\n  <div>Hello world</div>\n</template>\n\n<script>\n  export default {\n  \n}\n</script>\n\n<style>\n \n</style>"
+          "content": "<template>\n  <p>{{ greeting }} World!</p>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      greeting: 'Hello'\n    }\n  }\n}\n</script>\n\n<style>\nbody {\n  font-family: sans-serif;\n}\n</style>\n\n"
         }
       ]
     },
