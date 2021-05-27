@@ -24,7 +24,7 @@ interface CodeSwingTemplateItem extends vscode.QuickPickItem {
 
 async function createSwingDirectory() {
   const scratchDirectory =
-          config.get("scratchDirectory") ||
+          config.get("tempDirectory") ||
           path.join(os.tmpdir(), EXTENSION_NAME);
   const dayjs = require("dayjs");
   const timestamp = dayjs().format("YYYY-MM-DD (hh-mm-ss A)");
