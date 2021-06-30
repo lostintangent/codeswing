@@ -362,7 +362,8 @@ export class SwingWebView {
       }
       
       body {
-        background-color: white;
+        background-color: var(--vscode-editor-background, white);
+        color: var(--vscode-editor-foreground, initial);
         font-size: var(---vscode-font-size);
         padding: 0;
       }
