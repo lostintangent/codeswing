@@ -476,7 +476,7 @@ input[type="checkbox"]:invalid, input[type="radio"]:invalid {
       }
       
       body {
-        background-color: white
+        background-color: white;
         font-size: var(---vscode-font-size);
         padding: 0;
       }
