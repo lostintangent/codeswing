@@ -38,7 +38,7 @@ export class SwingWebView {
             vscode.window.showInformationMessage(value);
           }
           break;
-          
+
         case "clear":
           output.clear();
           break;
@@ -87,7 +87,7 @@ export class SwingWebView {
           });
           break;
         }
-        
+
         case "navigateCode": {
           const file = vscode.Uri.joinPath(swing, value.file);
           let editor = vscode.window.visibleTextEditors.find(
@@ -118,7 +118,7 @@ export class SwingWebView {
           // Save all open files, to prevent the user
           // from getting a save dialog upon navigation.
           await vscode.workspace.saveAll();
-          
+
           if (nextStep <= this.totalTutorialSteps!) {
             await storage.setCurrentTutorialStep(nextStep);
             openSwing(store.activeSwing!.rootUri);
@@ -271,7 +271,11 @@ export class SwingWebView {
 
     // The URL needs to have a trailing slash, or end the URLs could get messed up.
     const baseUrl = this.webview
-      .asWebviewUri(ProxyFileSystemProvider.getProxyUri(vscode.Uri.joinPath(this.swing, "/")))
+      .asWebviewUri(
+        ProxyFileSystemProvider.getProxyUri(
+          vscode.Uri.joinPath(this.swing, "/")
+        )
+      )
       .toString();
     const styleId = `swing-style-${Math.random()}`;
 
@@ -421,7 +425,7 @@ export class SwingWebView {
 
           if (data.value.source === "fetch") { 
             const resolve = pendingFetchRequests.get(id);
-            resolve({ status, headers, body });
+            resolve(new Response(body, { status, headers }));
             pendingFetchRequests.delete(id);
           } else {
             const xhr = pendingHttpRequests.get(id);

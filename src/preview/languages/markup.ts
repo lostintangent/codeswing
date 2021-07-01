@@ -11,20 +11,20 @@ const MarkupLanguage = {
   markdown: ".md",
   pug: ".pug",
   vue: ".vue",
-  svelte: ".svelte"
+  svelte: ".svelte",
 };
 
 const COMPONENT_EXTENSIONS = [
   MarkupLanguage.vue,
   MarkupLanguage.svelte,
-  ...REACT_EXTENSIONS
+  ...REACT_EXTENSIONS,
 ];
 
 const MARKUP_EXTENSIONS = [
   MarkupLanguage.html,
   MarkupLanguage.markdown,
   MarkupLanguage.pug,
-  ...COMPONENT_EXTENSIONS
+  ...COMPONENT_EXTENSIONS,
 ];
 
 function getMarkupExtensions() {
@@ -33,8 +33,8 @@ function getMarkupExtensions() {
 }
 
 export function getCandidateMarkupFilenames() {
-  return getMarkupExtensions().flatMap(
-    (extension) => MARKUP_BASE_NAMES.map(baseName => `${baseName}${extension}`)
+  return getMarkupExtensions().flatMap((extension) =>
+    MARKUP_BASE_NAMES.map((baseName) => `${baseName}${extension}`)
   );
 }
 
@@ -42,8 +42,8 @@ const COMPONENT_TYPE: { [extension: string]: string } = {
   ".jsx": "react",
   ".tsx": "react",
   ".vue": "vue",
-  ".svelte": "svelte"
-}
+  ".svelte": "svelte",
+};
 
 export async function getMarkupContent(
   document: TextDocument
@@ -58,14 +58,20 @@ export async function getMarkupContent(
     if (COMPONENT_EXTENSIONS.includes(extension)) {
       const componentType = COMPONENT_TYPE[extension];
       const { compileComponent } = require(`./components/${componentType}`);
-      const [component, appInit, imports] = await compileComponent(content, document);
+      const [component, appInit, imports] = await compileComponent(
+        content,
+        document
+      );
       const code = processImports(component);
       return `<div id="app"></div>
 <script type="module">
-  ${imports && imports.map(([name, lib]: any) => `import ${name} from "${getModuleUrl(lib)}";\n`)}
+  ${imports &&
+    imports.map(
+      ([name, lib]: any) => `import ${name} from "${getModuleUrl(lib)}";\n`
+    )}
   ${code}
   ${appInit}
-</script>`
+</script>`;
     }
 
     switch (extension) {

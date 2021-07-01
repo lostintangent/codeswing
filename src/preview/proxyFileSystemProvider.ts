@@ -3,6 +3,7 @@ import { URLSearchParams } from "url";
 import * as vscode from "vscode";
 import { byteArrayToString, stringToByteArray } from "../utils";
 import { compileComponent } from "./languages/components/svelte";
+import { compileScriptContent } from "./languages/script";
 import { processImports } from "./libraries/skypack";
 
 export class ProxyFileSystemProvider implements vscode.FileSystemProvider {
@@ -36,6 +37,11 @@ export class ProxyFileSystemProvider implements vscode.FileSystemProvider {
       let contents = byteArrayToString(await vscode.workspace.fs.readFile(proxyUri));
       if (type === "svelte") {
         [contents] = await compileComponent(contents);
+      } else if (type === "jsx" || type === "tsx") {
+        const compiledContent = await compileScriptContent(contents, `.${type}`);
+        if (compiledContent) {
+          contents = compiledContent;
+        }
       }
 
       return stringToByteArray(processImports(contents))

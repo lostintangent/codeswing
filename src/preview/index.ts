@@ -8,41 +8,44 @@ import { store, SwingFileType, SwingManifest } from "../store";
 import {
   byteArrayToString,
   getFileContents,
-  stringToByteArray
+  stringToByteArray,
 } from "../utils";
 import { exportSwingToCodePen, registerCodePenCommands } from "./codepen";
 import { registerSwingCommands } from "./commands";
 import { discoverLanguageProviders } from "./languages/languageProvider";
 import {
   getCandidateMarkupFilenames,
-  getMarkupContent
+  getMarkupContent,
 } from "./languages/markup";
 import {
   getReadmeContent,
   README_BASE_NAME,
-  README_EXTENSIONS
+  README_EXTENSIONS,
 } from "./languages/readme";
 import {
   includesReactFiles,
   includesReactScripts,
   REACT_SCRIPTS,
   SCRIPT_BASE_NAME,
-  SCRIPT_EXTENSIONS
+  SCRIPT_EXTENSIONS,
 } from "./languages/script";
 import {
   getStylesheetContent,
   STYLESHEET_BASE_NAME,
-  STYLESHEET_EXTENSIONS
+  STYLESHEET_EXTENSIONS,
 } from "./languages/stylesheet";
 import { createLayoutManager } from "./layoutManager";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
-import { ProxyFileSystemProvider, registerProxyFileSystemProvider } from "./proxyFileSystemProvider";
+import {
+  ProxyFileSystemProvider,
+  registerProxyFileSystemProvider,
+} from "./proxyFileSystemProvider";
 import {
   endCurrentTour,
   isCodeTourInstalled,
   registerTourCommands,
   startTourFromUri,
-  TOUR_FILE
+  TOUR_FILE,
 } from "./tour";
 import { registerTutorialModule } from "./tutorials";
 import { storage } from "./tutorials/storage";
@@ -88,17 +91,25 @@ function localeCompare(a: string, b: string) {
   return a.localeCompare(b, undefined, { sensitivity: "base" }) === 0;
 }
 
-function isSwingDocument(
+function isSwingDocument(uri: vscode.Uri) {
+  const swingUri = store.activeSwing!.currentUri;
+  if (
+    !localeCompare(swingUri.scheme, uri.scheme) ||
+    !localeCompare(swingUri.authority, uri.authority) ||
+    !localeCompare(swingUri.query, uri.query) ||
+    !uri.path.toUpperCase().startsWith(swingUri.path.toUpperCase())
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function isSwingDocumentOfType(
   document: vscode.TextDocument,
   fileType: SwingFileType
 ) {
-  const swingUri = store.activeSwing!.currentUri;
-  if (
-    !localeCompare(swingUri.scheme, document.uri.scheme) ||
-    !localeCompare(swingUri.authority, document.uri.authority) ||
-    !localeCompare(swingUri.query, document.uri.query) ||
-    !document.uri.path.toUpperCase().startsWith(swingUri.path.toUpperCase())
-  ) {
+  if (!isSwingDocument(document.uri)) {
     return false;
   }
 
@@ -139,7 +150,9 @@ function isSwingDocument(
     );
   }
 
-  return fileCandidates!.find((candidate) => candidate === path.basename(document.uri.path));
+  return fileCandidates!.find(
+    (candidate) => candidate === path.basename(document.uri.path)
+  );
 }
 
 export function getFileOfType(
@@ -358,7 +371,11 @@ export async function openSwing(uri: Uri) {
     {
       enableScripts: true,
       enableCommandUris: true,
-      localResourceRoots: [uri, currentUri, Uri.parse(`${ProxyFileSystemProvider.SCHEME}:/`)],
+      localResourceRoots: [
+        uri,
+        currentUri,
+        Uri.parse(`${ProxyFileSystemProvider.SCHEME}:/`),
+      ],
     }
   );
 
@@ -445,12 +462,12 @@ export async function openSwing(uri: Uri) {
 
   const documentChangeDisposable = vscode.workspace.onDidChangeTextDocument(
     debounce(async ({ document }) => {
-      if (isSwingDocument(document, SwingFileType.markup)) {
+      if (isSwingDocumentOfType(document, SwingFileType.markup)) {
         const content = await getMarkupContent(document);
         if (content !== null) {
           htmlView.updateHTML(content, runOnEdit);
         }
-      } else if (isSwingDocument(document, SwingFileType.script)) {
+      } else if (isSwingDocumentOfType(document, SwingFileType.script)) {
         // If the user renamed the script file (e.g. from *.js to *.jsx)
         // than we need to update the manifest in case new scripts
         // need to be injected into the webview (e.g. "react").
@@ -472,7 +489,7 @@ export async function openSwing(uri: Uri) {
         }
 
         htmlView.updateJavaScript(document, runOnEdit);
-      } else if (isSwingDocument(document, SwingFileType.manifest)) {
+      } else if (isSwingDocumentOfType(document, SwingFileType.manifest)) {
         htmlView.updateManifest(document.getText(), runOnEdit);
 
         if (jsDocument) {
@@ -482,18 +499,20 @@ export async function openSwing(uri: Uri) {
           // actually impacts it (e.g. adding/removing react)
           htmlView.updateJavaScript(jsDocument, runOnEdit);
         }
-      } else if (isSwingDocument(document, SwingFileType.stylesheet)) {
+      } else if (isSwingDocumentOfType(document, SwingFileType.stylesheet)) {
         const content = await getStylesheetContent(document);
         if (content !== null) {
           htmlView.updateCSS(content, runOnEdit);
         }
-      } else if (isSwingDocument( document, SwingFileType.readme)) {
+      } else if (isSwingDocumentOfType(document, SwingFileType.readme)) {
         const rawContent = document.getText();
         processReadme(rawContent, runOnEdit);
-      } else if (isSwingDocument(document, SwingFileType.config)) {
+      } else if (isSwingDocumentOfType(document, SwingFileType.config)) {
         htmlView.updateConfig(document.getText(), runOnEdit);
       } else if (document.uri.scheme === INPUT_SCHEME) {
         htmlView.updateInput(document.getText(), runOnEdit);
+      } else if (isSwingDocument(document.uri) && runOnEdit) {
+        htmlView.rebuildWebview();
       }
     }, 100)
   );
@@ -501,14 +520,9 @@ export async function openSwing(uri: Uri) {
   let documentSaveDisposeable: vscode.Disposable;
   if (!runOnEdit && autoRun === "onSave") {
     documentSaveDisposeable = vscode.workspace.onDidSaveTextDocument(
-      async (document) => {
-        if (
-          document.uri.scheme === store.activeSwing!.currentUri.scheme &&
-          document.uri.authority === store.activeSwing?.currentUri.authority &&
-          document.uri.query === store.activeSwing?.currentUri.query &&
-          document.uri.path.startsWith(store.activeSwing!.currentUri.path)
-        ) {
-          await htmlView.rebuildWebview();
+      (document) => {
+        if (isSwingDocument(document.uri)) {
+          htmlView.rebuildWebview();
         }
       }
     );
@@ -620,7 +634,7 @@ export function registerPreviewModule(
   registerTourCommands(context);
   registerCodePenCommands(context);
   registerProxyFileSystemProvider();
-  
+
   getCDNJSLibraries();
   discoverLanguageProviders();
 

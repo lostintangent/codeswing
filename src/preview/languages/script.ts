@@ -51,7 +51,7 @@ export function getScriptContent(
   const extension = path.extname(document.uri.path).toLocaleLowerCase();
   let isModule = MODULE_EXTENSIONS.includes(extension);
 
-  let content = document.getText();
+  const content = document.getText();
   if (content.trim() === "") {
     return [content, isModule];
   } else {
@@ -60,7 +60,17 @@ export function getScriptContent(
 
   const includesJsx =
   manifest && manifest.scripts && manifest.scripts.includes("react");
-     
+
+  const compileComponent = compileScriptContent(content, extension, isModule, includesJsx);
+  return compileComponent ? [compileComponent, isModule]: null;
+}
+
+export function compileScriptContent(
+  content: string,
+  extension: string,
+  isModule: boolean = true,
+  includesJsx: boolean = true
+): string | null { 
   if (isModule) {
     if (includesJsx) {
       // React can only be imported into the page once, and so if the user's
@@ -74,7 +84,6 @@ export function getScriptContent(
     content = processImports(content);
   }
   
-  
   if (TYPESCRIPT_EXTENSIONS.includes(extension) || includesJsx) {
     const typescript = require("typescript");
     const compilerOptions: any = {
@@ -87,13 +96,13 @@ export function getScriptContent(
     }
 
     try {
-      return [typescript.transpile(content, compilerOptions), isModule];
+      return typescript.transpile(content, compilerOptions);
     } catch (e) {
       // Something failed when trying to transpile Pug,
       // so don't attempt to return anything
       return null;
     }
   } else {
-    return [content, isModule];
+    return content;
   }
 }

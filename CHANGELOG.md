@@ -3,6 +3,12 @@
 - Auto-running the swing when a secondary file is saved
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
 
+# v0.0.17 (07/01/21)
+
+- You can now `import` `*.jsx` and `*.tsx` files
+- Enabling "run on edit" for all file types
+- Introduced the new `CodeSwing: Theme Preview` setting, which allows you to theme the swing preview window, to match your VS Code color theme
+
 # v0.0.16 (03/02/2021)
 
 - Added support for React Native web 🚀
@@ -28,7 +34,7 @@
 
 # v0.0.12 (02/19/2021)
 
-- You can now use the `@import` and `@use` statements in Sass files (file-based swings only) 
+- You can now use the `@import` and `@use` statements in Sass files (file-based swings only)
 - Added the ability to upload local files to a swing
 - Your `style.css` and `script.js` files can now be explicitly linked from your `index.html` file, without breaking the run-on-type behavior.
 
