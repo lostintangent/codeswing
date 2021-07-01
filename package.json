@@ -349,7 +349,12 @@
             ]
           },
           "description": "Specifies one or more URLs that point of template galleries for creating swings."
-        }
+        },
+        "codeswing.themePreview": {
+          "default": false,
+          "type": "boolean",
+          "description": "Specifies whether to apply Visual Studio Code theme to the preview window."
+        },
       }
     },
     "languages": [

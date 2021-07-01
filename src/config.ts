@@ -13,6 +13,7 @@ export function get(
 export function get(key: "tempDirectory"): string;
 export function get(key: "showConsole"): boolean;
 export function get(key: "templateGalleries"): string[];
+export function get(key: "themePreview"): boolean;
 export function get(key: any) {
   const extensionConfig = workspace.getConfiguration(EXTENSION_NAME);
   return extensionConfig.get(key);
