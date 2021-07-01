@@ -9,6 +9,7 @@ import { getScriptContent } from "./languages/script";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
 import { ProxyFileSystemProvider } from "./proxyFileSystemProvider";
 import { storage } from "./tutorials/storage";
+import themeStyles from './themeStyles';
 
 const EXIT_RESPONSE = "Exit Swing";
 
@@ -353,6 +354,8 @@ export class SwingWebView {
 
       tutorialNavigation = `<iframe id="tutorial-navigation" srcdoc="${frame}"></iframe>`;
     }
+    
+    const shouldUseThemeStyles = this.manifest?.themePreview ?? config.get("themePreview");
 
     this.webview.html = `<html>
   <head>
@@ -378,7 +381,7 @@ export class SwingWebView {
         padding-bottom: 10px;
         border-bottom: 1px solid black;
       }
-
+      ${shouldUseThemeStyles ? themeStyles : ''}
     </style>
     ${styles}
     <style id="${styleId}">

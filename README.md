@@ -43,7 +43,7 @@ Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scisso
 
 After you install the CodeSwing extension, you can create new swings at any time, using the following commands:
 
-- `CodeSwing: New Swing...` - Creates a temporary "scratch" swing, that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time. If you'd like to customize where scratch swings are stored, you can set the `CodeSwing: Scratch Directory` setting to the absolute path of the desired directory.
+- `CodeSwing: New Swing...` - Creates a temporary swing that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time. If you'd like to customize where these swings are stored, you can set the `Temp Directory` setting in the extension preferences to the absolute path of the desired directory.
 
 - `CodeSwing: New Swing from Last Template` - Creates a swing using the last template that you used. This can be useful when you tend to use the same template over and over again.
 
@@ -240,10 +240,12 @@ Whenever you create a swing, it includes a `codeswing.json` file, which defines 
 - `template` - Indicates that this swing is intended to be used as a [template for new swings](#user-templates), and therefore, will appear in the list when creating a new swing. Defaults to `false`.
 
 - `readmeBehavior` - Indicates how the swing's [readme](#readme) (if it has one) will be rendered to the end-user. Defaults to `previewHeader`.
--
+
 - `tutorial` - Indicates that this swing is intended to be used as a [multi-step tutorial](#tutorials). When set, this property indicates the title of the tutorial.
 
 - `input` - Indicates that this swing requires [user input](#swing-input), and also specifies an optional input file name, prompt message and completion message.
+
+- `themePreview` - Indicates that this swing is better viewed with Visual Studio Code theme applied to the preview. Note that this will take precedence over the user's configured default layout.
 
 ## Contributed Commands
 
@@ -303,6 +305,8 @@ Additionally, when you have a swing currently open, the following commands are a
 - `Codeswing: Show Console` - Specifies whether to always show the console when opening a swing. Defaults to `false`.
 
 - `Codeswing: Template Galleries` - Specifies the list of template galleries to use, when displaying the available templates when creating a new swing. Defaults to `["web:basic", "web:languages"]`.
+
+- `Codeswing: Theme Preview` - Specifies whether to apply Visual Studio Code theme to the preview window. Defaults to `false`.
 
 ## Keybindings
 
