@@ -52,6 +52,10 @@ export class ProxyFileSystemProvider implements vscode.FileSystemProvider {
         }
       } else if (type === "json") {
         contents = `export default ${contents}`;
+      } else if (type === "css") {
+        contents = `const styleElement = document.createElement("style");
+styleElement.innerText = \`${contents}\`;
+document.head.appendChild(styleElement);`;
       }
 
       return stringToByteArray(processImports(contents));

@@ -5,7 +5,7 @@
 
 # v0.0.18 (07/01/21)
 
-- You can now `import` `*.json` files
+- You can now `import` `*.json` and `*.css` files
 
 # v0.0.17 (07/01/21)
 
