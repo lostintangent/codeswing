@@ -350,7 +350,7 @@
           },
           "description": "Specifies one or more URLs that point of template galleries for creating swings."
         },
-        "codeswing.useThemeInWebview": {
+        "codeswing.themePreview": {
           "default": false,
           "type": "boolean",
           "description": "Use Visual Studio Code theme colors for the webview pannel (background and color might change if you export the swing to another platform)."
