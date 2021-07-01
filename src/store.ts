@@ -25,6 +25,7 @@ export interface SwingManifest {
   readmeBehavior?: ReadmeBehavior;
   tutorial?: string;
   input?: SwingInput;
+  themePreview?: boolean;
 }
 
 export enum SwingLibraryType {
