@@ -353,7 +353,7 @@
         "codeswing.themePreview": {
           "default": false,
           "type": "boolean",
-          "description": "Use Visual Studio Code theme colors for the webview pannel (background and color might change if you export the swing to another platform)."
+          "description": "Use Visual Studio Code theme for the webview pannel (these styles will only be visible when a swing is viewed in VSCode)."
         },
       }
     },
