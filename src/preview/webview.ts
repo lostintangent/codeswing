@@ -352,7 +352,7 @@ export class SwingWebView {
     
     const themeStyles = config.get("useThemeInWebview")
       ? `background-color: var(--vscode-editor-background, white);
-         color: var(--vscode-editor-foreground, initial);`
+         color: var(--vscode-editor-foreground, revert);`
       : `background-color: white;`
 
 
