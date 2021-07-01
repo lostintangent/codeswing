@@ -3,6 +3,10 @@
 - Auto-running the swing when a secondary file is saved
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
 
+# v0.0.18 (07/01/21)
+
+- You can now `import` `*.json` files
+
 # v0.0.17 (07/01/21)
 
 - You can now `import` `*.jsx` and `*.tsx` files

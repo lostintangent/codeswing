@@ -24,27 +24,37 @@ export class ProxyFileSystemProvider implements vscode.FileSystemProvider {
 
   async readFile(uri: vscode.Uri): Promise<Uint8Array> {
     let proxyUri = vscode.Uri.parse(decodeURIComponent(uri.path.substr(1)));
-    
+
     const extension = path.extname(uri.path);
     if (extension === ".js") {
       let type;
       if (uri.query) {
         const query = new URLSearchParams(uri.query);
         type = query.get("type");
-        proxyUri = proxyUri.with({ path: proxyUri.path.replace(".js", `.${type}`), query: "" });
+        proxyUri = proxyUri.with({
+          path: proxyUri.path.replace(".js", `.${type}`),
+          query: "",
+        });
       }
 
-      let contents = byteArrayToString(await vscode.workspace.fs.readFile(proxyUri));
+      let contents = byteArrayToString(
+        await vscode.workspace.fs.readFile(proxyUri)
+      );
       if (type === "svelte") {
         [contents] = await compileComponent(contents);
       } else if (type === "jsx" || type === "tsx") {
-        const compiledContent = await compileScriptContent(contents, `.${type}`);
+        const compiledContent = await compileScriptContent(
+          contents,
+          `.${type}`
+        );
         if (compiledContent) {
           contents = compiledContent;
         }
+      } else if (type === "json") {
+        contents = `export default ${contents}`;
       }
 
-      return stringToByteArray(processImports(contents))
+      return stringToByteArray(processImports(contents));
     } else {
       return vscode.workspace.fs.readFile(proxyUri);
     }
@@ -92,8 +102,9 @@ export class ProxyFileSystemProvider implements vscode.FileSystemProvider {
 export function registerProxyFileSystemProvider() {
   vscode.workspace.registerFileSystemProvider(
     ProxyFileSystemProvider.SCHEME,
-    new ProxyFileSystemProvider(), {
-      isReadonly: true
+    new ProxyFileSystemProvider(),
+    {
+      isReadonly: true,
     }
   );
 }
