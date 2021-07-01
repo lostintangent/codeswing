@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "Interactive coding playground for building web applications (aka swings).",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "engines": {
     "vscode": "^1.51.0"
   },
@@ -354,7 +354,7 @@
           "default": false,
           "type": "boolean",
           "description": "Specifies whether to apply Visual Studio Code theme to the preview window."
-        },
+        }
       }
     },
     "languages": [
