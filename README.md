@@ -245,7 +245,7 @@ Whenever you create a swing, it includes a `codeswing.json` file, which defines 
 
 - `input` - Indicates that this swing requires [user input](#swing-input), and also specifies an optional input file name, prompt message and completion message.
 
-- `themePreview` - Indicates that this swing is better viewed with Visual Studio Code theme applied to the webview. Note that this will take precedence over the user's configured default layout.
+- `themePreview` - Indicates that this swing is better viewed with Visual Studio Code theme applied to the preview. Note that this will take precedence over the user's configured default layout.
 
 ## Contributed Commands
 
