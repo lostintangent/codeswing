@@ -350,7 +350,7 @@ export class SwingWebView {
       tutorialNavigation = `<iframe id="tutorial-navigation" srcdoc="${frame}"></iframe>`;
     }
     
-    const themeStyles = config.get("useThemeInWebview")
+    const themeStyles = config.get("themePreview")
       ? `background-color: var(--vscode-editor-background, white);
          color: var(--vscode-editor-foreground, revert);`
       : `background-color: white;`
