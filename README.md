@@ -43,7 +43,7 @@ Furthermore, if you'd like to try out a fun sample, clone the [Rock Paper Scisso
 
 After you install the CodeSwing extension, you can create new swings at any time, using the following commands:
 
-- `CodeSwing: New Swing...` - Creates a temporary swing that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time. If you'd like to customize where these swings are stored, you can set the `Temp Directory` setting in the extension preferences to the absolute path of the desired directory.
+- `CodeSwing: New Swing...` - Creates a temporary swing that allows you to quickly try something out (like a visual REPL!). These swings are stored in your system temp directory in a folder called `codeswing`, and are named based on the current date/time.
 
 - `CodeSwing: New Swing from Last Template` - Creates a swing using the last template that you used. This can be useful when you tend to use the same template over and over again.
 
@@ -127,7 +127,7 @@ If you open a directory in VS Code, and that directory represents a swing, then 
 
 When you create or open a swing, a new tree view called "CodeSwing" will appear on the "Explorer" tab (though you can move it to anywhere you want!). It will display the list of files in the active swing, and allow you to edit them.
 
-If you open a swing directory as a workspace, then the "CodeSwing" tree won't appear, since it would be duplicative of the "Explorer" tree itself. Therefore, the "CodeSwing" tree is meant to accomodate scratch swings, swings you open from directories other than the active VS Code workspace, or swings you load from [gists](#gistpad).
+If you open a swing directory as a workspace, then the "CodeSwing" tree won't appear, since it would be duplicative of the "Explorer" tree itself. Therefore, the "CodeSwing" tree is meant to accomodate temprary swings, swings you open from directories other than the active VS Code workspace, or swings you load from [gists](#gistpad).
 
 ### Readme
 
@@ -167,7 +167,7 @@ CodeSwing includes integration with [CodeTour](https://aka.ms/codetour), which a
 
 ### Live Share
 
-If you'd like to collaborate with someone on a swing (e.g. doing a technical interview or remote tutoring session), then you can install the [Live Share](https://aka.ms/vsls) extension, start a session, and then co-edit your swing in real-time. Note that Live Share support is currently limited to [workspace swings](#workspace-swings). Scratch swings, and swings opened from GistPad (i.e. stored in a gist) aren't currently supported.
+If you'd like to collaborate with someone on a swing (e.g. doing a technical interview or remote tutoring session), then you can install the [Live Share](https://aka.ms/vsls) extension, start a session, and then co-edit your swing in real-time. Note that Live Share support is currently limited to [workspace swings](#workspace-swings). Temporary swings, and swings opened from GistPad (i.e. stored in a gist) aren't currently supported.
 
 <img width="700px" src="https://user-images.githubusercontent.com/116461/103246112-2d6b1500-4917-11eb-98af-cfbda51b1ace.gif" />
 
@@ -253,11 +253,15 @@ Whenever you create a swing, it includes a `codeswing.json` file, which defines 
 
 When you install CodeSwing, the following commands are available from the command palette:
 
-- `CodeSwing: New Swing...` - Creates a new code swing, whose files are saved to a specified directory.
+- `CodeSwing: New Swing...` - Creates a new temporary code swing, which can be useful for doing quick/ad-hoc explorations.
 
-- `CodeSwing: New Scratch Swing...` - Creates a new in-memory code swing, which can be useful for doing quick/ad-hoc explorations.
+- `CodeSwing: New Swing in Directory...` - Creates a new code swing, whose files are saved to a specified directory.
+
+- `CodeSwing: New Swing from Last Template` - Creates a new temporary swing using the most recently used tempalte.
 
 - `CodeSwing: Open Swing...` - Opens a swing, based on the contents of a specified directory.
+
+- `CodeSwing: Open Swing in New Windows...` - Opens a swing in a new VS Code window.
 
 Additionally, when you have a swing currently open, the following commands are available:
 
@@ -301,8 +305,6 @@ Additionally, when you have a swing currently open, the following commands are a
   - `none`: If a swing has a readme, then it won't be displayed automatically when someone opens it.
   - `previewFooter`: If a swing has a readme, then its contents will be rendered as the footer of the preview window.
   - `previewHeader` _(default)_: If a swing has a readme, then its contents will be rendered as the header of the preview window.
-
-- `Codeswing: Scratch Directory` - Specifies the directory that you want to store scratch swings into, using an absolute path. Defaults to `$TMP/codeswing`.
 
 - `Codeswing: Show Console` - Specifies whether to always show the console when opening a swing. Defaults to `false`.
 

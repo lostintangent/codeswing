@@ -58,6 +58,7 @@ interface ActiveSwing {
 }
 
 export interface Store {
+  globalStorageUri?: vscode.Uri;
   activeSwing?: ActiveSwing;
 }
 

@@ -8,8 +8,8 @@ import { byteArrayToString } from "../utils";
 import { getScriptContent } from "./languages/script";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
 import { ProxyFileSystemProvider } from "./proxyFileSystemProvider";
+import themeStyles from "./themeStyles";
 import { storage } from "./tutorials/storage";
-import themeStyles from './themeStyles';
 
 const EXIT_RESPONSE = "Exit Swing";
 
@@ -354,8 +354,9 @@ export class SwingWebView {
 
       tutorialNavigation = `<iframe id="tutorial-navigation" srcdoc="${frame}"></iframe>`;
     }
-    
-    const shouldUseThemeStyles = this.manifest?.themePreview ?? config.get("themePreview");
+
+    const shouldUseThemeStyles =
+      this.manifest?.themePreview ?? config.get("themePreview");
 
     this.webview.html = `<html>
   <head>
@@ -376,12 +377,12 @@ export class SwingWebView {
 
       iframe#tutorial-navigation {
         height: 30px;
-        width: 100%;
+        width: calc(100% - 20px);
         border: none;
         padding-bottom: 10px;
         border-bottom: 1px solid black;
       }
-      ${shouldUseThemeStyles ? themeStyles : ''}
+      ${shouldUseThemeStyles ? themeStyles : ""}
     </style>
     ${styles}
     <style id="${styleId}">
@@ -451,7 +452,7 @@ export class SwingWebView {
 
       function triggerInput(input) {
         if (window.checkInput && window.checkInput(input)) {
-          setTimeout(() => navigateTutorial(1), 2000);
+          navigateTutorial(1);
         }
       }
 

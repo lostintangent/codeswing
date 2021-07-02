@@ -1,6 +1,13 @@
 # Coming Up
 
+- Fix CodePen exporting
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
+
+# v0.0.19 (07/02/21)
+
+- Fixed formatting of the tutorial navigation header
+- Removed the timeout from tutorial step navigation
+- Removed the `CodeSwing: Temp Directory` setting
 
 # v0.0.18 (07/01/21)
 

@@ -1,7 +1,4 @@
-import * as os from "os";
-import * as path from "path";
 import * as vscode from "vscode";
-import * as config from "../config";
 import { EXTENSION_NAME, SWING_FILE } from "../constants";
 import { DEFAULT_MANIFEST, openSwing } from "../preview";
 import { store } from "../store";
@@ -9,7 +6,7 @@ import { stringToByteArray, withProgress } from "../utils";
 import {
   enableGalleries,
   loadGalleries,
-  registerTemplateProvider
+  registerTemplateProvider,
 } from "./galleryProvider";
 import { initializeStorage, storage } from "./storage";
 
@@ -23,17 +20,15 @@ interface CodeSwingTemplateItem extends vscode.QuickPickItem {
 }
 
 async function createSwingDirectory() {
-  const scratchDirectory =
-          config.get("tempDirectory") ||
-          path.join(os.tmpdir(), EXTENSION_NAME);
   const dayjs = require("dayjs");
   const timestamp = dayjs().format("YYYY-MM-DD (hh-mm-ss A)");
-  const swingDirectory = path.join(scratchDirectory, timestamp);
+  const swingDirectory = vscode.Uri.joinPath(
+    store.globalStorageUri!,
+    timestamp
+  );
 
-  const uri = vscode.Uri.file(swingDirectory);
-  await vscode.workspace.fs.createDirectory(uri);
-
-  return uri;
+  await vscode.workspace.fs.createDirectory(swingDirectory);
+  return swingDirectory;
 }
 
 async function getTemplates(): Promise<CodeSwingTemplateItem[]> {
@@ -57,7 +52,7 @@ export async function newSwing(
   quickPick.placeholder = "Select the template to use";
   quickPick.matchOnDescription = true;
   quickPick.ignoreFocusOut = true;
-  
+
   const templates = await getTemplates();
   if (templates.length === 0) {
     templates.push({
@@ -65,20 +60,22 @@ export async function newSwing(
         "No templates available. Configure your template galleries and try again.",
     });
   }
-  
+
   const mru = storage.getTemplateMRU();
   if (mru && mru.length > 0) {
     for (let i = mru.length - 1; i >= 0; i--) {
-      const itemIndex = templates.findIndex(gallery => gallery.label === mru[i]);
+      const itemIndex = templates.findIndex(
+        (gallery) => gallery.label === mru[i]
+      );
       if (itemIndex !== -1) {
         const [item] = templates.splice(itemIndex, 1);
         item.alwaysShow = true;
         item.description = "Recently used";
         templates.unshift(item);
-      } 
+      }
     }
   }
-  
+
   quickPick.items = templates;
   quickPick.buttons = [
     {
@@ -111,7 +108,7 @@ async function newSwingFromTemplate(
   files: SwingFile[],
   uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>)
 ) {
-  const manifest = files.find((file) => file.filename === SWING_FILE)
+  const manifest = files.find((file) => file.filename === SWING_FILE);
   if (!manifest) {
     const content = JSON.stringify(DEFAULT_MANIFEST, null, 2);
     files.push({ filename: SWING_FILE, content });
@@ -164,7 +161,7 @@ async function promptForGalleryConfiguration(
   const galleries = (await loadGalleries())
     .sort((a, b) => a.title.localeCompare(b.title))
     .map((gallery) => ({ ...gallery, label: gallery.title }));
-  
+
   quickPick.items = galleries;
   quickPick.selectedItems = galleries.filter((gallery) => gallery.enabled);
 
@@ -196,70 +193,85 @@ export function registerCreationModule(
   syncKeys: string[]
 ) {
   context.subscriptions.push(
+    vscode.commands.registerCommand(`${EXTENSION_NAME}.newSwing`, async () => {
+      const uri = await createSwingDirectory();
+      newSwing(uri);
+    })
+  );
+
+  context.subscriptions.push(
     vscode.commands.registerCommand(
-      `${EXTENSION_NAME}.newSwing`,
+      `${EXTENSION_NAME}.newSwingFromLastTemplate`,
       async () => {
-        const uri = await createSwingDirectory();
-        newSwing(uri);
+        const [latestTemplate] = storage.getTemplateMRU();
+        const templates = await getTemplates();
+        const template = templates.find(
+          (template) => template.label === latestTemplate
+        );
+        if (template) {
+          const uri = await createSwingDirectory();
+          newSwingFromTemplate(template.files!, uri);
+        }
       }
     )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${EXTENSION_NAME}.newSwingFromLastTemplate`, async () => {
-      const [latestTemplate] = storage.getTemplateMRU();
-      const templates = await getTemplates();
-      const template = templates.find(template => template.label === latestTemplate);
-      if (template) {
-        const uri = await createSwingDirectory();
-        newSwingFromTemplate(template.files!, uri);
+    vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.newSwingDirectory`,
+      async () => {
+        const folder = await vscode.window.showOpenDialog({
+          canSelectFolders: true,
+          canSelectFiles: false,
+          canSelectMany: false,
+          defaultUri: vscode.workspace.workspaceFolders?.[0].uri,
+        });
+
+        if (folder) {
+          newSwing(folder[0]);
+        }
       }
-    })
+    )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${EXTENSION_NAME}.newSwingDirectory`, async () => {
-      const folder = await vscode.window.showOpenDialog({
-        canSelectFolders: true,
-        canSelectFiles: false,
-        canSelectMany: false,
-        defaultUri: vscode.workspace.workspaceFolders?.[0].uri,
-      });
+    vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.saveCurrentSwing`,
+      async () => {
+        const folder = await vscode.window.showOpenDialog({
+          canSelectFolders: true,
+          canSelectFiles: false,
+          canSelectMany: false,
+          defaultUri: vscode.workspace.workspaceFolders?.[0].uri,
+        });
 
-      if (folder) {
-        newSwing(folder[0]);
+        if (!folder) {
+          return;
+        }
+
+        await withProgress("Saving swing...", async () => {
+          const files = await vscode.workspace.fs.readDirectory(
+            store.activeSwing!.rootUri
+          );
+          return Promise.all(
+            files.map(async ([file]) => {
+              const sourceUri = vscode.Uri.joinPath(
+                store.activeSwing!.rootUri,
+                file
+              );
+              const contents = await vscode.workspace.fs.readFile(sourceUri);
+
+              const uri = vscode.Uri.joinPath(folder[0], file);
+              await vscode.workspace.fs.writeFile(uri, contents);
+            })
+          );
+        });
       }
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(`${EXTENSION_NAME}.saveCurrentSwing`, async () => {
-      const folder = await vscode.window.showOpenDialog({
-        canSelectFolders: true,
-        canSelectFiles: false,
-        canSelectMany: false,
-        defaultUri: vscode.workspace.workspaceFolders?.[0].uri,
-      });
-
-      if (!folder) {
-        return;
-      }
-
-      await withProgress("Saving swing...", async () => {
-        const files = await vscode.workspace.fs.readDirectory(store.activeSwing!.rootUri);
-        return Promise.all(files.map(async ([file]) => {
-          const sourceUri = vscode.Uri.joinPath(store.activeSwing!.rootUri, file);
-          const contents = await vscode.workspace.fs.readFile(sourceUri);
-
-          const uri = vscode.Uri.joinPath(folder[0], file);
-          await vscode.workspace.fs.writeFile(uri, contents);
-        }));
-      });
-    })
+    )
   );
 
   initializeStorage(context, syncKeys);
-  
+
   api.newSwing = newSwing;
   api.registerTemplateProvider = registerTemplateProvider;
 }
