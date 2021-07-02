@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 const config = {
-  mode: "development",
+  mode: "production",
   entry: "./src/extension.ts",
   devtool: "source-map",
   externals: {
