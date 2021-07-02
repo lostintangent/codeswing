@@ -16,6 +16,7 @@
     "url": "https://github.com/codespaces-contrib/codeswing"
   },
   "extensionKind": [
+    "web",
     "ui",
     "workspace"
   ],
