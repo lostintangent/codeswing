@@ -4,7 +4,6 @@ const webpack = require("webpack");
 const config = {
   mode: "production",
   entry: "./src/extension.ts",
-  devtool: "source-map",
   externals: {
     vscode: "commonjs vscode",
     "uglify-js": "commonjs uglify-js", // Pug relies on uglify-js, which doesn't play nice with Webpack. Fortunately we don't need it, so we exclude it from the bundle
@@ -69,14 +68,6 @@ const config = {
       },
     ],
   },
-  plugins: [
-    new webpack.SourceMapDevToolPlugin({
-      test: /\.ts$/,
-      noSources: false,
-      module: true,
-      columns: true,
-    }),
-  ],
 };
 
 const nodeConfig = {
