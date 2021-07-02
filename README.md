@@ -147,6 +147,8 @@ Once you're using modules, we'd recommend you use [Skypack](https://skypack.dev)
 
 <img width="500px" src="https://user-images.githubusercontent.com/116461/103246626-09a8ce80-4919-11eb-9b01-b3a7a02a5634.gif" />
 
+Additionally, you can import CSS and JSON files into a module. When you import a CSS file, CodeSwing will inject the contents of that file into the DOM. When you import a JSON file, the default `export` of the module will be the parsed version of the JSON file.
+
 ### Code Links
 
 If you'd like to add a link in your swing/readme, which references a file and/or line/column within a file in the swing, simply add a hyperlink, whose `href` value uses the `swing:` scheme (kind of like a `mailto:`), and specifies the file name you'd like to open (e.g. `swing:index.html`). Optionally, you can specify a line and column number as well (e.g. `swing:index.html@23:5`), which allows you to highlight a specific line/span of code when the end-user clicks on it.

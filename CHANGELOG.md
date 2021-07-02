@@ -1,6 +1,5 @@
 # Coming Up
 
-- Auto-running the swing when a secondary file is saved
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
 
 # v0.0.18 (07/01/21)
