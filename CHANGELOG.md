@@ -4,11 +4,11 @@
 
 # v0.0.18 (07/01/21)
 
-- You can now `import` `*.json` and `*.css` files
+- You can now `import` `*.json` and `*.css` files from a JavaScript module
 
 # v0.0.17 (07/01/21)
 
-- You can now `import` `*.jsx` and `*.tsx` files
+- You can now `import` `*.jsx` and `*.tsx` files from a JavaScript module
 - Enabling "run on edit" for all file types
 - Introduced the new `CodeSwing: Theme Preview` setting, which allows you to theme the swing preview window, to match your VS Code color theme
 
