@@ -29,6 +29,7 @@
     "onStartupFinished"
   ],
   "main": "./dist/extension.js",
+  "browser": "./dist/extension-web.js",
   "contributes": {
     "commands": [
       {
@@ -412,7 +413,7 @@
     "glob": "^7.1.6",
     "ts-loader": "^8.0.12",
     "typescript": "^4.1.2",
-    "vsce": "^1.81.1",
+    "vsce": "^1.95.0",
     "webpack": "^5.11.1",
     "webpack-cli": "^4.3.0"
   },
@@ -426,9 +427,12 @@
     "less": "^3.12.2",
     "markdown-it": "^12.0.3",
     "mobx": "^6.0.4",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "postcss": "^8.2.6",
     "pug": "^3.0.0",
     "sass": "^1.32.7",
+    "stream-browserify": "^3.0.0",
     "svelte": "^3.32.3",
     "typescript": "^4.1.2",
     "vsls": "^1.0.3015",

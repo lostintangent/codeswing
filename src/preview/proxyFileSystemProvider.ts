@@ -1,5 +1,4 @@
 import * as path from "path";
-import { URLSearchParams } from "url";
 import * as vscode from "vscode";
 import { byteArrayToString, stringToByteArray } from "../utils";
 import { compileComponent } from "./languages/components/svelte";
