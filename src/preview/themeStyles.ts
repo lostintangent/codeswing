@@ -13,7 +13,7 @@ body {
   background-color: var(--vscode-editor-background, white);
   color: var(--vscode-editor-foreground, revert);
   caret-color: var(--vscode-editorCursor-foreground);
-  font-family: var(--vscode-font-family);
+  font-family: var(--vscode-font-family, sans-serif);
   font-weight: var(--vscode-font-weight);
   font-size: var(--vscode-font-size);
 }
@@ -50,19 +50,49 @@ hr {
   border-color: var(--vscode-textSeparator-foreground);
 }
 
-pre {
-  background-color: var(--vscode-textCodeBlock-background);
+pre, code, samp, var {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-weight: var(--vscode-editor-font-weight);
+  font-size: var(--vscode-editor-font-size);
 }
 
 pre, code {
-  font-family: var(--vscode-editor-font-family);
-  font-weight: var(--vscode-editor-font-weight);
-  font-size: var(--vscode-editor-font-size);
   color: var(--vscode-textPreformat-foreground);
 }
 
 pre {
+  background-color: var(--vscode-textCodeBlock-background);
   padding: 4px;
+  overflow: hidden;
+}
+
+pre ins, pre del {
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  z-index: 0;
+}
+
+pre ins::before, pre del::before {
+  content: '';
+  position: absolute;
+  left: -100vw;
+  width: 200vw;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+
+pre ins::before {
+  background-color: var(--vscode-diffEditor-insertedTextBackground);
+  border-color: var(--vscode-diffEditor-insertedTextBorder, transparent);
+}
+
+pre del::before {
+  background-color: var(--vscode-diffEditor-removedTextBackground);
+  border-color: var(--vscode-diffEditor-removedTextBorder, transparent);
 }
 
 details summary {
@@ -106,6 +136,22 @@ textarea:invalid, input:invalid, select:invalid {
 input[type="checkbox"]:focus, input[type="radio"]:focus,
 input[type="checkbox"]:invalid, input[type="radio"]:invalid {
   outline-offset: revert;
+}
+
+kbd {
+  font-family: var(--vscode-font-family, sans-serif);
+  font-size: calc(var(--vscode-font-size) * .85);
+  color: var(--vscode-keybindingLabel--foreground);
+  border-radius: 3px;
+  padding: 0 4px;
+  background-color: var(--vscode-keybindingLabel-background);
+  border: 1px solid var(--vscode-keybindingLabel-border);
+  border-bottom-color: var(--vscode-editor-background);
+  box-shadow: 0 1px 0 var(--vscode-keybindingLabel-bottomBorder);
+}
+
+kbd + kbd {
+  margin-left: 4px;
 }
 `
 
