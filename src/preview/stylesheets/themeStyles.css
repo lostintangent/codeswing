@@ -1,4 +1,3 @@
-const styles = `
 *:focus {
   outline: var(--vscode-focusBorder) solid 1px;
 }
@@ -153,6 +152,3 @@ kbd {
 kbd + kbd {
   margin-left: 4px;
 }
-`
-
-export default styles

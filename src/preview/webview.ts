@@ -1,4 +1,5 @@
 import axios from "axios";
+import themeStyles from "raw-loader!./stylesheets/themeStyles.css";
 import * as vscode from "vscode";
 import { openSwing } from ".";
 import * as config from "../config";
@@ -8,7 +9,6 @@ import { byteArrayToString } from "../utils";
 import { getScriptContent } from "./languages/script";
 import { getCDNJSLibraries } from "./libraries/cdnjs";
 import { ProxyFileSystemProvider } from "./proxyFileSystemProvider";
-import themeStyles from "./themeStyles";
 import { storage } from "./tutorials/storage";
 
 const EXIT_RESPONSE = "Exit Swing";
