@@ -59,10 +59,15 @@ export function getScriptContent(
   }
 
   const includesJsx =
-  manifest && manifest.scripts && manifest.scripts.includes("react");
+    manifest && manifest.scripts && manifest.scripts.includes("react");
 
-  const compileComponent = compileScriptContent(content, extension, isModule, includesJsx);
-  return compileComponent ? [compileComponent, isModule]: null;
+  const compileComponent = compileScriptContent(
+    content,
+    extension,
+    isModule,
+    includesJsx
+  );
+  return compileComponent ? [compileComponent, isModule] : null;
 }
 
 export function compileScriptContent(
@@ -70,7 +75,7 @@ export function compileScriptContent(
   extension: string,
   isModule: boolean = true,
   includesJsx: boolean = true
-): string | null { 
+): string | null {
   if (isModule) {
     if (includesJsx) {
       // React can only be imported into the page once, and so if the user's
@@ -78,12 +83,15 @@ export function compileScriptContent(
       content = content
         .replace(/import (?:\* as )?React from (["'])react\1/, "")
         .replace(/import (.+) from (["'])react\2/, "const $1 = React")
-        .replace(/(?<=from ["'])react-native(?=["'])/, "https://gistcdn.githack.com/lostintangent/6de9be49a0f112dd36eff3b8bc771b9e/raw/ce12b9075322245be20a79eba4d89d4e5152a4aa/index.js")
+        .replace(
+          /from (["'])react-native\1/,
+          "from $1https://gistcdn.githack.com/lostintangent/6de9be49a0f112dd36eff3b8bc771b9e/raw/ce12b9075322245be20a79eba4d89d4e5152a4aa/index.js$1"
+        );
     }
 
     content = processImports(content);
   }
-  
+
   if (TYPESCRIPT_EXTENSIONS.includes(extension) || includesJsx) {
     const typescript = require("typescript");
     const compilerOptions: any = {

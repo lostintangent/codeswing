@@ -345,3 +345,5 @@ When your extension contributes a custom language, CodeSwing expects that your e
 - **Playing audio and video** - [VS Code doesn't ship with ffmpeg](https://stackoverflow.com/questions/48321919/show-html5-video-on-previewhtml-command-in-vscode-extension), and therefore, it isn't capable of playing most common audio (e.g. WAV, MP3, MIDI) and video (e.g. MP4) formats ([example](https://gist.github.com/lostintangent/5e286fa15f739b029ae2bedcf323db5e)). As a result, if you try to use an `<audio>`/`<video>` tag and/or, the WebAudio API, you won't be able to decode most media. You can, however, use the web audio API to dynamically create audio ([sample](https://gist.github.com/lostintangent/baf485f08c6e471d7e145e058cb16cd8)).
 
 - **Using Sass @import or @use statements in a non file-based swing**
+
+- **SCSS/Sass, Less, Pug and Vue (web)** HTML/Markdown, CSS, JS/TS, and Svelte/React work

@@ -80,7 +80,7 @@ export async function getMarkupContent(
         return pug.render(content);
       case MarkupLanguage.markdown:
         const markdown = require("markdown-it")();
-        return markdown.render(content);
+        return markdown.render(content, { html: true });
       case MarkupLanguage.html:
         return content;
       default:

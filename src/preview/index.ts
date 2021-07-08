@@ -218,7 +218,9 @@ export async function openSwing(uri: Uri) {
   }
 
   const isWorkspaceSwing =
-    uri.toString() === vscode.workspace.workspaceFolders?.[0].uri.toString();
+    vscode.workspace.workspaceFolders &&
+    uri.toString() === vscode.workspace.workspaceFolders[0].uri.toString();
+
   await vscode.commands.executeCommand(
     "setContext",
     "codeswing:inSwingWorkspace",

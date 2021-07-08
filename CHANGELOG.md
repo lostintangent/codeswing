@@ -3,6 +3,12 @@
 - Fix CodePen exporting
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
 
+# v0.0.20 (07/08/21)
+
+- You can now use HTML in `index.md` files, when using Markdown as your markup format
+- Swings can now be open even when you don't have a workspace open
+- Fixed a bug with using CodeSwing in Safari
+
 # v0.0.19 (07/02/21)
 
 - Fixed formatting of the tutorial navigation header
