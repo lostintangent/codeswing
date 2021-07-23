@@ -2,7 +2,7 @@ import * as vsls from "vsls";
 import { EXTENSION_NAME } from "../constants";
 
 export async function registerLiveShareModule() {
-  const vslsApi = await vsls.getApi(`codespace-contrib.${EXTENSION_NAME}`);
+  const vslsApi = await vsls.getApi(`codespaces-contrib.${EXTENSION_NAME}`);
   if (!vslsApi) return;
 
   vslsApi.onDidChangeSession((e) => {
