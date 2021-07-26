@@ -7,7 +7,7 @@ import { URI_PATTERN } from "../constants";
 import { store, SwingLibraryType, SwingManifest } from "../store";
 import { byteArrayToString } from "../utils";
 import { getScriptContent } from "./languages/script";
-import { getCDNJSLibraries } from "./libraries/cdnjs";
+import { getCdnJsLibraries } from "./libraries/cdnjs";
 import { ProxyFileSystemProvider } from "./proxyFileSystemProvider";
 import { storage } from "./tutorials/storage";
 
@@ -250,7 +250,7 @@ export class SwingWebView {
         if (isUrl) {
           appendLibrary(library);
         } else {
-          const libraries = await getCDNJSLibraries();
+          const libraries = await getCdnJsLibraries();
           const libraryEntry = libraries.find((lib) => lib.name === library);
 
           if (!libraryEntry) {

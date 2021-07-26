@@ -5,7 +5,7 @@ import { getFileOfType } from ".";
 import { EXTENSION_NAME, SWING_FILE, URI_PATTERN } from "../constants";
 import { store, SwingFileType } from "../store";
 import { getFileContents, getUriContents, stringToByteArray } from "../utils";
-import { getCDNJSLibraries } from "./libraries/cdnjs";
+import { getCdnJsLibraries } from "./libraries/cdnjs";
 
 function getExportMarkup(data: any) {
   const value = JSON.stringify(data)
@@ -62,7 +62,7 @@ function resolveLibraries(libraries: string[]) {
       if (isUrl) {
         return library;
       } else {
-        const libraries = await getCDNJSLibraries();
+        const libraries = await getCdnJsLibraries();
         const libraryEntry = libraries.find((lib) => lib.name === library);
 
         if (!libraryEntry) {

@@ -38,23 +38,29 @@ export function registerTreeViewCommands(context: ExtensionContext) {
           canSelectFolders: false,
           canSelectMany: true,
           openLabel: "Upload",
-        })
+        });
 
         if (!files) {
           return;
         }
 
-        await Promise.all(files.map(async file => {
-          const contents = await workspace.fs.readFile(file);
+        await Promise.all(
+          files.map(async (file) => {
+            const contents = await workspace.fs.readFile(file);
 
-          const fileName = path.basename(file.path);
-          const filePath = node ? `${node.directory}/${fileName}` : fileName;
-          const uri = Uri.joinPath(store.activeSwing!.rootUri, filePath);
+            const fileName = path.basename(file.path);
+            const filePath = node ? `${node.directory}/${fileName}` : fileName;
+            const uri = Uri.joinPath(store.activeSwing!.rootUri, filePath);
 
-          await workspace.fs.writeFile(uri, contents);
-        }));
+            await workspace.fs.writeFile(uri, contents);
+          })
+        );
 
         refreshTreeView();
+
+        // We're assuming the uploaded file impacts
+        // the rendering of the swing.
+        store.activeSwing!.webView.rebuildWebview();
       }
     )
   );
@@ -75,15 +81,18 @@ export function registerTreeViewCommands(context: ExtensionContext) {
         const newUri = Uri.joinPath(store.activeSwing!.rootUri, file);
 
         await withProgress("Renaming file...", async () => {
-          // If the file being renamed is dirty, then we 
+          // If the file being renamed is dirty, then we
           // need to save it before renaming it. Otherwise,
           // VS Code will retain the old file and show it as
           // deleted, since they don't want to lose the changing.
-          const visibleDocument = window.visibleTextEditors.find(editor => editor.document.uri.toString() === node.resourceUri!.toString())
+          const visibleDocument = window.visibleTextEditors.find(
+            (editor) =>
+              editor.document.uri.toString() === node.resourceUri!.toString()
+          );
           if (visibleDocument) {
             await visibleDocument.document.save();
           }
-        
+
           await workspace.fs.rename(node.resourceUri!, newUri);
         });
 

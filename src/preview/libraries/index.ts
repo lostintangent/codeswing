@@ -4,39 +4,24 @@ import { DEFAULT_MANIFEST } from "..";
 import { SWING_FILE, URI_PATTERN } from "../../constants";
 import { store, SwingLibraryType, SwingManifest } from "../../store";
 import { byteArrayToString, stringToByteArray } from "../../utils";
-import { getCDNJSLibraries, getLibraryVersions } from "./cdnjs";
-
-const SUPPORTED_DEFAULT_LIBRARIES = [
-  "angular.js",
-  "d3",
-  "ember.js",
-  "font-awesome",
-  "jquery",
-  "react",
-  "react-dom",
-  "redux",
-  "mobx",
-  "polymer",
-  "vue",
-  "tailwindcss",
-];
+import {
+  CdnJsLibraryVersion,
+  getCdnJsLibraries,
+  getLibraryVersions,
+} from "./cdnjs";
 
 async function libraryToVersionsPickList(libraryName: string) {
   const versions = await getLibraryVersions(libraryName);
-  return versions.map((version) => {
-    return {
-      label: version.version,
-      version,
-    };
-  });
+  return versions.map((version) => ({
+    label: version.version,
+    version,
+  }));
 }
 
 function libraryFilesToPickList(files: string[]) {
-  return files.map((file) => {
-    return {
-      label: file,
-    };
-  });
+  return files.map((file) => ({
+    label: file,
+  }));
 }
 
 function createLibraryUrl(
@@ -45,14 +30,6 @@ function createLibraryUrl(
   libraryFile: string
 ) {
   return `https://cdnjs.cloudflare.com/ajax/libs/${libraryName}/${libraryVersion}/${libraryFile}`;
-}
-
-function filterOutCommonJsFiles(versions: string[]) {
-  const result = versions.filter((file: string) => {
-    return !file.startsWith("cjs");
-  });
-
-  return result;
 }
 
 function getSwingManifest(text: string): SwingManifest {
@@ -91,13 +68,19 @@ async function addDependencyLink(
   store.activeSwing!.webView.updateManifest(updatedContent, true);
 }
 
-const createLatestUrl = (libraryAnswer: any) => {
-  const { name, latest } = libraryAnswer.library;
-  return SUPPORTED_DEFAULT_LIBRARIES.indexOf(name) > -1 ? name : latest;
-};
+const EXCLUDED_LABELS = ["cjs", "esm", ".min.", ".prod."];
+const EXCLUDED_FILES = [".mjs", ".map"];
+
+function filterVersionFiles({ files }: CdnJsLibraryVersion) {
+  return files.filter(
+    (file) =>
+      EXCLUDED_LABELS.every((label) => !file.includes(label)) &&
+      EXCLUDED_FILES.every((excludedFile) => !file.endsWith(excludedFile))
+  );
+}
 
 export async function addSwingLibrary(libraryType: SwingLibraryType) {
-  const libraries = await getCDNJSLibraries();
+  const libraries = await getCdnJsLibraries();
   const libraryPickListItems = libraries.map((library) => {
     return {
       label: library.name,
@@ -143,9 +126,7 @@ export async function addSwingLibrary(libraryType: SwingLibraryType) {
       return;
     }
 
-    const libraryFiles = filterOutCommonJsFiles(
-      libraryVersionAnswer.version.files
-    );
+    const libraryFiles = filterVersionFiles(libraryVersionAnswer.version);
 
     const fileAnswer =
       libraryFiles.length > 1
@@ -161,14 +142,11 @@ export async function addSwingLibrary(libraryType: SwingLibraryType) {
       return;
     }
 
-    const libraryUrl =
-      libraryVersionAnswer.label === "latest"
-        ? createLatestUrl(libraryAnswer)
-        : createLibraryUrl(
-            (<any>libraryAnswer).library.name,
-            libraryVersionAnswer.label,
-            fileAnswer.label
-          );
+    const libraryUrl = createLibraryUrl(
+      (<any>libraryAnswer).library.name,
+      libraryVersionAnswer.label,
+      fileAnswer.label
+    );
 
     await addDependencyLink(libraryType, libraryUrl);
   });

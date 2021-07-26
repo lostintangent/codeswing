@@ -2,42 +2,33 @@ import axios from "axios";
 
 const LIBRARIES_URL = "https://api.cdnjs.com/libraries";
 
-export interface ICDNJSLibrary {
+export interface CdnJsLibrary {
   name: string;
   description: string;
   latest: string;
 }
 
-export interface ICDNJSLibraryVersion {
+export interface CdnJsLibraryVersion {
   version: string;
   files: string[];
 }
 
-export interface ICDNJSLibraryManifest {
-  name: string;
-  description: string;
-  filename: string;
-  assets: ICDNJSLibraryVersion[];
-}
-
-let libraries: ICDNJSLibrary[] | undefined;
-
-async function getLibrariesInternal(): Promise<ICDNJSLibrary[]> {
+let libraries: CdnJsLibrary[] | undefined;
+async function getLibrariesInternal(): Promise<CdnJsLibrary[]> {
   try {
-    const librariesResponse = await axios.get<{ results: ICDNJSLibrary[] }>(
+    const response = await axios.get<{ results: CdnJsLibrary[] }>(
       `${LIBRARIES_URL}?fields=description`
     );
 
-    libraries = librariesResponse.data.results;
-
+    libraries = response.data.results;
     return libraries;
-  } catch (e) {
+  } catch {
     throw new Error("Cannot get the libraries.");
   }
 }
 
-let currentGetLibrariesPromise: Promise<ICDNJSLibrary[]> | undefined;
-export async function getCDNJSLibraries() {
+let currentGetLibrariesPromise: Promise<CdnJsLibrary[]> | undefined;
+export async function getCdnJsLibraries() {
   if (libraries) {
     return libraries;
   }
@@ -50,20 +41,17 @@ export async function getCDNJSLibraries() {
   return await currentGetLibrariesPromise;
 }
 
-export async function getLibraryVersions(libraryName: string) {
+export async function getLibraryVersions(
+  libraryName: string
+): Promise<CdnJsLibraryVersion[]> {
   try {
-    const libraries = await axios.get<ICDNJSLibraryManifest>(
-      `${LIBRARIES_URL}/${libraryName}`
-    );
+    const {
+      data: { assets },
+    } = await axios.get(`${LIBRARIES_URL}/${libraryName}?fields=assets`);
 
-    const packageManifest = libraries.data;
-    return [
-      {
-        version: "latest",
-        files: [packageManifest.filename],
-      },
-      ...packageManifest.assets,
-    ];
+    // The CDNJS API returns the versions
+    // in ascending order, so we want to reverse it.
+    return assets.reverse();
   } catch {
     return [];
   }

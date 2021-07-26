@@ -3,6 +3,11 @@
 - Fix CodePen exporting
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
 
+# v0.0.21 (07/26/21)
+
+- The swing library selector now properly filters out CommonJS/ESM modules and source maps when adding a JavaScript library
+- The preview window is now automatically re-run when you upload a file to the active swing
+
 # v0.0.20 (07/08/21)
 
 - You can now use HTML in `index.md` files, when using Markdown as your markup format

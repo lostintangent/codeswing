@@ -35,7 +35,7 @@ import {
   STYLESHEET_EXTENSIONS,
 } from "./languages/stylesheet";
 import { createLayoutManager } from "./layoutManager";
-import { getCDNJSLibraries } from "./libraries/cdnjs";
+import { getCdnJsLibraries } from "./libraries/cdnjs";
 import {
   ProxyFileSystemProvider,
   registerProxyFileSystemProvider,
@@ -637,7 +637,7 @@ export function registerPreviewModule(
   registerCodePenCommands(context);
   registerProxyFileSystemProvider();
 
-  getCDNJSLibraries();
+  getCdnJsLibraries();
   discoverLanguageProviders();
 
   api.openSwing = openSwing;
