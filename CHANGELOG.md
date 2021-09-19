@@ -5,15 +5,12 @@
 - Enabling SCSS/Sass support in github.dev
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
 
-# v0.0.22 (09/19/21)
+# v0.0.21 (09/19/21)
 
 - Introduced a new `CodeSwing: Launch Behavior` setting, that allows customizing how CodeSwing should behave when you open a swing workspace.
 - Introduced a new `CodeSwing: Root Directory` setting, that allows specifying the workspace directory that new swings should be created in
 - Introduced a new `CodeSwing: Initialize Workspace as Swing` command, that allows you to open a folder and turn it into a swing
 - Added support for calling `window.open()` on HTTP(S) URLs
-
-# v0.0.21 (07/26/21)
-
 - The swing library selector now properly filters out CommonJS/ESM modules and source maps when adding a JavaScript library
 - The preview window is now automatically re-run when you upload a file to the active swing
 
