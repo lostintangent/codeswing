@@ -72,9 +72,9 @@ export async function registerSwingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${EXTENSION_NAME}.run`, async () =>
-      store.activeSwing?.webView.rebuildWebview()
-    )
+    vscode.commands.registerCommand(`${EXTENSION_NAME}.run`, async () => {
+      store.activeSwing?.webView.rebuildWebview();
+    })
   );
 
   context.subscriptions.push(
@@ -112,17 +112,22 @@ export async function registerSwingCommands(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${EXTENSION_NAME}.openSwingInNewWindow`, async () => {
-      const folder = await vscode.window.showOpenDialog({
-        canSelectFolders: true,
-        canSelectFiles: false,
-        canSelectMany: false,
-      });
+    vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.openSwingInNewWindow`,
+      async () => {
+        const folder = await vscode.window.showOpenDialog({
+          canSelectFolders: true,
+          canSelectFiles: false,
+          canSelectMany: false,
+        });
 
-      if (folder) {
-        vscode.commands.executeCommand("vscode.openFolder", folder[0], { forceNewWindow: true });
+        if (folder) {
+          vscode.commands.executeCommand("vscode.openFolder", folder[0], {
+            forceNewWindow: true,
+          });
+        }
       }
-    })
+    )
   );
 
   context.subscriptions.push(

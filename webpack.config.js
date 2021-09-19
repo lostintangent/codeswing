@@ -79,6 +79,12 @@ const nodeConfig = {
     libraryTarget: "commonjs2",
     devtoolModuleFilenameTemplate: "../[resource-path]",
   },
+  resolve: {
+    ...config.resolve,
+    alias: {
+      "@abstractions": path.join(__dirname, "./src/abstractions/node"),
+    },
+  },
 };
 
 const webConfig = {
@@ -107,6 +113,9 @@ const webConfig = {
       url: false,
       util: false,
       vm: false,
+    },
+    alias: {
+      "@abstractions": path.join(__dirname, "./src/abstractions/web"),
     },
   },
 };

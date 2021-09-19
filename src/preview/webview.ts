@@ -141,6 +141,22 @@ export class SwingWebView {
           }
           break;
         }
+
+        case "openUrl": {
+          if ((value as string).startsWith("http")) {
+            vscode.env.openExternal(vscode.Uri.parse(value));
+          } else {
+            const uri = vscode.Uri.joinPath(store.activeSwing!.rootUri, value);
+            await vscode.commands.executeCommand(
+              "simpleBrowser.api.open",
+              uri,
+              {
+                viewColumn: vscode.ViewColumn.Beside,
+              }
+            );
+          }
+          break;
+        }
       }
     });
   }
@@ -472,6 +488,13 @@ export class SwingWebView {
         });
       };
 
+      window.open = (url) => {
+        vscode.postMessage({
+          command: "openUrl",
+          value: url
+        });
+      }
+
       console.clear = () => {
         vscode.postMessage({
           command: "clear",
@@ -529,21 +552,28 @@ export class SwingWebView {
 
       const LINK_PREFIX = "swing:";
       document.addEventListener("click", (e) => {
-        if (e.target.href && e.target.href.startsWith(LINK_PREFIX)) {
+        if (e.target.href) {
           e.preventDefault();
 
-          const href = e.target.href.replace(LINK_PREFIX, "");
-          const [file, lineColumn] = href.split("@");
-          const [line, column] = lineColumn ? lineColumn.split(":") : [];
+          if (e.target.href.startsWith(LINK_PREFIX)) {
+            const href = e.target.href.replace(LINK_PREFIX, "");
+            const [file, lineColumn] = href.split("@");
+            const [line, column] = lineColumn ? lineColumn.split(":") : [];
 
-          vscode.postMessage({
-            command: "navigateCode",
-            value: {
-              file, 
-              line: Number(line) || 1,
-              column: Number(column) || 1
-            }
-          });
+            vscode.postMessage({
+              command: "navigateCode",
+              value: {
+                file, 
+                line: Number(line) || 1,
+                column: Number(column) || 1
+              }
+            });
+          } else if (!e.target.href.startsWith("http")) {
+            vscode.postMessage({
+              command: "openUrl",
+              value: e.target.href
+            });
+          }
         }
       });
 

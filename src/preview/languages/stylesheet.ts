@@ -33,12 +33,12 @@ export async function getStylesheetContent(
     switch (extension) {
       case StylesheetLanguage.scss:
       case StylesheetLanguage.sass: {
-        const sass = require("sass");
-        const { css } = sass.renderSync({
-          data: content,
-          indentedSyntax: extension === StylesheetLanguage.sass,
-          includePaths: [store.activeSwing!.currentUri.path]
-        });
+        const sass = require("@abstractions/sass");
+        const css = await sass.compile(
+          content,
+          extension === StylesheetLanguage.sass,
+          store.activeSwing!.currentUri
+        );
 
         return byteArrayToString(css);
       }

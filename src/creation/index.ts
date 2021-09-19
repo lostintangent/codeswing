@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as config from "../config";
 import { EXTENSION_NAME, SWING_FILE } from "../constants";
 import { DEFAULT_MANIFEST, openSwing } from "../preview";
 import { store } from "../store";
@@ -22,10 +23,16 @@ interface CodeSwingTemplateItem extends vscode.QuickPickItem {
 async function createSwingDirectory() {
   const dayjs = require("dayjs");
   const timestamp = dayjs().format("YYYY-MM-DD (hh-mm-ss A)");
-  const swingDirectory = vscode.Uri.joinPath(
-    store.globalStorageUri!,
-    timestamp
-  );
+
+  const rootDirectory = config.get("rootDirectory");
+  const rootUri = rootDirectory
+    ? vscode.Uri.joinPath(
+        vscode.workspace.workspaceFolders![0].uri,
+        rootDirectory
+      )
+    : store.globalStorageUri!;
+
+  const swingDirectory = vscode.Uri.joinPath(rootUri, timestamp);
 
   await vscode.workspace.fs.createDirectory(swingDirectory);
   return swingDirectory;
@@ -230,6 +237,16 @@ export function registerCreationModule(
         if (folder) {
           newSwing(folder[0]);
         }
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.initializeWorkspace`,
+      async () => {
+        const uri = vscode.workspace.workspaceFolders![0].uri;
+        newSwing(uri);
       }
     )
   );

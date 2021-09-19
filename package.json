@@ -16,7 +16,6 @@
     "url": "https://github.com/codespaces-contrib/codeswing"
   },
   "extensionKind": [
-    "web",
     "ui",
     "workspace"
   ],
@@ -57,6 +56,11 @@
       {
         "command": "codeswing.exportToCodePen",
         "title": "Export to CodePen",
+        "category": "CodeSwing"
+      },
+      {
+        "command": "codeswing.initializeWorkspace",
+        "title": "Initialize Workspace as Swing",
         "category": "CodeSwing"
       },
       {
@@ -148,6 +152,10 @@
         {
           "command": "codeswing.exportToCodePen",
           "when": "codeswing:inSwing"
+        },
+        {
+          "command": "codeswing.initializeWorkspace",
+          "when": "!codeswing:inSwingWorkspace && !codeswing:inSwing"
         },
         {
           "command": "codeswing.openConsole",
@@ -294,6 +302,15 @@
           "type": "boolean",
           "description": "Specifies whether to automatically clear the console when running a swing."
         },
+        "codeswing.launchBehavior": {
+          "default": "openSwing",
+          "enum": [
+            "newSwing",
+            "none",
+            "openSwing"
+          ],
+          "description": "Specifies how CodeSwing should behave when you open a swing workspace."
+        },
         "codeswing.layout": {
           "default": "splitLeft",
           "enum": [
@@ -316,6 +333,11 @@
             "previewHeader"
           ],
           "description": "Specifies how the swing's readme content should be displayed."
+        },
+        "codeswing.rootDirectory": {
+          "default": null,
+          "type": "string",
+          "description": "Specifies the directory to create swings in within the open workspace."
         },
         "codeswing.showConsole": {
           "default": false,
@@ -402,6 +424,7 @@
     "@types/debounce": "^1.2.0",
     "@types/glob": "^7.1.3",
     "@types/node": "^12.11.7",
+    "@types/sass": "^1.16.1",
     "@types/vscode": "^1.51.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
@@ -429,6 +452,7 @@
     "postcss": "^8.2.6",
     "pug": "^3.0.0",
     "sass": "^1.32.7",
+    "sass.js": "^0.11.1",
     "stream-browserify": "^3.0.0",
     "svelte": "^3.32.3",
     "typescript": "^4.1.2",

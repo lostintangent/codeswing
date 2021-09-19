@@ -1,8 +1,8 @@
 import * as path from "path";
 import { commands, ExtensionContext, Uri, window, workspace } from "vscode";
-import { EXTENSION_NAME } from "../constants";
-import { store } from "../store";
-import { withProgress } from "../utils";
+import { EXTENSION_NAME } from "../../constants";
+import { store } from "../../store";
+import { withProgress } from "../../utils";
 import { refreshTreeView } from "./activeSwing";
 import { CodeSwingDirectoryNode, CodeSwingFileNode } from "./nodes";
 

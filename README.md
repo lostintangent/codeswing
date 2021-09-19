@@ -253,6 +253,8 @@ Whenever you create a swing, it includes a `codeswing.json` file, which defines 
 
 When you install CodeSwing, the following commands are available from the command palette:
 
+- `CodeSwing: Initialize Workspace as Swing` - Creates a new swing and stores its files in the root of the active workspace.
+
 - `CodeSwing: New Swing...` - Creates a new temporary code swing, which can be useful for doing quick/ad-hoc explorations.
 
 - `CodeSwing: New Swing in Directory...` - Creates a new code swing, whose files are saved to a specified directory.
@@ -300,11 +302,19 @@ Additionally, when you have a swing currently open, the following commands are a
   - `splitRightTabbed`: Opens a split-level layout, with the editors grouped into a single tab on the right, and the preview occupying the full IDE height on the right.
   - `splitTop`: Opens a split-level layout, with the editors horizontally stacked on the top, and the preview occupying the full IDE width on the bottom.
 
+- `Codeswing: Launch Behavior` - Specifies how CodeSwing should behave when you open a swing workspace. Can be set to one of the following values:
+
+  - `newSwing`: The end-user will be prompted to create a new swing whenever they open this workspace.
+  - `none`: No swings or prompts are automatically displayed.
+  - `openSwing` _(default)_: If the current workspace is a swing, it will be automatically opened. Otherwise, you'll be prompted to create a new swing.
+
 - `Codeswing: Readme Behavior` - Specifies how to display the contents of a swing's readme, if it has one. Can be set to one of the following values:
 
   - `none`: If a swing has a readme, then it won't be displayed automatically when someone opens it.
   - `previewFooter`: If a swing has a readme, then its contents will be rendered as the footer of the preview window.
   - `previewHeader` _(default)_: If a swing has a readme, then its contents will be rendered as the header of the preview window.
+
+- `Codeswing: Root Directory` - Specifies the directory to create swings in within the open workspace. Defaults to `null`.
 
 - `Codeswing: Show Console` - Specifies whether to always show the console when opening a swing. Defaults to `false`.
 

@@ -11,8 +11,8 @@ import {
   window,
   workspace,
 } from "vscode";
-import { EXTENSION_NAME } from "../constants";
-import { store } from "../store";
+import { EXTENSION_NAME } from "../../constants";
+import { store } from "../../store";
 import { CodeSwingDirectoryNode, CodeSwingFileNode } from "./nodes";
 
 async function getSwingFiles(subDirectory?: string) {
