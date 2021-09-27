@@ -18,6 +18,20 @@
       ]
     },
     {
+      "title": "HTML/CSS/TypeScript",
+      "files": [
+        {
+          "filename": "index.html"
+        },
+        {
+          "filename": "script.ts"
+        },
+        {
+          "filename": "style.css"
+        }
+      ]
+    },
+    {
       "title": "HTML-Only",
       "files": [
         {

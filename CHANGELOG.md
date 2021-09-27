@@ -7,6 +7,7 @@
 
 # v0.0.21 (09/19/21)
 
+- Added a new `HTML/CSS/TypeScript` tempalte to the basic gallery
 - Introduced a new `CodeSwing: Launch Behavior` setting, that allows customizing how CodeSwing should behave when you open a swing workspace.
 - Introduced a new `CodeSwing: Root Directory` setting, that allows specifying the workspace directory that new swings should be created in
 - Introduced a new `CodeSwing: Initialize Workspace as Swing` command, that allows you to open a folder and turn it into a swing
