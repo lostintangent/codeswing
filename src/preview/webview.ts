@@ -503,14 +503,14 @@ export class SwingWebView {
       };
 
       const originalLog = console.log;
-      console.log = (message, ...args) => {
-        const value = serializeMessage(message);
+      console.log = (...args) => {
+        const value = (args || [undefined]).map(serializeMessage).join('\\t');
         vscode.postMessage({
           command: "log",
           value
         });
         
-        originalLog.call(console, message, ...args);
+        originalLog.call(console, ...args);
       };
 
       // TODO: Add support for sending FormData, URLSearchParams,
