@@ -301,9 +301,7 @@ export class SwingWebView {
 
     const scriptType = this.isJavaScriptModule
       ? "module"
-      : this.manifest && this.manifest.scriptType
-      ? this.manifest.scriptType
-      : "text/javascript";
+      : (this.manifest?.scriptType || "text/javascript");
 
     const readmeBehavior =
       (this.manifest && this.manifest.readmeBehavior) ||
