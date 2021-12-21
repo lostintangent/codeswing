@@ -54,6 +54,8 @@ export function getScriptContent(
   const content = document.getText();
   if (content.trim() === "") {
     return [content, isModule];
+  } else if (manifest?.scriptType === 'module') {
+    isModule = true;
   } else {
     isModule = isModule || content.trim().startsWith("import ");
   }
