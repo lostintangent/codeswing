@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "Interactive coding playground for building web applications (aka swings).",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "engines": {
     "vscode": "^1.51.0"
   },
@@ -26,6 +26,7 @@
     "onCommand:codeswing.openSwing",
     "onCommand:codeswing.openSwingInNewWindow",
     "workspaceContains:codeswing.json",
+    "onFileSystem:vscode-vfs",
     "onStartupFinished"
   ],
   "main": "./dist/extension.js",
@@ -401,15 +402,19 @@
     "codeswing.templateGalleries": [
       {
         "id": "web:basic",
-        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@HEAD/templates/basic.json"
+        "url": "https://cdn.jsdelivr.net/gh/lostintangent/codeswing@HEAD/templates/basic.json"
       },
       {
         "id": "web:languages",
-        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@HEAD/templates/languages.json"
+        "url": "https://cdn.jsdelivr.net/gh/lostintangent/codeswing@HEAD/templates/languages.json"
       },
       {
         "id": "web:components",
-        "url": "https://cdn.jsdelivr.net/gh/codespaces-contrib/codeswing@main/templates/components.json"
+        "url": "https://cdn.jsdelivr.net/gh/lostintangent/codeswing@main/templates/components.json"
+      },
+      {
+        "id": "go",
+        "url": "https://cdn.jsdelivr.net/gh/lostintangent/codeswing@main/templates/go.json"
       }
     ]
   },

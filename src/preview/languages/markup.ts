@@ -4,7 +4,7 @@ import { getModuleUrl, processImports } from "../libraries/skypack";
 import { compileCode, getExtensions } from "./languageProvider";
 import { REACT_EXTENSIONS } from "./script";
 
-const MARKUP_BASE_NAMES = ["index", "App"];
+const MARKUP_BASE_NAMES = ["index", "App", "main"];
 
 const MarkupLanguage = {
   html: ".html",
@@ -12,6 +12,7 @@ const MarkupLanguage = {
   pug: ".pug",
   vue: ".vue",
   svelte: ".svelte",
+  go: ".go",
 };
 
 const COMPONENT_EXTENSIONS = [
@@ -24,6 +25,7 @@ const MARKUP_EXTENSIONS = [
   MarkupLanguage.html,
   MarkupLanguage.markdown,
   MarkupLanguage.pug,
+  MarkupLanguage.go,
   ...COMPONENT_EXTENSIONS,
 ];
 
@@ -72,6 +74,9 @@ export async function getMarkupContent(
   ${code}
   ${appInit}
 </script>`;
+    } else if (extension === MarkupLanguage.go) {
+      const { compileGo } = require("./go");
+      return await compileGo(content, document.uri);
     }
 
     switch (extension) {

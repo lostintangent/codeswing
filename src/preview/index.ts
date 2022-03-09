@@ -8,44 +8,44 @@ import { store, SwingFileType, SwingManifest } from "../store";
 import {
   byteArrayToString,
   getFileContents,
-  stringToByteArray,
+  stringToByteArray
 } from "../utils";
 import { exportSwingToCodePen, registerCodePenCommands } from "./codepen";
 import { registerSwingCommands } from "./commands";
 import { discoverLanguageProviders } from "./languages/languageProvider";
 import {
   getCandidateMarkupFilenames,
-  getMarkupContent,
+  getMarkupContent
 } from "./languages/markup";
 import {
   getReadmeContent,
   README_BASE_NAME,
-  README_EXTENSIONS,
+  README_EXTENSIONS
 } from "./languages/readme";
 import {
   includesReactFiles,
   includesReactScripts,
   REACT_SCRIPTS,
   SCRIPT_BASE_NAME,
-  SCRIPT_EXTENSIONS,
+  SCRIPT_EXTENSIONS
 } from "./languages/script";
 import {
   getStylesheetContent,
   STYLESHEET_BASE_NAME,
-  STYLESHEET_EXTENSIONS,
+  STYLESHEET_EXTENSIONS
 } from "./languages/stylesheet";
 import { createLayoutManager } from "./layoutManager";
 import { getCdnJsLibraries } from "./libraries/cdnjs";
 import {
   ProxyFileSystemProvider,
-  registerProxyFileSystemProvider,
+  registerProxyFileSystemProvider
 } from "./proxyFileSystemProvider";
 import {
   endCurrentTour,
   isCodeTourInstalled,
   registerTourCommands,
   startTourFromUri,
-  TOUR_FILE,
+  TOUR_FILE
 } from "./tour";
 import { registerTutorialModule } from "./tutorials";
 import { storage } from "./tutorials/storage";
@@ -310,8 +310,7 @@ export async function openSwing(uri: Uri) {
 
   const layoutManager = await createLayoutManager(
     includedFiles,
-    manifest.layout,
-    isWorkspaceSwing
+    manifest.layout
   );
 
   const [htmlDocument, cssDocument, jsDocument] = await Promise.all(

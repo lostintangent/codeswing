@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 const config = {
-  mode: "production",
+  mode: "development",
   entry: "./src/extension.ts",
   externals: {
     vscode: "commonjs vscode",

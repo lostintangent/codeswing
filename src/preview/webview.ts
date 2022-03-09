@@ -312,6 +312,9 @@ export class SwingWebView {
     const header = readmeBehavior === "previewHeader" ? this.readme : "";
     const footer = readmeBehavior === "previewFooter" ? this.readme : "";
 
+    const shouldUseThemeStyles =
+      this.manifest?.themePreview ?? config.get("themePreview");
+
     // TODO: Refactor this out to a "tutorial renderer" that
     // can handle all of the tutorial-specific UI and behavior
     let title = "";
@@ -338,6 +341,8 @@ export class SwingWebView {
         span {
           margin: 0 5px;
         }
+
+        ${shouldUseThemeStyles ? themeStyles : ""}
 
       </style>
       <script>
@@ -370,9 +375,6 @@ export class SwingWebView {
 
       tutorialNavigation = `<iframe id="tutorial-navigation" srcdoc="${frame}"></iframe>`;
     }
-
-    const shouldUseThemeStyles =
-      this.manifest?.themePreview ?? config.get("themePreview");
 
     this.webview.html = `<html>
   <head>
