@@ -301,9 +301,7 @@ export class SwingWebView {
 
     const scriptType = this.isJavaScriptModule
       ? "module"
-      : this.manifest && this.manifest.scriptType
-      ? this.manifest.scriptType
-      : "text/javascript";
+      : (this.manifest?.scriptType || "text/javascript");
 
     const readmeBehavior =
       (this.manifest && this.manifest.readmeBehavior) ||
@@ -505,14 +503,14 @@ export class SwingWebView {
       };
 
       const originalLog = console.log;
-      console.log = (message, ...args) => {
-        const value = serializeMessage(message);
+      console.log = (...args) => {
+        const value = (args || [undefined]).map(serializeMessage).join('\\t');
         vscode.postMessage({
           command: "log",
           value
         });
         
-        originalLog.call(console, message, ...args);
+        originalLog.call(console, ...args);
       };
 
       // TODO: Add support for sending FormData, URLSearchParams,

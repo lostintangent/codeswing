@@ -245,11 +245,11 @@ export async function openSwing(uri: Uri) {
 
   if (manifest.tutorial) {
     currentTutorialStep = storage.currentTutorialStep(uri);
-    const tutoralSteps = files.filter(([file, _]) =>
+    const tutoralSteps = files.filter((file) =>
       file.match(TUTORIAL_STEP_PATTERN)
     );
 
-    totalTutorialSteps = tutoralSteps.reduce((maxStep, [fileName, _]) => {
+    totalTutorialSteps = tutoralSteps.reduce((maxStep, fileName) => {
       const step = Number(TUTORIAL_STEP_PATTERN.exec(fileName)!.groups!.step);
 
       if (step > maxStep) {
