@@ -1,7 +1,6 @@
 # Coming Up
 
 - Fix CodePen exporting
-
 - Adding support for `window.open` with swing-local HTML files
 - Enabling SCSS/Sass support in github.dev
 - Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
