@@ -1,0 +1,40 @@
+{
+  "author": "Remy Sharp",
+  "name": "loop-protect",
+  "description": "Prevent infinite loops in dynamically eval'd JavaScript.",
+  "main": "dist/",
+  "version": "2.1.6",
+  "homepage": "https://github.com/jsbin/loop-protect",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jsbin/loop-protect.git"
+  },
+  "scripts": {
+    "test": "jest test/*.test.js",
+    "build": "NODE_ENV=production babel lib/ --out-dir dist --copy-files",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "babel": {
+    "presets": [
+      "stage-0",
+      "env"
+    ]
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-runtime": "^6.26.0",
+    "babel-standalone": "^6.26.0",
+    "jest": "^22.0.6"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://jsbin.mit-license.org"
+    }
+  ]
+}
