@@ -1,0 +1,86 @@
+id: web:components
+title: Components
+description: Create components using popular libraries and frameworks.
+templates:
+  - title: React.js
+    files:
+      - filename: App.jsx
+        content: |
+          export default function App() {
+            return <div>Hello world</div>;
+          }
+
+  - title: React.js w/TypeScript
+    files:
+      - filename: App.tsx
+        content: |
+          export default function App() {
+            return <div>Hello world</div>;
+          }
+
+  - title: React Native
+    files:
+      - filename: App.jsx
+        content: |
+          import { StyleSheet, Text, View } from "react-native";
+
+          export default function App() {
+            return (
+              <View>
+                <Text style={styles.text}>Hello world 🎉</Text>
+              </View>
+            );
+          }
+
+          const styles = StyleSheet.create({
+            text: {
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              marginVertical: "1em",
+              textAlign: "center"
+            }
+          });
+
+  - title: Vue.js
+    files:
+      - filename: App.vue
+        content: |
+          <template>
+            <p>{{ greeting }} World!</p>
+          </template>
+
+          <script>
+          export default {
+            data() {
+              return {
+                greeting: 'Hello'
+              }
+            }
+          }
+          </script>
+
+          <style>
+          body {
+            font-family: sans-serif;
+          }
+          </style>
+
+  - title: Svelte
+    files:
+      - filename: App.svelte
+        content: |
+          <script>
+          let name = "world";
+          </script>
+
+          <h1>Hello {name}!</h1>
+          
+  - title: Svelte w/TypeScript
+    files:
+      - filename: App.svelte
+        content: |
+          <script lang="ts">
+          let name: string = "world";
+          </script>
+
+          <h1>Hello {name}!</h1>

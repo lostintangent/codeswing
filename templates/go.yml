@@ -1,0 +1,17 @@
+id: go
+title: Go
+description: Go development, powered by the Go playground (https://go.dev/play)
+templates:
+  - title: Hello World
+    files:
+      - filename: main.go
+        content: |
+          package main
+
+          import (
+            "fmt"
+          )
+
+          func main() {
+            fmt.Println("Hello, World!")
+          }
