@@ -1,9 +1,6 @@
-# Coming Up
+# v0.0.23 (02/17/24)
 
-- Fix CodePen exporting
-- Adding support for `window.open` with swing-local HTML files
-- Enabling SCSS/Sass support in github.dev
-- Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
+- Fixed a bug that prevented exporting swings to CodePen if they included an `&nbsp;` in a file
 
 # v0.0.22 (03/05/22)
 
