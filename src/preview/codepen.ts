@@ -8,9 +8,7 @@ import { getFileContents, getUriContents, stringToByteArray } from "../utils";
 import { getCdnJsLibraries } from "./libraries/cdnjs";
 
 function getExportMarkup(data: any) {
-  const value = JSON.stringify(data)
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
+  const value = encodeURIComponent(JSON.stringify(data));
   return `<form action="https://codepen.io/pen/define" method="POST">
 <input type="hidden" name="data" value="${value}" />
 </form>
