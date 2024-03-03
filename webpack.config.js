@@ -49,7 +49,7 @@ const config = {
     vue: "commonjs vue",
   },
   resolve: {
-    extensions: [".ts", ".js", ".json"],
+    extensions: [".ts", ".js", ".json", ".txt"],
   },
   node: {
     __filename: false,
@@ -65,6 +65,10 @@ const config = {
             loader: "ts-loader",
           },
         ],
+      },
+      {
+        test: /\.txt$/i,
+        loader: "raw-loader",
       },
     ],
   },

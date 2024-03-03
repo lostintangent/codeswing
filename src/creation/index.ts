@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
+import { synthesizeTemplateFiles } from "../ai";
+import { storage as aiStorage } from "../ai/storage";
 import * as config from "../config";
 import { EXTENSION_NAME, SWING_FILE } from "../constants";
 import { DEFAULT_MANIFEST, openSwing } from "../preview";
-import { store } from "../store";
+import { SwingFile, store } from "../store";
 import { stringToByteArray, withProgress } from "../utils";
 import {
   enableGalleries,
@@ -10,11 +12,6 @@ import {
   registerTemplateProvider,
 } from "./galleryProvider";
 import { initializeStorage, storage } from "./storage";
-
-export interface SwingFile {
-  filename: string;
-  content?: string;
-}
 
 interface CodeSwingTemplateItem extends vscode.QuickPickItem {
   files?: SwingFile[];
@@ -83,23 +80,43 @@ export async function newSwing(
     }
   }
 
-  quickPick.items = templates;
-  quickPick.buttons = [
+  const aiTooltip = "Generate swing with AI";
+  const quickPickButtons = [
     {
       iconPath: new vscode.ThemeIcon("settings"),
       tooltip: "Configure Template Galleries",
     },
   ];
 
-  quickPick.onDidTriggerButton((e) =>
-    promptForGalleryConfiguration(uri, title)
-  );
+  if (await aiStorage.getOpenAiApiKey()) {
+    quickPickButtons.unshift({
+      iconPath: new vscode.ThemeIcon("sparkle"),
+      tooltip: aiTooltip,
+    });
+  }
+
+  quickPick.items = templates;
+  quickPick.buttons = quickPickButtons;
+
+  quickPick.onDidTriggerButton((e) => {
+    if (e.tooltip === aiTooltip) {
+      synthesizeTemplate(uri);
+    } else {
+      promptForGalleryConfiguration(uri, title);
+    }
+  });
 
   quickPick.onDidAccept(async () => {
     quickPick.hide();
 
     const template = quickPick.selectedItems[0] as CodeSwingTemplateItem;
     if (template.files) {
+      store.history = [
+        {
+          prompt: `Create a starter playground using the following template: ${template.detail}`,
+          files: template.files,
+        },
+      ];
       await withProgress("Creating swing...", async () =>
         newSwingFromTemplate(template.files!, uri)
       );
@@ -109,6 +126,21 @@ export async function newSwing(
   });
 
   quickPick.show();
+}
+
+async function synthesizeTemplate(
+  uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>)
+) {
+  const prompt = await vscode.window.showInputBox({
+    placeHolder: "Describe the swing you want to generate",
+  });
+  if (!prompt) return;
+
+  await withProgress("Creating swing...", async () => {
+    store.history = [];
+    const files = await synthesizeTemplateFiles(prompt);
+    return newSwingFromTemplate(files!, uri);
+  });
 }
 
 async function newSwingFromTemplate(

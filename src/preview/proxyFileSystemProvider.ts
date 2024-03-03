@@ -53,7 +53,7 @@ export class ProxyFileSystemProvider implements vscode.FileSystemProvider {
         contents = `export default ${contents}`;
       } else if (type === "css") {
         contents = `const styleElement = document.createElement("style");
-styleElement.innerText = \`${contents}\`;
+styleElement.textContent = \`${contents}\`;
 document.head.appendChild(styleElement);`;
       }
 

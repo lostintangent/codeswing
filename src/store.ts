@@ -43,6 +43,16 @@ export enum SwingFileType {
   tour,
 }
 
+export interface SwingFile {
+  filename: string;
+  content?: string;
+}
+
+export interface Version {
+  prompt: string;
+  files: SwingFile[];
+}
+
 interface ActiveSwing {
   rootUri: vscode.Uri;
   currentUri: vscode.Uri;
@@ -60,6 +70,7 @@ interface ActiveSwing {
 export interface Store {
   globalStorageUri?: vscode.Uri;
   activeSwing?: ActiveSwing;
+  history?: Version[];
 }
 
 export const store: Store = observable({});

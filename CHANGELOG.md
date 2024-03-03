@@ -1,9 +1,9 @@
-# Coming Up
+# v0.0.23 (03/03/24)
 
-- Fix CodePen exporting
-- Adding support for `window.open` with swing-local HTML files
-- Enabling SCSS/Sass support in github.dev
-- Grouping tutorial steps into sections (https://github.com/sveltejs/svelte/tree/master/site/content/examples)
+- Introduced the ability to generate and refine swings using an AI prompt (after configuring an OpenAI key)
+- Fixed a bug in searching/adding modules to a JavaScript file
+- Fixed a bug that prevented exporting swings to CodePen if they included an `&nbsp;` in a file
+- Fixed some bugs with importing CSS files, and using React
 
 # v0.0.22 (03/05/22)
 

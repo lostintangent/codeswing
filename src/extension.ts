@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { registerAiModule } from "./ai";
 import { api } from "./api";
 import { registerCreationModule } from "./creation";
 import { registerLiveShareModule } from "./liveShare";
@@ -12,6 +13,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const syncKeys: string[] = [];
 
+  registerAiModule(context);
   registerCreationModule(context, api, syncKeys);
   registerPreviewModule(context, api, syncKeys);
 

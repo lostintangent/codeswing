@@ -15,6 +15,8 @@ export function get(key: "rootDirectory"): string;
 export function get(key: "showConsole"): boolean;
 export function get(key: "templateGalleries"): string[];
 export function get(key: "themePreview"): boolean;
+export function get(key: "ai.endpointUrl"): string;
+export function get(key: "ai.model"): string;
 export function get(key: any) {
   const extensionConfig = workspace.getConfiguration(EXTENSION_NAME);
   return extensionConfig.get(key);

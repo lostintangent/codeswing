@@ -2,13 +2,16 @@ import * as vscode from "vscode";
 import { Uri } from "vscode";
 import { DEFAULT_MANIFEST } from "..";
 import { SWING_FILE, URI_PATTERN } from "../../constants";
-import { store, SwingLibraryType, SwingManifest } from "../../store";
+import { SwingLibraryType, SwingManifest, store } from "../../store";
 import { byteArrayToString, stringToByteArray } from "../../utils";
 import {
   CdnJsLibraryVersion,
   getCdnJsLibraries,
   getLibraryVersions,
+  searchPackages,
 } from "./cdnjs";
+import { hasDefaultExport } from "./skypack";
+import debounce = require("debounce");
 
 async function libraryToVersionsPickList(libraryName: string) {
   const versions = await getLibraryVersions(libraryName);
@@ -149,6 +152,73 @@ export async function addSwingLibrary(libraryType: SwingLibraryType) {
     );
 
     await addDependencyLink(libraryType, libraryUrl);
+  });
+
+  list.show();
+}
+
+// JavaScript module functions
+
+const DEFAULT_MODULES = [
+  ["angular", "HTML enhanced for web apps"],
+  ["react", "React is a JavaScript library for building user interfaces."],
+  ["react-dom", "React package for working with the DOM."],
+  ["vue", "Reactive, component-oriented view layer for modern web interfaces."],
+];
+
+async function addModuleImport(moduleName: string) {
+  const { camel } = require("case");
+  const importName = camel(moduleName);
+
+  const prefix = (await hasDefaultExport(moduleName)) ? "" : "* as ";
+  const importContent = `import ${prefix}${importName} from "${moduleName}";\n\n`;
+  store.activeSwing!.scriptEditor?.edit((edit) => {
+    edit.insert(new vscode.Position(0, 0), importContent);
+  });
+}
+
+export async function addScriptModule() {
+  const list = vscode.window.createQuickPick();
+  list.placeholder = "Specify the module name you'd like to add";
+  list.items = DEFAULT_MODULES.map(([label, description]) => ({
+    label,
+    description,
+  }));
+
+  list.onDidChangeValue(
+    debounce(
+      async (value) => {
+        if (value === "") {
+          list.items = DEFAULT_MODULES.map(([label, description]) => ({
+            label,
+            description,
+          }));
+        } else {
+          list.busy = true;
+          list.items = [{ label: `Searching modules for "${value}"...` }];
+          const modules = await searchPackages(value);
+          list.items = modules.map((module) => ({
+            label: module.name,
+            description: module.latest,
+          }));
+
+          list.busy = false;
+        }
+      },
+      100,
+      { immediate: true }
+    )
+  );
+
+  list.onDidAccept(async () => {
+    list.hide();
+
+    const moduleAnswer = list.selectedItems[0];
+    if (!moduleAnswer) {
+      return;
+    }
+
+    await addModuleImport(moduleAnswer.label);
   });
 
   list.show();

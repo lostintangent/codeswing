@@ -265,6 +265,8 @@ When you install CodeSwing, the following commands are available from the comman
 
 - `CodeSwing: Open Swing in New Windows...` - Opens a swing in a new VS Code window.
 
+- `CodeSwing: Set OpenAI API Key` - Configures the OpenAI API key that is used to support generating AI swings.
+
 Additionally, when you have a swing currently open, the following commands are available:
 
 - `CodeSwing: Add Library` - Allows you to insert a new JavaScript (e.g. React) or CSS (e.g. Tailwind) library into your swing.
@@ -321,6 +323,10 @@ Additionally, when you have a swing currently open, the following commands are a
 - `Codeswing: Template Galleries` - Specifies the list of template galleries to use, when displaying the available templates when creating a new swing. Defaults to `["web:basic", "web:languages"]`.
 
 - `Codeswing: Theme Preview` - Specifies whether to apply Visual Studio Code theme to the preview window. Defaults to `false`.
+
+- `Codeswing > AI: Endpoint URL` - Specifies the Azure OpenAI endpoint to use for AI generation. Defaults to `null` _(use OpenAI)_.
+
+- `Codeswing > AI: Model` - Specifies the OpenAI model to use for AI generation. Defaults to `gpt-4-0125-preview`.
 
 ## Keybindings
 

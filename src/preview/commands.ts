@@ -1,11 +1,12 @@
 import * as vscode from "vscode";
 import { openSwing } from ".";
+import { synthesizeTemplateFiles } from "../ai";
 import * as config from "../config";
 import { EXTENSION_NAME } from "../constants";
 import { store, SwingLibraryType } from "../store";
+import { withProgress } from "../utils";
 import { SwingLayout } from "./layoutManager";
-import { addSwingLibrary } from "./libraries";
-import { addSkypackModule } from "./libraries/skypack";
+import { addScriptModule, addSwingLibrary } from "./libraries";
 
 export async function registerSwingCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -47,7 +48,7 @@ export async function registerSwingCommands(context: vscode.ExtensionContext) {
           ) {
             addSwingLibrary(response.libraryType);
           } else {
-            addSkypackModule();
+            addScriptModule();
           }
         }
       }
@@ -75,6 +76,28 @@ export async function registerSwingCommands(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(`${EXTENSION_NAME}.run`, async () => {
       store.activeSwing?.webView.rebuildWebview();
     })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.refineWithAI`,
+      async () => {
+        const prompt = await vscode.window.showInputBox({
+          placeHolder: "Describe the change you'd like to make",
+        });
+        if (!prompt) return;
+
+        await withProgress("Revising swing...", async () => {
+          const files = await synthesizeTemplateFiles(prompt);
+          for (const file of files) {
+            await vscode.workspace.fs.writeFile(
+              vscode.Uri.joinPath(store.activeSwing!.currentUri, file.filename),
+              Buffer.from(file.content || "")
+            );
+          }
+        });
+      }
+    )
   );
 
   context.subscriptions.push(

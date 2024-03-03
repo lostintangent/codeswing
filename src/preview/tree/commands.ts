@@ -19,7 +19,8 @@ export function registerTreeViewCommands(context: ExtensionContext) {
           return;
         }
 
-        const filePath = node ? `${node.directory}/${file}` : file;
+        const filePath =
+          node && node.directory ? `${node.directory}/${file}` : file;
         const uri = Uri.joinPath(store.activeSwing!.rootUri, filePath);
 
         await workspace.fs.writeFile(uri, new Uint8Array());

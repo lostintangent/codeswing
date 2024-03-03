@@ -3,14 +3,16 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { getFileOfType } from ".";
 import { EXTENSION_NAME, SWING_FILE, URI_PATTERN } from "../constants";
-import { store, SwingFileType } from "../store";
+import { SwingFileType, store } from "../store";
 import { getFileContents, getUriContents, stringToByteArray } from "../utils";
 import { getCdnJsLibraries } from "./libraries/cdnjs";
 
 function getExportMarkup(data: any) {
   const value = JSON.stringify(data)
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
+    .replace(/'/g, "&apos;")
+    .replace(/&nbsp/g, "&amp;nbsp");
+
   return `<form action="https://codepen.io/pen/define" method="POST">
 <input type="hidden" name="data" value="${value}" />
 </form>

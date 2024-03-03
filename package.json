@@ -3,9 +3,9 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "Interactive coding playground for building web applications (aka swings).",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "engines": {
-    "vscode": "^1.51.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
@@ -20,11 +20,6 @@
     "workspace"
   ],
   "activationEvents": [
-    "onCommand:codeswing.newSwing",
-    "onCommand:codeswing.newSwingDirectory",
-    "onCommand:codeswing.newSwingFromLastTemplate",
-    "onCommand:codeswing.openSwing",
-    "onCommand:codeswing.openSwingInNewWindow",
     "workspaceContains:codeswing.json",
     "onFileSystem:vscode-vfs",
     "onStartupFinished"
@@ -49,6 +44,11 @@
         "title": "Change Layout",
         "category": "CodeSwing",
         "icon": "$(editor-layout)"
+      },
+      {
+        "command": "codeswing.clearOpenAiApiKey",
+        "title": "Clear OpenAI API Key",
+        "category": "CodeSwing"
       },
       {
         "command": "codeswing.deleteSwingFile",
@@ -121,8 +121,19 @@
         "icon": "$(play)"
       },
       {
+        "command": "codeswing.refineWithAI",
+        "title": "Refine with AI",
+        "category": "CodeSwing",
+        "icon": "$(sparkle)"
+      },
+      {
         "command": "codeswing.saveCurrentSwing",
         "title": "Save Current Swing As...",
+        "category": "CodeSwing"
+      },
+      {
+        "command": "codeswing.setOpenAiApiKey",
+        "title": "Set OpenAI API Key",
         "category": "CodeSwing"
       },
       {
@@ -149,6 +160,10 @@
         {
           "command": "codeswing.changeLayout",
           "when": "codeswing:inSwing"
+        },
+        {
+          "command": "codeswing.clearOpenAiApiKey",
+          "when": "codeswing:hasOpenAiApiKey"
         },
         {
           "command": "codeswing.exportToCodePen",
@@ -179,6 +194,10 @@
           "when": "codeswing:inSwing"
         },
         {
+          "command": "codeswing.refineWithAI",
+          "when": "codeswing:inSwing && codeswing:hasOpenAiApiKey"
+        },
+        {
           "command": "codeswing.saveCurrentSwing",
           "when": "codeswing:inSwing"
         },
@@ -204,6 +223,11 @@
         }
       ],
       "editor/title": [
+        {
+          "command": "codeswing.refineWithAI",
+          "when": "codeswing:inSwing && codeswing:hasOpenAiApiKey",
+          "group": "navigation@1"
+        },
         {
           "command": "codeswing.run",
           "when": "codeswing:inSwing",
@@ -374,6 +398,16 @@
           "default": false,
           "type": "boolean",
           "description": "Specifies whether to apply Visual Studio Code theme to the preview window."
+        },
+        "codeswing.ai.endpointUrl": {
+          "default": null,
+          "type": "string",
+          "description": "Specifies the Azure OpenAI endpoint to use for AI generation."
+        },
+        "codeswing.ai.model": {
+          "default": "gpt-4-0125-preview",
+          "type": "string",
+          "description": "Specifies the OpenAI model to use for AI generation."
         }
       }
     },
@@ -430,27 +464,28 @@
     "@types/glob": "^7.1.3",
     "@types/node": "^12.11.7",
     "@types/sass": "^1.16.1",
-    "@types/vscode": "^1.51.0",
+    "@types/vscode": "^1.75.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "eslint": "^7.9.0",
-    "glob": "^7.1.6",
+    "glob": "^10.3.10",
+    "markdown-it": "^14.0.0",
     "raw-loader": "^4.0.2",
-    "ts-loader": "^8.0.12",
-    "typescript": "^4.1.2",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
     "vsce": "^1.95.0",
-    "webpack": "^5.11.1",
-    "webpack-cli": "^4.3.0"
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@azure/openai": "^1.0.0-beta.11",
     "@vue/component-compiler": "^4.2.3",
-    "axios": "^0.21.0",
+    "axios": "^1.6.7",
     "case": "^1.6.3",
-    "dayjs": "^1.9.8",
-    "debounce": "^1.2.0",
+    "dayjs": "^1.11.10",
+    "debounce": "^2.0.0",
     "form-data": "^3.0.0",
     "less": "^3.12.2",
-    "markdown-it": "^12.0.3",
     "mobx": "^6.0.4",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
@@ -459,9 +494,9 @@
     "sass": "^1.32.7",
     "sass.js": "^0.11.1",
     "stream-browserify": "^3.0.0",
-    "svelte": "^3.32.3",
-    "typescript": "^4.1.2",
+    "svelte": "^4.1.2",
+    "typescript": "^5.3.3",
     "vsls": "^1.0.3015",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.7.14"
   }
 }

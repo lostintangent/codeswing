@@ -12,16 +12,19 @@ export interface IStorage {
 }
 
 export let storage: IStorage;
-export async function initializeStorage(context: ExtensionContext, syncKeys: string[]) {
+export async function initializeStorage(
+  context: ExtensionContext,
+  syncKeys: string[]
+) {
   storage = {
     getTemplateMRU(): string[] {
       const mru = context.globalState.get<string[]>(MRU_STORAGE_KEY) || [];
-      return mru.filter(template => template !== null);
+      return mru.filter((template) => template !== null);
     },
     async addTemplateToMRU(template: string) {
       const mru = this.getTemplateMRU();
       if (mru.includes(template)) {
-        const oldIndex = mru.findIndex(item => item === template);
+        const oldIndex = mru.findIndex((item) => item === template);
         mru.splice(oldIndex, 1);
       }
 
@@ -35,10 +38,10 @@ export async function initializeStorage(context: ExtensionContext, syncKeys: str
       await commands.executeCommand("setContext", MRU_CONTEXT_KEY, true);
     },
   };
-  
+
   if (storage.getTemplateMRU().length > 0) {
     await commands.executeCommand("setContext", MRU_CONTEXT_KEY, true);
   }
-  
+
   syncKeys.push(MRU_STORAGE_KEY);
 }

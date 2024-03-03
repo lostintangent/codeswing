@@ -1,55 +1,55 @@
-import { debounce } from "debounce";
 import * as path from "path";
 import * as vscode from "vscode";
 import { Uri } from "vscode";
 import * as config from "../config";
 import { EXTENSION_NAME, INPUT_SCHEME, SWING_FILE } from "../constants";
-import { store, SwingFileType, SwingManifest } from "../store";
+import { SwingFileType, SwingManifest, store } from "../store";
 import {
   byteArrayToString,
   getFileContents,
-  stringToByteArray
+  stringToByteArray,
 } from "../utils";
 import { exportSwingToCodePen, registerCodePenCommands } from "./codepen";
 import { registerSwingCommands } from "./commands";
 import { discoverLanguageProviders } from "./languages/languageProvider";
 import {
   getCandidateMarkupFilenames,
-  getMarkupContent
+  getMarkupContent,
 } from "./languages/markup";
 import {
-  getReadmeContent,
   README_BASE_NAME,
-  README_EXTENSIONS
+  README_EXTENSIONS,
+  getReadmeContent,
 } from "./languages/readme";
 import {
-  includesReactFiles,
-  includesReactScripts,
   REACT_SCRIPTS,
   SCRIPT_BASE_NAME,
-  SCRIPT_EXTENSIONS
+  SCRIPT_EXTENSIONS,
+  includesReactFiles,
+  includesReactScripts,
 } from "./languages/script";
 import {
-  getStylesheetContent,
   STYLESHEET_BASE_NAME,
-  STYLESHEET_EXTENSIONS
+  STYLESHEET_EXTENSIONS,
+  getStylesheetContent,
 } from "./languages/stylesheet";
 import { createLayoutManager } from "./layoutManager";
 import { getCdnJsLibraries } from "./libraries/cdnjs";
 import {
   ProxyFileSystemProvider,
-  registerProxyFileSystemProvider
+  registerProxyFileSystemProvider,
 } from "./proxyFileSystemProvider";
 import {
+  TOUR_FILE,
   endCurrentTour,
   isCodeTourInstalled,
   registerTourCommands,
   startTourFromUri,
-  TOUR_FILE
 } from "./tour";
 import { registerTutorialModule } from "./tutorials";
 import { storage } from "./tutorials/storage";
 import { SwingWebView } from "./webview";
+import debounce = require("debounce");
 
 const CONFIG_FILE = "config.json";
 const CANVAS_FILE = "canvas.html";
@@ -463,6 +463,16 @@ export async function openSwing(uri: Uri) {
 
   const documentChangeDisposable = vscode.workspace.onDidChangeTextDocument(
     debounce(async ({ document }) => {
+      if (store.history && store.history.length > 0) {
+        const version = store.history[store.history.length - 1];
+        const file = version.files.find(
+          (file) => file.filename === path.basename(document.fileName)
+        );
+        if (file) {
+          file.content = document.getText();
+        }
+      }
+
       if (isSwingDocumentOfType(document, SwingFileType.markup)) {
         const content = await getMarkupContent(document);
         if (content !== null) {

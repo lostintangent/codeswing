@@ -56,3 +56,11 @@ export async function getLibraryVersions(
     return [];
   }
 }
+
+export async function searchPackages(searchString: string) {
+  const librariesResponse = await axios.get<{ results: CdnJsLibrary[] }>(
+    `${LIBRARIES_URL}?search=${searchString}`
+  );
+
+  return librariesResponse.data.results;
+}

@@ -1,8 +1,8 @@
 import axios from "axios";
 import * as vscode from "vscode";
-import { SwingFile } from ".";
 import * as config from "../config";
 import { EXTENSION_NAME } from "../constants";
+import { SwingFile } from "../store";
 
 interface Gallery {
   id: string;

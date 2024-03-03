@@ -54,7 +54,7 @@ export function getScriptContent(
   const content = document.getText();
   if (content.trim() === "") {
     return [content, isModule];
-  } else if (manifest?.scriptType === 'module') {
+  } else if (manifest?.scriptType === "module") {
     isModule = true;
   } else {
     isModule = isModule || content.trim().startsWith("import ");
@@ -84,6 +84,11 @@ export function compileScriptContent(
       // code is trying to import it, we need to replace that import statement.
       content = content
         .replace(/import (?:\* as )?React from (["'])react\1/, "")
+        .replace(/import (?:\* as )?ReactDOM from (["'])react-dom\1/, "")
+        .replace(
+          /import React, {(.+)} from (["'])react\2/,
+          "const {$1} = React"
+        )
         .replace(/import (.+) from (["'])react\2/, "const $1 = React")
         .replace(
           /from (["'])react-native\1/,
@@ -94,14 +99,17 @@ export function compileScriptContent(
     content = processImports(content);
   }
 
-  if (TYPESCRIPT_EXTENSIONS.includes(extension) || includesJsx) {
+  const containsJsx =
+    includesJsx || content.match(/import .* from (["'])react\1/) !== null;
+
+  if (TYPESCRIPT_EXTENSIONS.includes(extension) || containsJsx) {
     const typescript = require("typescript");
     const compilerOptions: any = {
       experimentalDecorators: true,
       target: "ES2018",
     };
 
-    if (includesJsx || REACT_EXTENSIONS.includes(extension)) {
+    if (REACT_EXTENSIONS.includes(extension) || containsJsx) {
       compilerOptions.jsx = typescript.JsxEmit.React;
     }
 
