@@ -1,3 +1,7 @@
+# v0.0.24 (03/03/24)
+
+- Fixed some bugs when generating component swings with AI (e.g. Svelte, Go), as well as when requesting Pug or Less/Sass
+
 # v0.0.23 (03/03/24)
 
 - Introduced the ability to generate and refine swings using an AI prompt (after configuring an OpenAI key)

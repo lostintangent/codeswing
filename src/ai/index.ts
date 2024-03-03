@@ -126,7 +126,12 @@ RESPONSE:
   // If the model generated a component, then we need to remove any script
   // files that it might have also generated. Despite asking it not to!
   if (files.some((e) => e.filename.startsWith("App."))) {
-    files.splice(files.findIndex((e) => e.filename.startsWith("script.")));
+    const scriptIndex = files.findIndex((e) =>
+      e.filename.startsWith("script.")
+    );
+    if (scriptIndex !== -1) {
+      files.splice(scriptIndex, 1);
+    }
   }
 
   // Find any files in the previous files that aren't in the new files
