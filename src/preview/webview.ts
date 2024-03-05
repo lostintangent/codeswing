@@ -157,6 +157,12 @@ export class SwingWebView {
           }
           break;
         }
+
+        case "updateTitle": {
+          const title = value;
+          store.activeSwing!.webViewPanel.title = `CodeSwing (${title})`;
+          break;
+        }
       }
     });
   }
@@ -378,6 +384,7 @@ export class SwingWebView {
   <head>
     <base href="${baseUrl}" />
     <meta charset="UTF-8" />
+    <title>CodeSwing</title>
     <style>
 
       html, body {
@@ -426,6 +433,14 @@ export class SwingWebView {
         if (linkedScript) {
           linkedScript.parentElement.removeChild(linkedScript);
         }
+
+        const observer = new MutationObserver(() => {
+          vscode.postMessage({
+            command: "updateTitle",
+            value: document.title
+          });
+        });
+        observer.observe(document.querySelector("title"), { attributes: true, childList: true, subtree: true });
       });
   
       let httpRequestId = 1;
