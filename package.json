@@ -3,7 +3,7 @@
   "displayName": "CodeSwing",
   "publisher": "codespaces-contrib",
   "description": "Interactive coding playground for building web applications (aka swings).",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -405,7 +405,7 @@
           "description": "Specifies the Azure OpenAI endpoint to use for AI generation."
         },
         "codeswing.ai.model": {
-          "default": "gpt-4-0125-preview",
+          "default": "gpt-4o",
           "type": "string",
           "description": "Specifies the OpenAI model to use for AI generation."
         }

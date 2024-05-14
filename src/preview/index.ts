@@ -22,11 +22,9 @@ import {
   getReadmeContent,
 } from "./languages/readme";
 import {
-  REACT_SCRIPTS,
   SCRIPT_BASE_NAME,
   SCRIPT_EXTENSIONS,
   includesReactFiles,
-  includesReactScripts,
 } from "./languages/script";
 import {
   STYLESHEET_BASE_NAME,
@@ -69,6 +67,7 @@ async function getCanvasContent(uri: Uri, files: string[]) {
 
 async function getManifestContent(uri: Uri, files: string[]) {
   const manifest = await getFileContents(uri, SWING_FILE);
+  /*
   if (includesReactFiles(files)) {
     const parsedManifest = JSON.parse(manifest);
     if (!includesReactScripts(parsedManifest.scripts)) {
@@ -82,7 +81,7 @@ async function getManifestContent(uri: Uri, files: string[]) {
       vscode.workspace.fs.writeFile(manifestUri!, stringToByteArray(content));
       return content;
     }
-  }
+  }*/
 
   return manifest;
 }

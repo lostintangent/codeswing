@@ -1,6 +1,8 @@
-# v0.0.24 (03/03/24)
+# v0.0.24 (05/14/24)
 
-- Fixed some bugs when generating component swings with AI (e.g. Svelte, Go), as well as when requesting Pug or Less/Sass
+- Added support for reflecting changes to `window.title` in the title of the CodeSwing preview tab
+- Updated the default AI model to `gpt-4o` (which is much cheaper than Turbo)
+- Removed the logic that auto-adds `react` and `react-dom` to the `scripts` arrow in your `codeswing.json` file.
 
 # v0.0.23 (03/03/24)
 
