@@ -49,7 +49,8 @@ async function getTemplates(): Promise<CodeSwingTemplateItem[]> {
 
 export async function newSwing(
   uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>),
-  title: string = "Create new swing"
+  title: string = "Create new swing",
+  openInNewWindow: boolean = false
 ) {
   const quickPick = vscode.window.createQuickPick();
   quickPick.title = title;
@@ -118,7 +119,7 @@ export async function newSwing(
         },
       ];
       await withProgress("Creating swing...", async () =>
-        newSwingFromTemplate(template.files!, uri)
+        newSwingFromTemplate(template.files!, uri, openInNewWindow)
       );
 
       await storage.addTemplateToMRU(template.label);
@@ -145,7 +146,8 @@ async function synthesizeTemplate(
 
 async function newSwingFromTemplate(
   files: SwingFile[],
-  uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>)
+  uri: vscode.Uri | ((files: SwingFile[]) => Promise<vscode.Uri>),
+  openInNewWindow: boolean = false
 ) {
   const manifest = files.find((file) => file.filename === SWING_FILE);
   if (!manifest) {
@@ -184,7 +186,13 @@ async function newSwingFromTemplate(
     swingUri = uri;
   }
 
-  openSwing(swingUri);
+  if (openInNewWindow) {
+    vscode.commands.executeCommand("vscode.openFolder", swingUri, {
+      forceNewWindow: true,
+    });
+  } else {
+    openSwing(swingUri);
+  }
 }
 
 async function promptForGalleryConfiguration(
@@ -315,6 +323,16 @@ export function registerCreationModule(
             })
           );
         });
+      }
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.newSwingInNewWindow`,
+      async () => {
+        const uri = await createSwingDirectory();
+        newSwing(uri, "Create swing in new window", true);
       }
     )
   );

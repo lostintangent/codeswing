@@ -140,6 +140,11 @@
         "command": "codeswing.uploadSwingFile",
         "title": "Upload File(s)",
         "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "codeswing.newSwingInNewWindow",
+        "title": "New Swing in New Window...",
+        "category": "CodeSwing"
       }
     ],
     "views": {
