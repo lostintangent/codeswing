@@ -80,6 +80,11 @@
         "category": "CodeSwing"
       },
       {
+        "command": "codeswing.newSwingInNewWindow",
+        "title": "New Swing in New Window",
+        "category": "CodeSwing"
+      },
+      {
         "command": "codeswing.openConsole",
         "title": "Open Console",
         "category": "CodeSwing",
