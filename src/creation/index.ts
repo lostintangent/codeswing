@@ -226,6 +226,14 @@ async function promptForGalleryConfiguration(
   quickPick.show();
 }
 
+async function newSwingInNewWindow() {
+  const swingUri = await createSwingDirectory();
+  await newSwing(swingUri);
+  await vscode.commands.executeCommand("vscode.openFolder", swingUri, {
+    forceNewWindow: true,
+  });
+}
+
 export function registerCreationModule(
   context: vscode.ExtensionContext,
   api: any,
@@ -316,6 +324,13 @@ export function registerCreationModule(
           );
         });
       }
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      `${EXTENSION_NAME}.newSwingInNewWindow`,
+      newSwingInNewWindow
     )
   );
 

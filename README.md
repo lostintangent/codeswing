@@ -49,6 +49,8 @@ After you install the CodeSwing extension, you can create new swings at any time
 
 - `CodeSwing: New Swing in Directory...` - Creates a swing in a local directory, which allows you to re-open it later, and easily share it with others (e.g. store it in a GitHub repo).
 
+- `CodeSwing: New Swing in New Window` - Creates a new temporary swing in a new VS Code window. This can be useful when you want to create a swing without affecting your current workspace.
+
 After creating a swing, your editor layout will be automatically setup to accomodate the needs of the selected template. Furthermore, if you open a directory that represents a swing, or you run the `CodeSwing: Open Swing...` command, then the selected swing will be automatically launched.
 
 ### Language Support
@@ -266,6 +268,8 @@ When you install CodeSwing, the following commands are available from the comman
 - `CodeSwing: Open Swing in New Windows...` - Opens a swing in a new VS Code window.
 
 - `CodeSwing: Set OpenAI API Key` - Configures the OpenAI API key that is used to support generating AI swings.
+
+- `CodeSwing: New Swing in New Window` - Creates a new temporary swing in a new VS Code window. This can be useful when you want to create a swing without affecting your current workspace.
 
 Additionally, when you have a swing currently open, the following commands are available:
 
