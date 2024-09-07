@@ -32,7 +32,7 @@ export async function synthesizeTemplateFiles(
     openai = new OpenAIClient(credential);
   }
 
-  const messages = [{ role: "system", content: preamble }];
+  const messages = [{ role: "user", content: preamble }];
 
   prompt = userPrompt.replace("{{REQUEST}}", prompt);
 
@@ -40,7 +40,7 @@ export async function synthesizeTemplateFiles(
   if (store.history && store.history.length > 0) {
     previousVersion = store.history[store.history.length - 1];
     const content = previousVersion.files
-      .map((e) => `<<—[${e.filename}]\n${e.content}\n—>>`)
+      .map((e) => `<<—[${e.filename}]=\n${e.content}\n—>>`)
       .join("\n\n");
 
     messages.push(
@@ -106,7 +106,7 @@ RESPONSE:
     .filter((e) => e !== "")
     .map((e) => {
       e = e.trim();
-      const p = e.split("]\n");
+      const p = e.split("]=\n");
       return { filename: p[0].replace("<<—[", ""), content: p[1] };
     })!;
 

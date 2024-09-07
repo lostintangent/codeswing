@@ -1,3 +1,7 @@
+# v0.0.25 (09/07/24)
+
+- Fixed some bugs with the latest version of VS Code
+
 # v0.0.24 (05/14/24)
 
 - Added support for reflecting changes to `window.title` in the title of the CodeSwing preview tab
