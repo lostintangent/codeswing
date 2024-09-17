@@ -1,0 +1,76 @@
+<html></html>
+	<head>
+		<link href="resume.css" rel="stylesheet">
+		<title>My coding resume</title>
+	</head>
+
+	<body>
+    
+		<header id="header">
+			<!-- resume header with your name and title -->
+			<h1>ADITYA RAJ</h1>
+			<hr>
+			 (FULL STRACK  DEVELOPER)
+			<hr>
+		</header>
+		<main>
+			<article id="mainLeft">
+				<section>
+					<h2>CONTACT</h2>
+                    <p>email-proankitbihari@gmail.com</p>
+					<p>phone - 8102256744</p>
+				</section>
+				<section>
+					<h2>SKILLS</h2>
+					<p>HTML</p>
+                    <p>CSS</p>
+                    <p>JS</p>
+                    <p>NODE -JS</p>
+                    <p>EXP-JS</p>
+                    <p>REACT-JS</p>
+                    <p>MONGO-DB</p>
+                    <p>MY-SQL</p>
+                    <p>REDUX</p>
+                  
+				</section>
+				<section>
+					<h2>EDUCATION</h2>
+					<p> B-TECH</p>
+                    <p>SEM- 4TH</p>
+                    <p>BRANCH- CSE</p>
+                    <p>7+ CGPA</p>
+                    
+				</section>            
+			</article>
+			<article id="mainRight">
+				<section>
+					<h2>ABOUT</h2>
+					<p> A self dependent . Always belive in  own hardwork. be prepared to demonstrate your understanding of the company needs and provide concrete examples of your relevant skills and experience.</p>
+
+				</section>
+				<section>
+					<h2>WORK EXPERIENCE</h2>
+					<p>Smart India Hackathon (ministry of jalsakti. clean and grean tecnology)</p>
+				</section>
+            </section>
+            <section>
+                <p>
+                    <p>
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                        <a href="mailto:your-email@example.com">proankitbihari@gmail.com</a>
+                    </p>
+                </p>
+            </section>
+			</article>
+            <p>
+                <i class="fab fa-github" aria-hidden="true"></i>
+                <a href="github.com/gh-username">gh-craadi22cs30</a>
+            </p>
+            <p>
+                <i class="fab fa-linkedin" aria-hidden="true"></i>
+                <a href="linkedin.com/linkedin-username">linkedin-Aditya RaJ</a>
+            </p>
+          
+		</main>
+	</body>
+</html>
